@@ -1,0 +1,17 @@
+RewriteEngine On
+
+# Set base (nếu chạy trong subfolder)
+RewriteBase /
+
+# Chặn truy cập file nhạy cảm
+<FilesMatch "\.(env|log|ini|htaccess)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Bỏ qua file thật
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Redirect tất cả về index.php
+RewriteRule ^ index.php [QSA,L]
