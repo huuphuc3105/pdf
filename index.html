@@ -3,1330 +3,2057 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Logo Placement Tool</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<title>PDF Studio — Xoay, Ký tên, Comment, Zoom & Ghép PDF</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&family=Dancing+Script:wght@600&family=Pacifico&family=Sacramento&family=Sarabun:wght@400;600&display=swap" rel="stylesheet">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Inter:wght@300;400;500;600&display=swap');
-*{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%;overflow:hidden;
-  /* Illustrator-like light theme */
-  background:#b0b0b0;
-  color:#1a1a1a;
-  font-family:'Inter',sans-serif;font-size:12px}
-
-/* ── HEADER ── Illustrator top bar style ─ */
-#hdr{
-  height:40px;
-  background:#535353;
-  border-bottom:1px solid #3a3a3a;
-  display:flex;align-items:center;padding:0 10px;gap:8px;flex-shrink:0;z-index:50;
-  color:#e0e0e0;
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#0d0f14;--paper:#f5f2eb;--warm:#ede8dc;--accent:#e8490f;
+  --green:#16a34a;--muted:#8a8070;--border:#d6d0c4;--blue:#1e40af;
+  --yellow:#f59e0b;--purple:#7c3aed;--teal:#0d9488;
+  --mono:'DM Mono',monospace;--sans:'DM Sans',sans-serif;--display:'Syne',sans-serif;
 }
-.hbadge{
-  background:#ff7c00;color:#fff;
-  font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;
-  padding:2px 7px;letter-spacing:.06em;border-radius:2px;white-space:nowrap
+html,body{height:100%;overflow:hidden}
+body{font-family:var(--sans);background:var(--paper);color:var(--ink);display:flex;flex-direction:column}
+.hdr{display:flex;align-items:center;gap:14px;padding:11px 18px;background:var(--ink);color:var(--paper);flex-shrink:0;z-index:50}
+.logo{font-family:var(--display);font-size:1.05rem;font-weight:800;display:flex;align-items:center;gap:7px}
+.logo-mark{width:26px;height:26px;background:var(--accent);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:13px}
+.hdr-sep{width:1px;height:20px;background:#2e3240}
+.hdr-info{font-size:.73rem;font-family:var(--mono);color:#6b7280;flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.hdr-info strong{color:var(--paper)}
+.hdr-right{display:flex;gap:7px;align-items:center;flex-shrink:0}
+.btn{font-family:var(--sans);font-size:.76rem;font-weight:600;padding:6px 13px;border-radius:5px;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:5px;transition:all .14s;white-space:nowrap}
+.btn:disabled{opacity:.35;cursor:not-allowed;pointer-events:none}
+.btn-acc{background:var(--accent);color:#fff}.btn-acc:hover{background:#c93a08;transform:translateY(-1px)}
+.btn-grn{background:var(--green);color:#fff}.btn-grn:hover{background:#15803d;transform:translateY(-1px)}
+.btn-ghost{background:transparent;color:var(--paper);border:1px solid #2e3240}.btn-ghost:hover{background:#1e2230}
+.btn-warm{background:var(--warm);color:var(--ink);border:1px solid var(--border)}.btn-warm:hover{background:var(--border)}
+.btn-blue{background:#1e40af;color:#fff}.btn-blue:hover{background:#1e3a8a;transform:translateY(-1px)}
+.btn-purple{background:var(--purple);color:#fff}.btn-purple:hover{background:#6d28d9;transform:translateY(-1px)}
+.btn-teal{background:var(--teal);color:#fff}.btn-teal:hover{background:#0f766e;transform:translateY(-1px)}
+.btn-sm{padding:5px 10px;font-size:.71rem}
+.layout{display:flex;flex:1;overflow:hidden}
+
+/* ── SIDEBAR ── */
+.sidebar{width:248px;flex-shrink:0;background:var(--warm);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
+.sb-head{padding:11px 13px 9px;border-bottom:1px solid var(--border);background:var(--paper)}
+.sb-title{font-family:var(--mono);font-size:.66rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:7px}
+.sb-bulk{display:flex;flex-wrap:wrap;gap:4px}
+.sb-lbl{width:100%;font-size:.66rem;color:var(--muted);font-family:var(--mono)}
+.chip{font-family:var(--mono);font-size:.68rem;font-weight:500;padding:3px 8px;border-radius:20px;border:1.5px solid var(--border);background:var(--paper);color:var(--ink);cursor:pointer;transition:all .13s}
+.chip:hover{background:var(--accent);border-color:var(--accent);color:#fff}
+.chip.danger:hover{background:#dc2626;border-color:#dc2626;color:#fff}
+.sb-export-row{display:flex;flex-wrap:wrap;gap:4px;margin-top:5px}
+.chip-sel{font-family:var(--mono);font-size:.64rem;font-weight:500;padding:2px 7px;border-radius:12px;border:1.5px solid var(--border);background:var(--paper);color:var(--muted);cursor:pointer;transition:all .13s}
+.chip-sel:hover{background:var(--blue);border-color:var(--blue);color:#fff}
+.page-list{flex:1;overflow-y:auto;padding:9px;display:grid;grid-template-columns:1fr 1fr;gap:6px;align-content:start}
+.page-list::-webkit-scrollbar{width:3px}
+.page-list::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.pg-card{background:var(--paper);border:2px solid var(--border);border-radius:5px;padding:5px;cursor:pointer;transition:all .13s;text-align:center;position:relative}
+.pg-card:hover{border-color:#2563eb;transform:translateY(-1px)}
+.pg-card.active{border-color:var(--accent);box-shadow:0 0 0 3px rgba(232,73,15,.12)}
+.pg-card.rotated{border-color:#f59e0b}
+.pg-card.signed{border-color:var(--green)}
+.pg-card.has-comment{border-color:#7c3aed}
+.pg-card.rotated.signed{border-color:#8b5cf6}
+.pg-sel-check{position:absolute;top:4px;left:4px;width:16px;height:16px;border-radius:3px;background:#fff;border:1.5px solid var(--border);display:none;align-items:center;justify-content:center;z-index:5;cursor:pointer;transition:all .12s}
+.export-mode .pg-sel-check{display:flex}
+.export-mode .pg-card{border-color:var(--border) !important}
+.export-mode .pg-card.selected-for-export{border-color:#1e40af !important;background:#eff6ff;box-shadow:0 0 0 3px rgba(30,64,175,.14)}
+.export-mode .pg-card.selected-for-export .pg-sel-check{background:#1e40af;border-color:#1e40af;color:#fff}
+.pg-thumb{width:100%;aspect-ratio:3/4;background:#e8e4db;border-radius:3px;overflow:hidden;display:flex;align-items:center;justify-content:center;position:relative}
+.pg-thumb canvas{max-width:100%;max-height:100%;display:block}
+.pg-thumb-ld{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#e8e4db}
+.spin{border-radius:50%;animation:spin .6s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.pg-foot{margin-top:3px;display:flex;align-items:center;justify-content:space-between;padding:0 1px}
+.pg-num{font-family:var(--mono);font-size:.61rem;color:var(--muted)}
+.badges{display:flex;gap:2px}
+.badge{font-family:var(--mono);font-size:.57rem;font-weight:600;padding:1px 4px;border-radius:3px;display:none}
+.badge-r{background:#f59e0b;color:#000}
+.badge-s{background:var(--green);color:#fff}
+.badge-c{background:#7c3aed;color:#fff}
+.pg-card.rotated .badge-r{display:inline}
+.pg-card.signed .badge-s{display:inline}
+.pg-card.has-comment .badge-c{display:inline}
+
+/* ── MAIN AREA ── */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.toolbar{padding:7px 14px;background:var(--paper);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px;flex-wrap:wrap;flex-shrink:0}
+.tg{display:flex;align-items:center;gap:4px;padding:0 7px;border-right:1px solid var(--border)}
+.tg:last-child{border-right:none}
+.tlbl{font-family:var(--mono);font-size:.62rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.pager{display:flex;align-items:center;gap:4px;font-family:var(--mono);font-size:.76rem}
+.pager button{background:var(--warm);border:1px solid var(--border);color:var(--ink);width:25px;height:25px;border-radius:4px;cursor:pointer;font-size:.9rem;display:flex;align-items:center;justify-content:center;transition:background .12s}
+.pager button:hover{background:var(--border)}
+.pgdisp{min-width:66px;text-align:center}
+.rbtn{font-family:var(--mono);font-size:.7rem;font-weight:500;padding:4px 10px;border-radius:4px;background:var(--warm);border:1.5px solid var(--border);color:var(--ink);cursor:pointer;transition:all .12s}
+.rbtn:hover{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.ang{font-family:var(--mono);font-size:.72rem;color:var(--muted);background:var(--warm);padding:4px 10px;border-radius:4px;border:1px solid var(--border);min-width:48px;text-align:center}
+.ang.on{background:#fef3c7;border-color:#f59e0b;color:#92400e}
+.sbtn{background:#f0fdf4;color:var(--green);border:1.5px solid #86efac;font-family:var(--mono);font-size:.7rem;font-weight:500;padding:4px 10px;border-radius:4px;cursor:pointer;transition:all .12s}
+.sbtn:hover,.sbtn.on{background:var(--green);color:#fff;border-color:var(--green)}
+.cbtn{background:#f5f3ff;color:var(--purple);border:1.5px solid #c4b5fd;font-family:var(--mono);font-size:.7rem;font-weight:500;padding:4px 10px;border-radius:4px;cursor:pointer;transition:all .12s}
+.cbtn:hover,.cbtn.on{background:var(--purple);color:#fff;border-color:var(--purple)}
+
+/* ── ZOOM CONTROLS ── */
+.zoom-row{display:flex;align-items:center;gap:4px}
+.zbtn{font-family:var(--mono);font-size:.8rem;font-weight:700;width:25px;height:25px;border-radius:4px;background:var(--warm);border:1.5px solid var(--border);color:var(--ink);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .12s;flex-shrink:0;line-height:1}
+.zbtn:hover{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.zoom-val{font-family:var(--mono);font-size:.72rem;color:var(--muted);background:var(--warm);padding:4px 7px;border-radius:4px;border:1px solid var(--border);min-width:52px;text-align:center;cursor:pointer;transition:all .12s}
+.zoom-val:hover{border-color:var(--accent);color:var(--ink)}
+.zoom-fit{font-family:var(--mono);font-size:.64rem;padding:4px 7px;border-radius:4px;background:var(--warm);border:1.5px solid var(--border);color:var(--muted);cursor:pointer;transition:all .12s;white-space:nowrap}
+.zoom-fit:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
+.zoom-fit.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+.kbd{display:inline-block;font-family:var(--mono);font-size:.6rem;padding:1px 5px;background:var(--warm);border:1px solid var(--border);border-bottom-width:2px;border-radius:3px;color:var(--muted)}
+
+/* ── VIEWER ── */
+.viewer{flex:1;overflow:auto;display:flex;align-items:flex-start;justify-content:flex-start;padding:28px;background:#c8c4b7;position:relative;cursor:grab}
+.viewer.grabbing{cursor:grabbing}
+.viewer.zoom-fit-mode{align-items:center;justify-content:center;cursor:default}
+.vi{background:#fff;border-radius:2px;box-shadow:0 4px 8px rgba(0,0,0,.12),0 12px 32px rgba(0,0,0,.2),0 40px 80px rgba(0,0,0,.14);position:relative;line-height:0;transition:box-shadow .2s ease;flex-shrink:0}
+#mainCanvas{display:block}
+#sigOvl{position:absolute;top:0;left:0;pointer-events:none;z-index:15;display:block}
+#sigOvl.signing{pointer-events:all;cursor:crosshair}
+#commentOvl{position:absolute;top:0;left:0;pointer-events:none;z-index:16;display:block}
+#commentOvl.commenting{pointer-events:all;cursor:cell}
+.sig-box{position:absolute;cursor:move;border:2px dashed rgba(22,163,74,.85);border-radius:3px;user-select:none;z-index:20;touch-action:none;overflow:visible}
+.sig-box:hover{border-style:solid;border-color:var(--green)}
+.sig-box img{width:100%;height:100%;object-fit:fill;pointer-events:none;display:block;border-radius:2px}
+.sig-del{position:absolute;top:-11px;right:-11px;width:21px;height:21px;background:#dc2626;color:#fff;border-radius:50%;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:0;transition:opacity .13s;border:2px solid #fff;z-index:25;line-height:1}
+.sig-box:hover .sig-del{opacity:1}
+.sig-rsz{position:absolute;bottom:-6px;right:-6px;width:14px;height:14px;background:var(--green);border-radius:3px;cursor:se-resize;opacity:0;transition:opacity .13s;border:2px solid #fff;touch-action:none}
+.sig-box:hover .sig-rsz{opacity:1}
+/* ── INLINE COMMENT LABEL ── */
+.cmt-label{position:absolute;z-index:22;cursor:move;user-select:none;touch-action:none;display:flex;flex-direction:column;gap:0;filter:drop-shadow(0 2px 6px rgba(0,0,0,.22))}
+.cmt-label-body{display:inline-block;padding:5px 10px;border-radius:4px;font-size:13px;font-weight:600;font-family:'DM Sans',sans-serif;line-height:1.45;white-space:pre-wrap;word-break:break-word;max-width:220px;min-width:40px;border:2px solid rgba(0,0,0,.13);cursor:move}
+.cmt-label-toolbar{display:none;align-items:center;gap:3px;background:rgba(15,15,20,.88);border-radius:5px;padding:3px 5px;position:absolute;top:-34px;left:0;z-index:35;white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,.35)}
+.cmt-label:hover .cmt-label-toolbar,.cmt-label.editing .cmt-label-toolbar{display:flex}
+.cmt-tb-swatch{width:16px;height:16px;border-radius:50%;border:2px solid transparent;cursor:pointer;transition:border-color .1s;flex-shrink:0}
+.cmt-tb-swatch:hover{border-color:#fff}
+.cmt-tb-swatch.on{border-color:#fff !important}
+.cmt-tb-sep{width:1px;height:14px;background:rgba(255,255,255,.2);margin:0 2px}
+.cmt-tb-btn{background:none;border:none;color:rgba(255,255,255,.7);cursor:pointer;font-size:.7rem;padding:1px 4px;border-radius:3px;line-height:1.4;font-family:'DM Mono',monospace;transition:all .1s}
+.cmt-tb-btn:hover{background:rgba(255,255,255,.15);color:#fff}
+.cmt-tb-btn.del{color:#f87171}.cmt-tb-btn.del:hover{background:#7f1d1d;color:#fff}
+.cmt-label-editor{position:absolute;inset:0;resize:none;border:none;outline:none;background:transparent;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;line-height:1.45;padding:5px 10px;cursor:text;min-width:80px;min-height:28px;overflow:hidden}
+.cmt-label-rsz{position:absolute;bottom:-5px;right:-5px;width:12px;height:12px;background:#fff;border:1.5px solid rgba(0,0,0,.3);border-radius:2px;cursor:se-resize;opacity:0;transition:opacity .13s;z-index:36}
+.cmt-label:hover .cmt-label-rsz{opacity:1}
+/* ── COMMENT COMPOSER ── */
+.cmt-composer{position:absolute;z-index:35;background:#fff;border-radius:8px;box-shadow:0 6px 24px rgba(0,0,0,.28),0 0 0 1.5px rgba(124,58,237,.4);overflow:hidden;min-width:220px;max-width:280px;animation:cmtPop .15s ease}
+@keyframes cmtPop{from{opacity:0;transform:scale(.93)}to{opacity:1;transform:none}}
+.cmt-composer-hdr{background:#5b21b6;color:#fff;padding:5px 10px;font-family:'DM Mono',monospace;font-size:.65rem;font-weight:600;display:flex;align-items:center;justify-content:space-between}
+.cmt-composer-close{background:none;border:none;color:rgba(255,255,255,.6);cursor:pointer;font-size:.85rem;line-height:1;padding:0 2px}.cmt-composer-close:hover{color:#fff}
+.cmt-composer-textarea{width:100%;border:none;outline:none;resize:none;padding:9px 11px;font-size:.84rem;font-family:'DM Sans',sans-serif;line-height:1.5;min-height:72px;background:#fff;color:#0d0f14}
+.cmt-composer-footer{padding:5px 8px;background:#f5f3ff;border-top:1px solid #ede9fe;display:flex;align-items:center;gap:5px}
+.cmt-composer-colors{display:flex;align-items:center;gap:4px;flex:1}
+.cmt-comp-swatch{width:17px;height:17px;border-radius:50%;border:2px solid transparent;cursor:pointer;transition:border-color .1s;flex-shrink:0}
+.cmt-comp-swatch:hover{border-color:#0d0f14}
+.cmt-comp-swatch.on{border-color:#0d0f14 !important}
+.cmt-comp-size{font-family:'DM Mono',monospace;font-size:.62rem;color:#8a8070;cursor:pointer;background:none;border:1px solid #d6d0c4;border-radius:3px;padding:1px 5px;line-height:1.4}
+.cmt-comp-size.on{background:#5b21b6;color:#fff;border-color:#5b21b6}
+.cmt-composer-ok{background:#5b21b6;color:#fff;border:none;border-radius:4px;padding:4px 11px;font-size:.72rem;font-weight:700;cursor:pointer;font-family:'DM Mono',monospace;transition:background .12s}
+.cmt-composer-ok:hover{background:#4c1d95}
+/* ── MODE BARS ── */
+.mode-bar{position:absolute;top:12px;left:50%;transform:translateX(-50%);color:#fff;padding:7px 18px;border-radius:20px;font-size:.76rem;font-weight:600;font-family:var(--mono);display:none;align-items:center;gap:8px;z-index:30;backdrop-filter:blur(8px);white-space:nowrap;box-shadow:0 4px 16px rgba(0,0,0,.25)}
+.mode-bar.on{display:flex}
+.mode-bar.sign-mode{background:rgba(22,163,74,.94)}
+.mode-bar.comment-mode{background:rgba(124,58,237,.94)}
+.v-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:var(--muted);text-align:center}
+/* ── UPLOAD SCREEN ── */
+.upload-screen{flex:1;display:flex;align-items:center;justify-content:center;background:#c8c4b7;padding:40px}
+.drop-zone{background:var(--paper);border:2px dashed var(--border);border-radius:12px;padding:64px 56px;text-align:center;max-width:490px;width:100%;cursor:pointer;transition:all .18s}
+.drop-zone:hover,.drop-zone.over{border-color:var(--accent);background:#fdf8f3;transform:scale(1.015)}
+.drop-icon{font-size:66px;margin-bottom:16px}
+.drop-title{font-family:var(--display);font-size:1.65rem;font-weight:800;margin-bottom:8px}
+.drop-sub{font-size:.86rem;color:var(--muted);margin-bottom:24px;line-height:1.6}
+.drop-note{margin-top:12px;font-size:.69rem;font-family:var(--mono);color:var(--muted);letter-spacing:.04em}
+
+/* ── MODALS ── */
+.modal-bg{position:fixed;inset:0;background:rgba(13,15,20,.68);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(5px)}
+.modal-bg.hidden{display:none}
+.modal{background:var(--paper);border-radius:10px;width:100%;max-width:560px;box-shadow:0 24px 80px rgba(0,0,0,.45);overflow:hidden;display:flex;flex-direction:column;max-height:90vh;overflow-y:auto}
+.modal-hdr{padding:14px 18px;background:var(--ink);color:var(--paper);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:5}
+.modal-hdr h3{font-family:var(--display);font-size:.95rem;font-weight:700}
+.modal-x{background:none;border:none;color:#6b7280;cursor:pointer;font-size:1rem;padding:2px 6px;border-radius:4px}.modal-x:hover{color:var(--paper)}
+.modal-tabs{display:flex;background:var(--warm);border-bottom:1px solid var(--border);position:sticky;top:44px;z-index:4}
+.mtab{flex:1;padding:9px;font-size:.78rem;font-weight:600;font-family:var(--mono);text-align:center;cursor:pointer;border:none;background:transparent;color:var(--muted);transition:all .13s;border-bottom:2px solid transparent}
+.mtab.on{color:var(--ink);border-bottom-color:var(--accent);background:var(--paper)}
+.modal-body{padding:16px 18px}
+.modal-foot{padding:11px 18px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:7px;background:var(--warm);position:sticky;bottom:0;z-index:4}
+.draw-tools{display:flex;align-items:center;gap:7px;margin-bottom:9px;flex-wrap:wrap}
+.draw-tools label{font-size:.7rem;color:var(--muted);font-family:var(--mono)}
+.cswatch{width:21px;height:21px;border-radius:50%;border:2.5px solid transparent;cursor:pointer;transition:border-color .12s;flex-shrink:0}
+.cswatch.on{border-color:var(--ink)}
+.sz-btn{width:27px;height:27px;background:var(--warm);border:1px solid var(--border);border-radius:4px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .12s}
+.sz-btn:hover,.sz-btn.on{background:var(--ink)}.sz-btn:hover .dot,.sz-btn.on .dot{background:var(--paper)}
+.dot{background:var(--ink);border-radius:50%;transition:background .12s}
+.draw-wrap{border:2px solid var(--border);border-radius:7px;background:#fff;overflow:hidden;cursor:crosshair}
+#drawCanvas{display:block;touch-action:none}
+.font-opts{display:flex;gap:7px;margin-bottom:10px;flex-wrap:wrap}
+.fopt{padding:4px 11px;border:1.5px solid var(--border);border-radius:20px;font-size:.76rem;cursor:pointer;transition:all .13s;background:var(--paper)}
+.fopt.on{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+#typeInput{width:100%;padding:11px 13px;font-size:1.8rem;border:2px solid var(--border);border-radius:7px;outline:none;background:#fff;color:var(--ink);transition:border-color .13s}
+#typeInput:focus{border-color:var(--accent)}
+.type-prev{margin-top:10px;background:#fff;border:1.5px solid var(--border);border-radius:7px;padding:14px;text-align:center;min-height:74px;display:flex;align-items:center;justify-content:center}
+.clr-row{display:flex;gap:6px;align-items:center;margin-top:9px}
+.clr-row label{font-size:.7rem;color:var(--muted);font-family:var(--mono)}
+.up-sig{border:2px dashed var(--border);border-radius:7px;padding:28px;text-align:center;cursor:pointer;transition:all .18s;background:#fff}
+.up-sig:hover{border-color:var(--accent);background:#fdf8f3}
+#sigPreviewImg{max-width:100%;max-height:110px;margin-top:10px;border-radius:5px;display:none}
+.ts-box{margin-top:14px;padding:12px 14px;background:var(--warm);border-radius:8px;border:1px solid var(--border)}
+.ts-box-title{font-family:var(--mono);font-size:.64rem;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px;display:flex;align-items:center;gap:5px}
+.ts-toggle-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.ts-toggle-row label{display:flex;align-items:center;gap:6px;cursor:pointer;font-size:.8rem;font-weight:600;user-select:none}
+.ts-toggle-row input[type=checkbox]{width:15px;height:15px;cursor:pointer;accent-color:var(--green)}
+.ts-fmt-row{display:flex;flex-wrap:wrap;gap:5px}
+.ts-fmt-btn{font-family:var(--mono);font-size:.65rem;padding:3px 9px;border-radius:12px;border:1.5px solid var(--border);background:var(--paper);cursor:pointer;transition:all .12s;color:var(--muted)}
+.ts-fmt-btn.on{background:var(--green);color:#fff;border-color:var(--green)}
+
+/* ── EXPORT MODAL ── */
+.export-modal{max-width:540px}
+.exp-summary{background:var(--warm);border-radius:8px;padding:12px 14px;margin-bottom:14px;font-size:.8rem;font-family:var(--mono);color:var(--muted)}
+.exp-summary strong{color:var(--ink);font-size:.88rem}
+.exp-pages-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(44px,1fr));gap:6px;margin-bottom:14px;max-height:220px;overflow-y:auto;padding:2px}
+.exp-page-chip{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer}
+.exp-page-thumb{width:44px;height:58px;border-radius:4px;background:var(--warm);border:2px solid var(--border);overflow:hidden;position:relative;transition:all .13s;display:flex;align-items:center;justify-content:center}
+.exp-page-chip.on .exp-page-thumb{border-color:#1e40af;background:#eff6ff}
+.exp-page-chip.on .exp-page-thumb::after{content:'✓';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(30,64,175,.35);color:#fff;font-weight:700;font-size:1rem}
+.exp-page-thumb canvas{max-width:100%;max-height:100%;display:block}
+.exp-page-num{font-family:var(--mono);font-size:.58rem;color:var(--muted)}
+.exp-page-chip.on .exp-page-num{color:#1e40af;font-weight:600}
+.exp-range-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
+.exp-range-row label{font-family:var(--mono);font-size:.68rem;color:var(--muted)}
+.exp-range-row input{padding:5px 8px;border:1.5px solid var(--border);border-radius:5px;font-size:.78rem;font-family:var(--mono);width:80px;outline:none;background:#fff;color:var(--ink)}
+.exp-range-row input:focus{border-color:#1e40af}
+.exp-sel-btns{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px}
+.exp-sel-btn{font-family:var(--mono);font-size:.66rem;padding:3px 9px;border-radius:12px;border:1.5px solid var(--border);background:var(--paper);cursor:pointer;color:var(--ink);transition:all .12s}
+.exp-sel-btn:hover{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+
+/* ── COMBINE MODAL ── */
+.combine-modal{max-width:620px}
+/* current-file source chip */
+.cfi-source{font-family:var(--mono);font-size:.6rem;padding:2px 7px;border-radius:10px;font-weight:600;flex-shrink:0;white-space:nowrap}
+.cfi-source.from-current{background:#fef3c7;color:#92400e;border:1px solid #f59e0b}
+.cfi-source.from-file{background:#f0fdf4;color:#15803d;border:1px solid #86efac}
+/* current file quick-add banner */
+.combine-current-banner{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 13px;border-radius:8px;margin-bottom:10px;
+  background:linear-gradient(135deg,#fefce8,#ecfdf5);
+  border:1.5px solid #f59e0b;
 }
-.htitle{font-size:12px;font-weight:500;color:#e0e0e0;white-space:nowrap}
-.hx{width:1px;height:16px;background:#666;flex-shrink:0}
-.hi{font-family:'JetBrains Mono',monospace;font-size:10px;color:#aaa;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:280px}
-.hright{margin-left:auto;display:flex;align-items:center;gap:8px;flex-shrink:0}
-.chk{display:flex;align-items:center;gap:4px;font-size:11px;color:#ccc;cursor:pointer;user-select:none;white-space:nowrap}
-.chk input[type=checkbox]{accent-color:#ff7c00;width:12px;height:12px}
+.combine-current-banner.hidden{display:none}
+.ccb-icon{font-size:1.3rem;flex-shrink:0}
+.ccb-info{flex:1;min-width:0}
+.ccb-name{font-size:.82rem;font-weight:700;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ccb-meta{font-size:.68rem;color:var(--muted);font-family:var(--mono);margin-top:1px}
+.ccb-btn{font-family:var(--mono);font-size:.69rem;font-weight:600;padding:5px 11px;border-radius:6px;border:none;cursor:pointer;white-space:nowrap;transition:all .13s;flex-shrink:0}
+.ccb-btn.add{background:#f59e0b;color:#fff}.ccb-btn.add:hover{background:#d97706}
+.ccb-btn.added{background:#dcfce7;color:#15803d;border:1.5px solid #86efac;cursor:default}
+.combine-drop-zone{border:2px dashed var(--border);border-radius:10px;padding:28px;text-align:center;cursor:pointer;transition:all .18s;background:#fff;margin-bottom:14px}
+.combine-drop-zone:hover,.combine-drop-zone.over{border-color:var(--teal);background:#f0fdfa;transform:scale(1.01)}
+.combine-drop-zone .drop-icon{font-size:40px;margin-bottom:10px}
+.combine-file-list{display:flex;flex-direction:column;gap:6px;margin-bottom:14px;max-height:300px;overflow-y:auto}
+.combine-file-list::-webkit-scrollbar{width:3px}
+.combine-file-list::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.combine-file-item{display:flex;align-items:center;gap:10px;padding:9px 12px;background:#fff;border:1.5px solid var(--border);border-radius:8px;transition:all .13s;cursor:grab;position:relative}
+.combine-file-item:hover{border-color:var(--teal);background:#f0fdfa}
+.combine-file-item.dragging{opacity:.5;border-color:var(--teal);border-style:dashed}
+.combine-file-item.drag-over{border-color:var(--accent);box-shadow:0 0 0 2px rgba(232,73,15,.2)}
+.cfi-icon{font-size:1.4rem;flex-shrink:0}
+.cfi-info{flex:1;min-width:0}
+.cfi-name{font-size:.82rem;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cfi-meta{font-family:var(--mono);font-size:.66rem;color:var(--muted);margin-top:2px}
+.cfi-pages{font-family:var(--mono);font-size:.72rem;font-weight:600;color:var(--blue);background:#eff6ff;padding:2px 7px;border-radius:10px;flex-shrink:0}
+.cfi-drag-handle{color:var(--muted);font-size:.9rem;cursor:grab;padding:0 4px;flex-shrink:0}
+.cfi-del{width:22px;height:22px;background:transparent;border:none;color:var(--muted);cursor:pointer;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0;transition:all .12s}
+.cfi-del:hover{background:#fff1f2;color:#dc2626}
+.cfi-range{font-family:var(--mono);font-size:.66rem;padding:2px 6px;border:1px solid var(--border);border-radius:4px;background:var(--warm);color:var(--muted);width:90px;outline:none;transition:border-color .12s}
+.cfi-range:focus{border-color:var(--blue)}
+.combine-empty{text-align:center;padding:28px;color:var(--muted);font-size:.83rem}
+.combine-order-hint{font-size:.7rem;color:var(--muted);font-family:var(--mono);margin-bottom:8px;padding:5px 10px;background:var(--warm);border-radius:5px;display:flex;align-items:center;gap:6px}
+.combine-summary{background:var(--warm);border-radius:8px;padding:10px 14px;font-size:.8rem;font-family:var(--mono);color:var(--muted);display:flex;align-items:center;justify-content:space-between}
+.combine-summary strong{color:var(--ink)}
 
-/* Tool button in header */
-.htool{
-  display:flex;align-items:center;gap:4px;
-  padding:3px 8px;border-radius:3px;cursor:pointer;
-  font-size:11px;color:#ddd;border:1px solid transparent;
-  transition:all .15s;user-select:none;white-space:nowrap;
-}
-.htool:hover{background:rgba(255,255,255,.12);border-color:#888}
-.htool.active{background:#ff7c00;color:#fff;border-color:#e06000}
+/* ── EXPORT MODE BAR ── */
+.export-mode-bar{background:#1e40af;color:#fff;padding:6px 14px;display:none;align-items:center;gap:10px;font-family:var(--mono);font-size:.72rem;font-weight:600;flex-shrink:0;border-bottom:1px solid #1e3a8a}
+.export-mode-bar.on{display:flex}
+.export-count-badge{background:#fff;color:#1e40af;border-radius:10px;padding:1px 8px;font-size:.68rem;font-weight:700}
 
-/* GS badge */
-.gs-badge{display:flex;align-items:center;gap:4px;font-family:'JetBrains Mono',monospace;font-size:9px;padding:2px 7px;border-radius:2px;cursor:pointer;transition:all .2s;white-space:nowrap}
-.gs-ok  {background:rgba(34,197,94,.2);color:#16a34a;border:1px solid rgba(34,197,94,.4)}
-.gs-err {background:rgba(239,68,68,.2);color:#dc2626;border:1px solid rgba(239,68,68,.4)}
-.gs-unk {background:rgba(0,0,0,.15);color:#999;border:1px solid #777}
+/* ── LOADING ── */
+.loading{position:fixed;inset:0;background:rgba(13,15,20,.82);display:none;flex-direction:column;align-items:center;justify-content:center;gap:13px;z-index:300}
+.loading.on{display:flex}
+.lo-spin{width:42px;height:42px;border:3px solid rgba(255,255,255,.1);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite}
+.lo-txt{font-family:var(--mono);font-size:.8rem;color:rgba(255,255,255,.7)}
+.lo-bar{width:220px;height:4px;background:rgba(255,255,255,.15);border-radius:2px;overflow:hidden}
+.lo-fill{height:100%;background:var(--accent);border-radius:2px;width:0;transition:width .25s}
+.toasts{position:fixed;bottom:16px;right:16px;z-index:999;display:flex;flex-direction:column;gap:5px}
+.toast{background:var(--ink);color:var(--paper);padding:9px 14px;border-radius:6px;font-size:.78rem;display:flex;align-items:center;gap:7px;box-shadow:0 4px 16px rgba(0,0,0,.3);animation:fadeUp .2s ease;border-left:3px solid var(--accent);min-width:200px;max-width:340px}
+.toast.ok{border-left-color:#22c55e}.toast.err{border-left-color:#ef4444}.toast.warn{border-left-color:#f59e0b}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 
-/* ── LAYOUT ── */
-#app{display:flex;flex:1;height:calc(100vh - 40px);overflow:hidden}
-
-/* ── SIDEBAR ── Illustrator panel style ─ */
-#bar{
-  width:240px;min-width:240px;
-  background:#e8e8e8;
-  border-right:1px solid #b8b8b8;
-  overflow-y:auto;overflow-x:hidden;
-  display:flex;flex-direction:column;
-}
-.sec{border-bottom:1px solid #cacaca;padding:10px 12px;flex-shrink:0}
-.slbl{
-  font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
-  color:#555;margin-bottom:8px;display:flex;align-items:center;gap:6px;
-}
-.slbl::after{content:'';flex:1;height:1px;background:#c0c0c0}
-
-/* GS Panel */
-#gsPanel{background:#fff8ee;border:1px solid #f0c080;border-radius:3px;padding:10px;margin-bottom:8px}
-.gsp-ttl{color:#c06000;font-size:10px;font-weight:600;margin-bottom:6px}
-.gsp-body{font-size:10px;color:#806030;line-height:1.6;margin-bottom:7px}
-.gsp-body a{color:#ff7c00;text-decoration:none}.gsp-body a:hover{text-decoration:underline}
-.gsp-body code{font-family:'JetBrains Mono',monospace;font-size:9px;background:rgba(255,124,0,.1);padding:1px 4px;border-radius:2px}
-.gsp-row{display:flex;gap:5px}
-.gsp-row input{flex:1;min-width:0;background:#fff;border:1px solid #ddb060;border-radius:2px;color:#604020;font-family:'JetBrains Mono',monospace;font-size:9px;padding:4px 6px;outline:none}
-.gsp-row input:focus{border-color:#ff7c00}
-.gsp-row button{background:#ff7c00;border:none;color:#fff;font-size:10px;font-weight:600;padding:0 8px;border-radius:2px;cursor:pointer}
-.gsp-row button:hover{background:#e06000}
-.gsp-or{font-size:10px;color:#a08060;text-align:center;margin:6px 0}
-
-/* Upload zones */
-.uz{border:1.5px dashed #b8b8b8;border-radius:3px;padding:10px 8px;text-align:center;cursor:pointer;transition:all .15s;background:#f4f4f4}
-.uz:hover,.uz.drag{border-color:#ff7c00;background:rgba(255,124,0,.05)}
-.uz.done{border-color:#22c55e;border-style:solid;background:rgba(34,197,94,.04)}
-.uz.busy{border-color:#ff7c00;animation:blink .6s infinite alternate}
-@keyframes blink{to{opacity:.4}}
-.uz-ico{font-size:18px;margin-bottom:4px;display:block}
-.uz p{font-size:10px;color:#777;line-height:1.4}
-.uz strong{color:#ff7c00;font-weight:600}
-.uz-fn{font-family:'JetBrains Mono',monospace;font-size:9px;color:#16a34a;margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-input[type=file]{display:none}
-
-/* progress */
-.pgw{display:none;margin-top:6px}
-.pgw.on{display:block}
-.pgbar{height:2px;background:#d0d0d0;border-radius:2px;overflow:hidden}
-.pgfill{height:100%;background:#ff7c00;width:0;transition:width .25s;border-radius:2px}
-.pgtxt{font-family:'JetBrains Mono',monospace;font-size:9px;color:#888;margin-top:3px;text-align:center}
-
-/* logo preview */
-#lprev{display:none;margin-top:7px;background:#fff;border:1px solid #d0d0d0;border-radius:3px;padding:7px;text-align:center}
-#lprev img{max-width:100%;max-height:70px;object-fit:contain}
-#linfo{font-family:'JetBrains Mono',monospace;font-size:9px;color:#888;margin-top:3px}
-
-/* number inputs — Illustrator style */
-.ng{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:8px}
-.nf label{display:block;font-size:9px;color:#666;margin-bottom:2px;font-weight:500}
-.nf input{
-  width:100%;background:#fff;border:1px solid #c0c0c0;border-radius:2px;
-  color:#1a1a1a;font-family:'JetBrains Mono',monospace;font-size:11px;
-  padding:4px 6px;outline:none;transition:border-color .15s;
-}
-.nf input:focus{border-color:#ff7c00;box-shadow:0 0 0 2px rgba(255,124,0,.15)}
-
-/* sliders */
-.sr{display:flex;align-items:center;gap:6px;margin-bottom:6px}
-.sr label{font-size:10px;color:#555;white-space:nowrap;min-width:48px;font-weight:500}
-.sv{font-family:'JetBrains Mono',monospace;font-size:10px;color:#ff7c00;min-width:36px;text-align:right}
-input[type=range]{flex:1;-webkit-appearance:none;height:3px;background:#c8c8c8;border-radius:2px;outline:none}
-input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;background:#ff7c00;border-radius:50%;cursor:pointer;border:1.5px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,.3)}
-
-/* buttons — Illustrator style */
-.btn{display:flex;align-items:center;justify-content:center;gap:4px;width:100%;padding:6px 10px;border:1px solid #b8b8b8;border-radius:2px;font-family:'Inter',sans-serif;font-size:11px;font-weight:500;cursor:pointer;transition:all .15s;margin-bottom:5px;background:#e0e0e0;color:#1a1a1a}
-.btn:last-child{margin-bottom:0}
-.btn:disabled{opacity:.4;cursor:not-allowed}
-.btn:not(:disabled):hover{background:#d0d0d0;border-color:#999}
-.b-orange{background:#ff7c00;color:#fff;border-color:#e06000}
-.b-orange:not(:disabled):hover{background:#e06000}
-.b-green{background:#22c55e;color:#fff;border-color:#16a34a}
-.b-green:not(:disabled):hover{background:#16a34a}
-.brow{display:flex;gap:5px}.brow .btn{margin-bottom:0}
-
-/* JSON box */
-#jbox{display:none;margin-top:6px;background:#fff;border:1px solid #d0d0d0;border-radius:2px;padding:7px;font-family:'JetBrains Mono',monospace;font-size:8px;color:#666;white-space:pre-wrap;word-break:break-all;max-height:120px;overflow-y:auto;line-height:1.5}
-#jbox.on{display:block}
-
-/* ── Multi-logo overlays ── */
-.logo-ov{position:absolute;cursor:move;z-index:10;user-select:none;display:none}
-.logo-ov.on{display:block}
-.logo-ov img{width:100%;height:100%;object-fit:contain;display:block;pointer-events:none}
-.logo-ov .lsbd{position:absolute;inset:0;border:1.5px solid #ff7c00;pointer-events:none;border-radius:1px}
-.logo-ov.selected .lsbd{border-color:#ff7c00;box-shadow:0 0 0 2px rgba(255,124,0,.2)}
-.logo-ov.unselected .lsbd{border-color:rgba(160,160,160,.5);border-style:dashed}
-.logo-ov.unselected:hover .lsbd{border-color:#ff9a40;border-style:solid}
-.rh{position:absolute;width:8px;height:8px;background:#ff7c00;border:1.5px solid #fff;border-radius:1px;z-index:11;box-shadow:0 1px 3px rgba(0,0,0,.3)}
-.rh.rNW{top:-4px;left:-4px;cursor:nw-resize}
-.rh.rNE{top:-4px;right:-4px;cursor:ne-resize}
-.rh.rSW{bottom:-4px;left:-4px;cursor:sw-resize}
-.rh.rSE{bottom:-4px;right:-4px;cursor:se-resize}
-.rstem{position:absolute;top:-18px;left:50%;width:1px;height:18px;background:#ff7c00;transform:translateX(-50%);pointer-events:none}
-.rRot{position:absolute;top:-26px;left:50%;transform:translateX(-50%);width:12px;height:12px;background:#ff7c00;border-radius:50%;border:1.5px solid #fff;cursor:grab;display:flex;align-items:center;justify-content:center;font-size:8px;color:#fff;z-index:11}
-.dl{position:absolute;font-family:'JetBrains Mono',monospace;font-size:8px;color:#003080;background:rgba(220,235,255,.92);padding:1px 4px;border-radius:2px;pointer-events:none;white-space:nowrap;border:1px solid rgba(0,80,180,.2)}
-.dPos{top:-14px;left:0}.dW{bottom:-13px;left:50%;transform:translateX(-50%)}.dH{right:-36px;top:50%;transform:translateY(-50%)}
-
-/* ── Logo list in sidebar ── */
-#logoList{display:flex;flex-direction:column;gap:4px;margin-bottom:6px;max-height:160px;overflow-y:auto}
-.logo-item{display:flex;align-items:center;gap:6px;background:#fff;border:1px solid #d0d0d0;border-radius:3px;padding:5px 7px;cursor:pointer;transition:all .15s}
-.logo-item:hover{border-color:#ff7c00;background:#fff8f0}
-.logo-item.active{border-color:#ff7c00;background:#fff3e6;box-shadow:0 0 0 2px rgba(255,124,0,.12)}
-.logo-item-thumb{width:28px;height:28px;object-fit:contain;border:1px solid #e0e0e0;border-radius:2px;background:#f8f8f8;flex-shrink:0}
-.logo-item-info{flex:1;min-width:0}
-.logo-item-name{font-size:10px;font-weight:600;color:#333;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.logo-item-dim{font-family:'JetBrains Mono',monospace;font-size:9px;color:#888}
-.logo-item-del{width:18px;height:18px;border-radius:50%;background:rgba(200,40,40,.1);border:1px solid rgba(200,40,40,.25);color:#cc2222;font-size:11px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;line-height:1}
-.logo-item-del:hover{background:#cc2222;color:#fff;border-color:#cc2222}
-.logo-empty{font-size:10px;color:#aaa;text-align:center;padding:10px 0;font-style:italic}
-
-/* ── MEASURE PANEL in sidebar ── */
-#measurePanel{background:#f0f8ff;border:1px solid #90c0e0;border-radius:3px;padding:10px;margin-bottom:0}
-.meas-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
-.meas-lbl{font-size:10px;color:#555;font-weight:500}
-.meas-val{font-family:'JetBrains Mono',monospace;font-size:11px;color:#1e60a0;font-weight:600}
-.meas-clear{font-size:9px;color:#888;cursor:pointer;text-decoration:underline}
-.meas-clear:hover{color:#cc0000}
-#measureHint{font-size:9px;color:#888;line-height:1.5;margin-top:5px;font-style:italic}
-
-/* ── CANVAS AREA ── */
-#ca{flex:1;display:flex;flex-direction:column;overflow:hidden;background:#888;position:relative}
-
-/* rulers — Illustrator style (light gray) */
-#rc{position:absolute;top:0;left:0;width:22px;height:22px;background:#d4d4d4;border-right:1px solid #b0b0b0;border-bottom:1px solid #b0b0b0;z-index:30}
-#rx{position:absolute;top:0;left:22px;right:0;height:22px;background:#d4d4d4;border-bottom:1px solid #b0b0b0;overflow:hidden;z-index:30}
-#ry{position:absolute;top:22px;left:0;width:22px;bottom:28px;background:#d4d4d4;border-right:1px solid #b0b0b0;overflow:hidden;z-index:30}
-canvas.ru{display:block}
-
-/* crosshair */
-#chx,#chy{position:absolute;pointer-events:none;z-index:20;display:none}
-#chx{top:22px;bottom:28px;width:1px;background:rgba(0,100,200,.5)}
-#chy{left:22px;right:0;height:1px;background:rgba(0,100,200,.5)}
-#ctip{
-  position:absolute;top:26px;left:26px;
-  font-family:'JetBrains Mono',monospace;font-size:10px;
-  color:#003080;background:rgba(220,235,255,.95);
-  border:1px solid rgba(0,80,180,.4);padding:2px 7px;border-radius:2px;
-  pointer-events:none;z-index:40;display:none;white-space:nowrap;
-}
-
-/* viewport */
-#vp{position:absolute;top:22px;left:22px;right:0;bottom:28px;overflow:auto}
-
-/* canvas wrapper — white page on gray canvas */
-#cw{position:relative;display:inline-block;margin:20px;
-  box-shadow:0 3px 16px rgba(0,0,0,.4);background:#ffffff;cursor:crosshair}
-#pdfCv{display:block}
-#gridCv{position:absolute;inset:0;pointer-events:none;z-index:2}
-
-/* measure overlay canvas */
-#measCv{position:absolute;inset:0;pointer-events:none;z-index:15}
-
-/* logo overlay */
-#logo{position:absolute;display:none;cursor:move;z-index:10;user-select:none}
-#logo.on{display:block}
-#logo img{width:100%;height:100%;object-fit:contain;display:block;pointer-events:none}
-#sbd{position:absolute;inset:0;border:1px solid #ff7c00;pointer-events:none}
-.rh{position:absolute;width:8px;height:8px;background:#ff7c00;border:1.5px solid #fff;border-radius:1px;z-index:11;box-shadow:0 1px 3px rgba(0,0,0,.3)}
-#rNW{top:-4px;left:-4px;cursor:nw-resize}#rNE{top:-4px;right:-4px;cursor:ne-resize}
-#rSW{bottom:-4px;left:-4px;cursor:sw-resize}#rSE{bottom:-4px;right:-4px;cursor:se-resize}
-.rstem{position:absolute;top:-18px;left:50%;width:1px;height:18px;background:#ff7c00;transform:translateX(-50%);pointer-events:none}
-#rRot{position:absolute;top:-26px;left:50%;transform:translateX(-50%);width:12px;height:12px;background:#ff7c00;border-radius:50%;border:1.5px solid #fff;cursor:grab;display:flex;align-items:center;justify-content:center;font-size:8px;color:#fff;z-index:11}
-.dl{position:absolute;font-family:'JetBrains Mono',monospace;font-size:8px;color:#003080;background:rgba(220,235,255,.9);padding:1px 4px;border-radius:2px;pointer-events:none;white-space:nowrap;border:1px solid rgba(0,80,180,.2)}
-#dPos{top:-14px;left:0}#dW{bottom:-13px;left:50%;transform:translateX(-50%)}#dH{right:-36px;top:50%;transform:translateY(-50%)}
-
-/* status bar — Illustrator bottom bar */
-#stbar{
-  position:absolute;bottom:0;left:22px;right:0;height:28px;
-  background:#535353;border-top:1px solid #3a3a3a;
-  display:flex;align-items:center;padding:0 12px;gap:16px;
-  font-family:'JetBrains Mono',monospace;font-size:10px;color:#bbb;z-index:30;
-}
-#stbar b{color:#ff9a40;font-weight:400}
-#stMeas{color:#60b8ff;font-weight:600}
-
-/* toast */
-#toast{position:fixed;bottom:36px;right:12px;
-  background:#fff;border:1px solid #d0d0d0;border-left:3px solid #ff7c00;
-  padding:9px 14px;font-size:11px;border-radius:3px;
-  box-shadow:0 4px 16px rgba(0,0,0,.2);z-index:9999;
-  opacity:0;transform:translateY(6px);transition:all .2s;
-  pointer-events:none;max-width:340px;line-height:1.5;color:#1a1a1a}
-#toast.on{opacity:1;transform:translateY(0)}
-#toast.ok{border-left-color:#22c55e}
-#toast.err{border-left-color:#ef4444}
-#toast.warn{border-left-color:#f59e0b}
-
-/* loader */
-#ld{display:none;position:fixed;inset:0;background:rgba(80,80,80,.7);align-items:center;justify-content:center;flex-direction:column;gap:12px;z-index:9000}
-#ld.on{display:flex}
-.spin{width:28px;height:28px;border:2px solid #ccc;border-top-color:#ff7c00;border-radius:50%;animation:sp .55s linear infinite}
-@keyframes sp{to{transform:rotate(360deg)}}
-#ld p{font-size:12px;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.5)}
-
-::-webkit-scrollbar{width:6px;height:6px}
-::-webkit-scrollbar-track{background:#d0d0d0}
-::-webkit-scrollbar-thumb{background:#aaa;border-radius:3px}
-::-webkit-scrollbar-thumb:hover{background:#888}
+/* ── LANG SWITCHER ── */
+.lang-wrap{position:relative;display:flex;align-items:center;margin-left:4px;flex-shrink:0;user-select:none}
+.lang-selected{display:flex;align-items:center;gap:6px;font-family:var(--sans);font-size:.75rem;font-weight:600;padding:5px 28px 5px 10px;border-radius:6px;border:1.5px solid #2e3240;background:#1a1d2a;color:var(--paper);cursor:pointer;transition:all .14s;min-width:130px;white-space:nowrap}
+.lang-selected:hover{border-color:var(--accent);background:#1e2230}
+.lang-caret{position:absolute;right:9px;top:50%;transform:translateY(-50%);pointer-events:none;color:#6b7280;font-size:.55rem;transition:transform .2s}
+.lang-wrap.open .lang-caret{transform:translateY(-50%) rotate(180deg)}
+.lang-dropdown{position:absolute;top:calc(100% + 5px);left:0;background:#1a1d2a;border:1.5px solid #2e3240;border-radius:8px;min-width:160px;box-shadow:0 8px 28px rgba(0,0,0,.45);z-index:999;overflow:hidden;display:none;animation:dropIn .14s ease}
+.lang-wrap.open .lang-dropdown{display:block}
+@keyframes dropIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+.lang-opt{display:flex;align-items:center;gap:9px;padding:9px 13px;cursor:pointer;font-size:.8rem;font-weight:600;font-family:var(--sans);color:var(--paper);transition:background .12s;white-space:nowrap}
+.lang-opt:hover{background:#252836}
+.lang-opt.active{background:#1e3049;color:var(--accent)}
+.lang-opt .lang-native{font-size:.72rem;color:#9ca3af;font-weight:400;margin-left:auto;font-family:var(--mono)}
+#sigCompositePreview{display:none;margin-top:10px;border:1.5px solid var(--border);border-radius:7px;overflow:hidden;text-align:center;background:#f8f8f6}
+#sigCompositePreview img{max-width:100%;max-height:160px;display:block;margin:0 auto}
 </style>
 </head>
 <body>
 
-<!-- HEADER -->
-<div id="hdr">
-  <div class="hbadge">LOGO TOOL</div>
-  <div class="htitle">Đặt Logo vào Rập PDF</div>
-  <div class="hx"></div>
-  <div class="hi" id="hPdf">Chưa tải PDF</div>
-  <div class="hright">
-    <!-- Tool mode buttons -->
-    <div class="htool active" id="toolSelect" onclick="setTool('select')" title="Di chuyển logo (V)">
-      ↖ Chọn
+<header class="hdr">
+  <div class="logo"><div class="logo-mark">✍</div>PDF Studio</div>
+  <div class="hdr-sep"></div>
+  <div class="lang-wrap" id="langWrap">
+    <div class="lang-selected" id="langSelected" onclick="toggleLangDrop()">
+      <span class="lang-flag" id="langFlag">🇻🇳</span>
+      <span class="lang-name" id="langName">Tiếng Việt</span>
     </div>
-    <div class="htool" id="toolMeasure" onclick="setTool('measure')" title="Đo khoảng cách (M)">
-      ⟷ Đo mm
+    <span class="lang-caret">▼</span>
+    <div class="lang-dropdown" id="langDropdown">
+      <div class="lang-opt active" data-lang="vi" onclick="pickLang('vi')"><span class="lang-flag">🇻🇳</span><span>Tiếng Việt</span><span class="lang-native">VI</span></div>
+      <div class="lang-opt" data-lang="en" onclick="pickLang('en')"><span class="lang-flag">🇬🇧</span><span>English</span><span class="lang-native">EN</span></div>
+      <div class="lang-opt" data-lang="th" onclick="pickLang('th')"><span class="lang-flag">🇹🇭</span><span>ภาษาไทย</span><span class="lang-native">TH</span></div>
     </div>
-    <div class="hx"></div>
-    <label class="chk"><input type="checkbox" id="ckGrid"> Lưới</label>
-    <label class="chk"><input type="checkbox" id="ckSnap"> Snap 5pt</label>
-    <div class="hx"></div>
-    <div class="hi" id="hZoom">—</div>
-    <div class="hx"></div>
-    <div id="gsBadge" class="gs-badge gs-unk"
-         onclick="document.getElementById('gsPanel').scrollIntoView({behavior:'smooth'})">
-      <span id="gsIcon">⬡</span><span id="gsText">GS…</span>
+  </div>
+  <div class="hdr-info" id="hdrInfo">Xoay trang &amp; Ký tên PDF · Chạy hoàn toàn trên trình duyệt</div>
+  <div class="hdr-right" id="hdrRight" style="display:none">
+    <button class="btn btn-ghost btn-sm" onclick="openNewFile()">📂 Mở file mới</button>
+    <button class="btn btn-sm" style="background:#1e40af;color:#fff" onclick="openSigModal()">✍ Tạo chữ ký</button>
+    <button class="btn btn-purple btn-sm" onclick="openExportModal()">📑 Xuất trang</button>
+    <button class="btn btn-acc btn-sm" id="dlBtn" onclick="savePdf()">⬇ Tải xuống PDF</button>
+  </div>
+  <!-- Combine button always visible -->
+  <button class="btn btn-teal btn-sm" onclick="openCombineModal()" style="flex-shrink:0">🔗 Ghép PDF</button>
+</header>
+
+<div class="layout">
+  <!-- UPLOAD SCREEN -->
+  <div class="upload-screen" id="uploadScreen">
+    <div class="drop-zone" id="dropZone">
+      <div class="drop-icon" id="dropIcon">📄</div>
+      <h2 class="drop-title" id="dropTitle">Kéo thả file PDF</h2>
+      <p class="drop-sub" id="dropSub">hoặc nhấn để chọn file<br>Xử lý ngay trên trình duyệt · Không gửi lên server</p>
+      <button class="btn btn-acc" id="chooseFileBtn" onclick="event.stopPropagation();document.getElementById('pdfInput').click()">📂 Chọn file PDF</button>
+      <p class="drop-note" id="dropNote">CHỈ NHẬN PDF · KHÔNG GIỚI HẠN KÍCH THƯỚC</p>
+      <input type="file" id="pdfInput" accept=".pdf,application/pdf" style="display:none">
+    </div>
+  </div>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar" style="display:none">
+    <div class="sb-head">
+      <div class="sb-title" id="sbTitleLbl">Danh sách trang</div>
+      <div class="sb-bulk">
+        <span class="sb-lbl" id="sbRotateLbl">Xoay tất cả:</span>
+        <span class="chip" onclick="bulkRotate(90)">↻ 90°</span>
+        <span class="chip" onclick="bulkRotate(180)">↕ 180°</span>
+        <span class="chip" onclick="bulkRotate(270)">↺ 270°</span>
+        <span class="chip danger" onclick="bulkReset()">✕ Reset</span>
+      </div>
+      <div class="sb-export-row" id="sbExportRow" style="margin-top:7px">
+        <span class="sb-lbl" id="sbExportLbl" style="width:100%">Chọn trang xuất:</span>
+        <span class="chip-sel" onclick="openExportModal()">📑 Chọn trang...</span>
+      </div>
+    </div>
+    <div class="page-list" id="pageList"></div>
+  </aside>
+
+  <!-- MAIN AREA -->
+  <main class="main" id="mainArea" style="display:none">
+    <div class="export-mode-bar" id="exportModeBar">
+      <span>📑 Chế độ chọn trang xuất</span>
+      <span class="export-count-badge" id="exportCountBadge">0 trang</span>
+      <span style="flex:1"></span>
+      <button class="btn btn-sm" style="background:#fff;color:#1e40af;font-size:.66rem" onclick="openExportModal()">Xuất trang đã chọn</button>
+      <button class="btn btn-sm" style="background:rgba(255,255,255,.15);color:#fff;font-size:.66rem" onclick="exitExportSelMode()">✕ Thoát</button>
+    </div>
+    <div class="toolbar">
+      <!-- Page nav -->
+      <div class="tg">
+        <div class="pager">
+          <button onclick="prevPage()">‹</button>
+          <span class="pgdisp">Trang <strong id="pgCur">1</strong>/<span id="pgTotal">1</span></span>
+          <button onclick="nextPage()">›</button>
+        </div>
+      </div>
+      <!-- Zoom -->
+      <div class="tg">
+        <span class="tlbl" id="toolZoomLbl">Zoom</span>
+        <div class="zoom-row">
+          <button class="zbtn" onclick="zoomStep(-0.25)" title="Thu nhỏ (-)">−</button>
+          <span class="zoom-val" id="zoomVal" onclick="zoomReset()" title="Click để reset 100%">100%</span>
+          <button class="zbtn" onclick="zoomStep(+0.25)" title="Phóng to (+)">+</button>
+          <button class="zoom-fit" id="zoomFitBtn" onclick="toggleZoomFit()">Vừa trang</button>
+        </div>
+      </div>
+      <!-- Rotate -->
+      <div class="tg">
+        <span class="tlbl" id="toolRotateLbl">Xoay</span>
+        <button class="rbtn" onclick="rotateCurrent(90)">↻ +90°</button>
+        <button class="rbtn" onclick="rotateCurrent(-90)">↺ −90°</button>
+        <button class="rbtn" onclick="rotateCurrent(180)">↕ 180°</button>
+        <button class="rbtn" onclick="resetRot()" style="border-color:#fca5a5;color:#dc2626">✕</button>
+        <span class="ang" id="angBadge">0°</span>
+      </div>
+      <!-- Signature -->
+      <div class="tg">
+        <span class="tlbl" id="toolSigLbl">Chữ ký</span>
+        <button class="sbtn" id="btnSign" onclick="toggleSignMode()">✍ Đặt chữ ký</button>
+        <button class="sbtn" onclick="openSigModal()" style="background:#eff6ff;color:#1d4ed8;border-color:#93c5fd">+ Tạo / Đổi</button>
+        <button class="sbtn" onclick="clearAllSigs()" style="background:#fff1f2;color:#dc2626;border-color:#fca5a5">🗑 Xóa tất cả</button>
+      </div>
+      <!-- Comment -->
+      <div class="tg">
+        <span class="tlbl" id="toolCmtLbl">Comment</span>
+        <button class="cbtn" id="btnComment" onclick="toggleCommentMode()">💬 Thêm comment</button>
+        <button class="cbtn" onclick="clearAllComments()" style="background:#fff1f2;color:#dc2626;border-color:#fca5a5">🗑 Xóa tất cả</button>
+      </div>
+      <!-- Shortcuts -->
+      <div class="tg" style="border:none;margin-left:auto">
+        <span class="kbd">±</span><span style="font-size:.68rem;color:var(--muted);margin-right:4px"> zoom</span>
+        <span class="kbd">←→</span><span style="font-size:.68rem;color:var(--muted);margin-right:4px"> trang</span>
+        <span class="kbd">↑↓</span><span style="font-size:.68rem;color:var(--muted);margin-right:4px"> xoay</span>
+        <span class="kbd">S</span><span style="font-size:.68rem;color:var(--muted);margin-right:4px"> ký</span>
+        <span class="kbd">C</span><span style="font-size:.68rem;color:var(--muted)"> cmt</span>
+      </div>
+    </div>
+    <div class="viewer" id="viewer">
+      <div class="vi" id="vi" style="display:none">
+        <canvas id="mainCanvas"></canvas>
+        <canvas id="sigOvl"></canvas>
+        <canvas id="commentOvl"></canvas>
+      </div>
+      <div class="v-empty" id="vEmpty">
+        <div class="spin" style="width:34px;height:34px;border:3px solid var(--border);border-top-color:var(--accent)"></div>
+      </div>
+      <div class="mode-bar sign-mode" id="modeBar">✍ Chế độ ký — Click vào trang để đặt chữ ký &nbsp;·&nbsp; ESC thoát</div>
+      <div class="mode-bar comment-mode" id="commentModeBar">💬 Chế độ comment — Click vào trang để thêm &nbsp;·&nbsp; ESC thoát</div>
+    </div>
+  </main>
+</div>
+
+<!-- ═══ SIGNATURE MODAL ═══ -->
+<div class="modal-bg hidden" id="sigModal">
+  <div class="modal">
+    <div class="modal-hdr"><h3>✍ Tạo chữ ký</h3><button class="modal-x" onclick="closeSigModal()">✕</button></div>
+    <div class="modal-tabs">
+      <button class="mtab on" id="tab-draw"   onclick="switchTab('draw')">✏ Vẽ tay</button>
+      <button class="mtab"    id="tab-type"   onclick="switchTab('type')">T Gõ chữ</button>
+      <button class="mtab"    id="tab-upload" onclick="switchTab('upload')">📎 Upload ảnh</button>
+    </div>
+    <!-- DRAW -->
+    <div class="modal-body" id="pane-draw">
+      <div class="draw-tools">
+        <label>Màu:</label>
+        <div class="cswatch on" style="background:#0d0f14" onclick="setDColor('#0d0f14',this)"></div>
+        <div class="cswatch" style="background:#1e3a8a" onclick="setDColor('#1e3a8a',this)"></div>
+        <div class="cswatch" style="background:#dc2626" onclick="setDColor('#dc2626',this)"></div>
+        <div class="cswatch" style="background:#15803d" onclick="setDColor('#15803d',this)"></div>
+        <div style="width:1px;height:18px;background:var(--border);margin:0 2px"></div>
+        <label>Nét:</label>
+        <button class="sz-btn on" onclick="setDSize(2,this)"><div class="dot" style="width:4px;height:4px"></div></button>
+        <button class="sz-btn"    onclick="setDSize(3.5,this)"><div class="dot" style="width:7px;height:7px"></div></button>
+        <button class="sz-btn"    onclick="setDSize(6,this)"><div class="dot" style="width:11px;height:11px"></div></button>
+        <button class="btn btn-warm btn-sm" style="margin-left:auto" onclick="clearDraw()">Xóa lại</button>
+      </div>
+      <div class="draw-wrap"><canvas id="drawCanvas" width="514" height="175"></canvas></div>
+      <p id="drawHint" style="font-size:.68rem;color:var(--muted);margin-top:5px;font-family:var(--mono)">Vẽ chữ ký bằng chuột hoặc ngón tay</p>
+      <div class="ts-box">
+        <div class="ts-box-title">⏰ Ngày / Giờ ký</div>
+        <div class="ts-toggle-row"><label><input type="checkbox" id="tsEnable" checked onchange="toggleTsFmt()"> Hiện ngày giờ bên dưới chữ ký</label></div>
+        <div class="ts-fmt-row" id="tsFmtRow">
+          <span class="ts-fmt-btn on" data-fmt="full"     onclick="setTsFmt(this)">DD/MM/YYYY HH:mm:ss</span>
+          <span class="ts-fmt-btn"    data-fmt="date"     onclick="setTsFmt(this)">DD/MM/YYYY</span>
+          <span class="ts-fmt-btn"    data-fmt="datetime" onclick="setTsFmt(this)">DD/MM/YYYY HH:mm</span>
+          <span class="ts-fmt-btn"    data-fmt="iso"      onclick="setTsFmt(this)">YYYY-MM-DD HH:mm:ss</span>
+        </div>
+      </div>
+    </div>
+    <!-- TYPE -->
+    <div class="modal-body" id="pane-type" style="display:none">
+      <div class="font-opts">
+        <span class="fopt on" data-font="Dancing Script" onclick="setTFont(this)" style="font-family:'Dancing Script',cursive">Thư pháp</span>
+        <span class="fopt" data-font="Pacifico"       onclick="setTFont(this)" style="font-family:'Pacifico',cursive">Tròn nét</span>
+        <span class="fopt" data-font="Sacramento"     onclick="setTFont(this)" style="font-family:'Sacramento',cursive">Thanh lịch</span>
+        <span class="fopt" data-font="Georgia"        onclick="setTFont(this)" style="font-family:Georgia,serif">Cổ điển</span>
+      </div>
+      <input id="typeInput" oninput="updateTPrev()" placeholder="Nhập tên của bạn..." style="font-family:'Dancing Script',cursive">
+      <div class="type-prev" id="typePrev"><span style="font-family:'Dancing Script',cursive;font-size:2.2rem;color:#0d0f14">Tên của bạn</span></div>
+      <div class="clr-row">
+        <label>Màu:</label>
+        <div class="cswatch on" style="background:#0d0f14" onclick="setTColor('#0d0f14',this)"></div>
+        <div class="cswatch" style="background:#1e3a8a" onclick="setTColor('#1e3a8a',this)"></div>
+        <div class="cswatch" style="background:#dc2626" onclick="setTColor('#dc2626',this)"></div>
+        <div class="cswatch" style="background:#15803d" onclick="setTColor('#15803d',this)"></div>
+      </div>
+      <div class="ts-box">
+        <div class="ts-box-title">⏰ Ngày / Giờ ký</div>
+        <div class="ts-toggle-row"><label><input type="checkbox" id="tsEnableType" checked onchange="toggleTsFmtType()"> Hiện ngày giờ bên dưới chữ ký</label></div>
+        <div class="ts-fmt-row" id="tsFmtRowType">
+          <span class="ts-fmt-btn on" data-fmt="full"     onclick="setTsFmtType(this)">DD/MM/YYYY HH:mm:ss</span>
+          <span class="ts-fmt-btn"    data-fmt="date"     onclick="setTsFmtType(this)">DD/MM/YYYY</span>
+          <span class="ts-fmt-btn"    data-fmt="datetime" onclick="setTsFmtType(this)">DD/MM/YYYY HH:mm</span>
+          <span class="ts-fmt-btn"    data-fmt="iso"      onclick="setTsFmtType(this)">YYYY-MM-DD HH:mm:ss</span>
+        </div>
+      </div>
+    </div>
+    <!-- UPLOAD -->
+    <div class="modal-body" id="pane-upload" style="display:none">
+      <div class="up-sig" onclick="document.getElementById('imgInput').click()">
+        <div style="font-size:34px;margin-bottom:7px">🖼</div>
+        <p style="font-size:.83rem;font-weight:600">Nhấn để chọn ảnh chữ ký</p>
+        <p style="font-size:.72rem;color:var(--muted);margin-top:3px">PNG nền trong suốt cho kết quả đẹp nhất</p>
+        <img id="sigPreviewImg">
+      </div>
+      <input type="file" id="imgInput" accept="image/*" style="display:none">
+      <div class="ts-box">
+        <div class="ts-box-title">⏰ Ngày / Giờ ký</div>
+        <div class="ts-toggle-row"><label><input type="checkbox" id="tsEnableUpload" checked onchange="toggleTsFmtUpload()"> Hiện ngày giờ bên dưới chữ ký</label></div>
+        <div class="ts-fmt-row" id="tsFmtRowUpload">
+          <span class="ts-fmt-btn on" data-fmt="full"     onclick="setTsFmtUpload(this)">DD/MM/YYYY HH:mm:ss</span>
+          <span class="ts-fmt-btn"    data-fmt="date"     onclick="setTsFmtUpload(this)">DD/MM/YYYY</span>
+          <span class="ts-fmt-btn"    data-fmt="datetime" onclick="setTsFmtUpload(this)">DD/MM/YYYY HH:mm</span>
+          <span class="ts-fmt-btn"    data-fmt="iso"      onclick="setTsFmtUpload(this)">YYYY-MM-DD HH:mm:ss</span>
+        </div>
+      </div>
+    </div>
+    <div id="sigCompositePreview"><img id="sigCompositeImg" src="" alt="preview"></div>
+    <div class="modal-foot">
+      <button class="btn btn-warm" onclick="closeSigModal()">Hủy</button>
+      <button class="btn btn-grn"  onclick="confirmSig()">✓ Dùng chữ ký này</button>
     </div>
   </div>
 </div>
 
-<!-- APP -->
-<div id="app">
-
-  <!-- SIDEBAR -->
-  <div id="bar">
-
-    <!-- ① PDF -->
-    <div class="sec">
-      <div class="slbl">① Upload PDF (Rập)</div>
-      <div class="uz" id="pdfZone">
-        <span class="uz-ico">📄</span>
-        <p>Kéo thả <strong>file PDF</strong><br>hoặc click để chọn</p>
-        <div class="uz-fn" id="pdfFn" style="display:none"></div>
+<!-- ═══ PAGE EXPORT MODAL ═══ -->
+<div class="modal-bg hidden" id="exportModal">
+  <div class="modal export-modal">
+    <div class="modal-hdr" style="background:#1e3a8a"><h3>📑 Xuất trang đã chọn</h3><button class="modal-x" onclick="closeExportModal()">✕</button></div>
+    <div class="modal-body">
+      <div class="exp-summary" id="expSummary">Chọn trang để xuất ra file PDF mới</div>
+      <div class="exp-sel-btns">
+        <button class="exp-sel-btn" onclick="expSelectAll()">✓ Tất cả</button>
+        <button class="exp-sel-btn" onclick="expSelectNone()">✕ Bỏ chọn</button>
+        <button class="exp-sel-btn" onclick="expSelectOdd()">Trang lẻ</button>
+        <button class="exp-sel-btn" onclick="expSelectEven()">Trang chẵn</button>
+        <button class="exp-sel-btn" onclick="expSelectCurrent()">Trang hiện tại</button>
       </div>
-      <input type="file" id="pdfFile" accept=".pdf">
+      <div class="exp-range-row">
+        <label>Nhập dải trang:</label>
+        <input type="text" id="expRangeInput" placeholder="vd: 1-3,5,7-9" oninput="applyRangeInput()">
+        <span style="font-size:.68rem;color:var(--muted);font-family:var(--mono)">dùng dấu phẩy & gạch ngang</span>
+      </div>
+      <div class="exp-pages-grid" id="expPagesGrid"></div>
     </div>
-
-    <!-- ② Logo -->
-    <div class="sec">
-      <div class="slbl">② Upload Logo (nhiều logo)</div>
-      <div id="gsPanel" style="display:none">
-        <div class="gsp-ttl">⚠ Ghostscript chưa tìm thấy</div>
-        <div class="gsp-body">
-          Cần GS để chuyển <strong>EPS→PNG</strong>.<br>
-          <a href="https://www.ghostscript.com/releases/gsdnld.html" target="_blank">🔗 Tải Ghostscript</a><br><br>
-          Nhập đường dẫn <code>gswin64c.exe</code>:
-        </div>
-        <div class="gsp-row">
-          <input type="text" id="gsPathInput" placeholder="C:\Program Files\gs\...\gswin64c.exe">
-          <button onclick="applyGsPath()">✓</button>
-        </div>
-        <div class="gsp-or">hoặc dùng PNG/JPG</div>
-      </div>
-      <!-- Logo list -->
-      <div id="logoList"><div class="logo-empty">Chưa có logo nào</div></div>
-      <!-- Upload zone - multiple files -->
-      <div class="uz" id="epsZone">
-        <span class="uz-ico">🎨</span>
-        <p>Kéo thả <strong>EPS / PNG / SVG / JPG</strong><br>
-           <span style="font-size:9px;color:#aaa">Có thể upload nhiều file cùng lúc</span></p>
-      </div>
-      <input type="file" id="epsFile" accept=".eps,.ai,.png,.jpg,.jpeg,.svg" multiple>
-      <div class="pgw" id="pgW">
-        <div class="pgbar"><div class="pgfill" id="pgF"></div></div>
-        <div class="pgtxt" id="pgT"></div>
-      </div>
-    </div>
-
-        <!-- ③ Position & Size -->
-    <div class="sec">
-      <div class="slbl">③ Logo đang chọn: <span id="selLogoName" style="color:#ff7c00;font-style:normal;font-size:9px">—</span></div>
-      <div class="ng">
-        <div class="nf"><label>X (pts)</label><input type="number" id="nX" value="0" step="1"></div>
-        <div class="nf"><label>Y (pts)</label><input type="number" id="nY" value="0" step="1"></div>
-        <div class="nf"><label>W (pts)</label><input type="number" id="nW" value="100" step="1" min="1"></div>
-        <div class="nf"><label>H (pts)</label><input type="number" id="nH" value="100" step="1" min="1"></div>
-        <div class="nf"><label>X (mm)</label><input type="number" id="nXmm" value="0.00" step="0.1" style="color:#c04000"></div>
-        <div class="nf"><label>Y (mm)</label><input type="number" id="nYmm" value="0.00" step="0.1" style="color:#c04000"></div>
-        <div class="nf"><label>W (mm)</label><input type="number" id="nWmm" value="35.28" step="0.1" style="color:#c04000"></div>
-        <div class="nf"><label>H (mm)</label><input type="number" id="nHmm" value="35.28" step="0.1" style="color:#c04000"></div>
-      </div>
-      <div class="sr">
-        <label>Xoay</label>
-        <input type="range" id="sRot" min="-180" max="180" value="0" step="1">
-        <span class="sv" id="vRot">0°</span>
-      </div>
-      <div class="sr">
-        <label>Opacity</label>
-        <input type="range" id="sOpa" min="10" max="100" value="100" step="1">
-        <span class="sv" id="vOpa">100%</span>
-      </div>
-      <div class="brow" style="margin-top:6px">
-        <button class="btn" id="btnCtr" disabled>⊕ Căn giữa</button>
-        <button class="btn" id="btnRst" disabled>↺ Reset</button>
-      </div>
-    </div>
-
-    <!-- ⟷ MEASURE -->
-    <div class="sec">
-      <div class="slbl">⟷ Đo khoảng cách</div>
-      <div id="measurePanel">
-        <div class="meas-row">
-          <span class="meas-lbl">Khoảng cách</span>
-          <span class="meas-val" id="measDist">—</span>
-        </div>
-        <div class="meas-row">
-          <span class="meas-lbl">ΔX</span>
-          <span class="meas-val" id="measDX">—</span>
-        </div>
-        <div class="meas-row">
-          <span class="meas-lbl">ΔY</span>
-          <span class="meas-val" id="measDY">—</span>
-        </div>
-        <div class="meas-row">
-          <span class="meas-lbl">Góc</span>
-          <span class="meas-val" id="measAngle">—</span>
-        </div>
-        <div style="display:flex;justify-content:space-between;margin-top:4px">
-          <span class="meas-clear" onclick="clearMeasure()">✕ Xóa phép đo</span>
-          <span style="font-size:9px;color:#888">72pt = 25.4mm</span>
-        </div>
-        <div id="measureHint">Chọn tool <b>⟷ Đo mm</b> rồi<br>click điểm đầu → click điểm cuối</div>
-      </div>
-    </div>
-
-    <!-- Zoom -->
-    <div class="sec">
-      <div class="slbl">Zoom canvas</div>
-      <div class="sr">
-        <label>Zoom</label>
-        <input type="range" id="sZ" min="20" max="300" value="75" step="5">
-        <span class="sv" id="vZ">75%</span>
-      </div>
-      <div class="brow">
-        <button class="btn" id="btnFit" style="font-size:10px">⊡ Fit</button>
-        <button class="btn" id="btnZ1"  style="font-size:10px">1:1</button>
-        <button class="btn" id="btnZ2"  style="font-size:10px">2:1</button>
-      </div>
-    </div>
-
-    <!-- ④ Save & Export -->
-    <div class="sec">
-      <div class="slbl">④ Lưu & Xuất</div>
-      <button class="btn b-green" id="btnSave" disabled>💾 Lưu vị trí → Server</button>
-      <button class="btn b-orange" id="btnExp" disabled>⬇ Xuất PDF có Logo</button>
-      <button class="btn" id="btnLoad" style="font-size:10px">📂 Tải placement đã lưu</button>
-      <div id="jbox"></div>
-    </div>
-
-  </div><!-- /sidebar -->
-
-  <!-- CANVAS AREA -->
-  <div id="ca">
-    <div id="rc"></div>
-    <div id="rx"><canvas class="ru" id="rxCv" height="22"></canvas></div>
-    <div id="ry"><canvas class="ru" id="ryCv" width="22"></canvas></div>
-    <div id="chx"></div><div id="chy"></div>
-    <div id="ctip"></div>
-
-    <div id="vp">
-      <div id="cw">
-        <canvas id="pdfCv"></canvas>
-        <canvas id="gridCv"></canvas>
-        <canvas id="measCv"></canvas><!-- measure overlay -->
-
-        <!-- Dynamic logo overlays injected here by JS -->
-      </div>
-    </div>
-
-    <div id="stbar">
-      <span>PDF <b id="sPdf">—</b></span>
-      <span>Logo <b id="sLogo">—</b></span>
-      <span>Pos <b id="sPos">—</b></span>
-      <span>Cursor <b id="sCur">—</b></span>
-      <span id="stMeasWrap" style="display:none">Đo: <b id="stMeas">—</b></span>
+    <div class="modal-foot" style="background:#eff6ff">
+      <button class="btn btn-warm" onclick="closeExportModal()">Hủy</button>
+      <button class="btn" style="background:#1e40af;color:#fff" id="exportExecBtn" onclick="executeExport()">📥 Xuất <span id="exportCountLabel">0</span> trang</button>
     </div>
   </div>
+</div>
 
-</div><!-- /app -->
+<!-- ═══ COMBINE PDF MODAL ═══ -->
+<div class="modal-bg hidden" id="combineModal">
+  <div class="modal combine-modal">
+    <div class="modal-hdr" style="background:#0d9488">
+      <h3 id="combineTitleHdr">🔗 Ghép nhiều PDF thành một</h3>
+      <button class="modal-x" onclick="closeCombineModal()">✕</button>
+    </div>
+    <div class="modal-body" style="padding:14px 18px">
 
-<div id="toast"></div>
-<div id="ld"><div class="spin"></div><p id="ldMsg">Đang xử lý…</p></div>
-
-<script>
-
-'use strict';
-
-// ═══════════════════════════════════════════════════════
-// CONFIG
-// ═══════════════════════════════════════════════════════
-const API = 'http://192.168.1.251:7780';
-pdfjsLib.GlobalWorkerOptions.workerSrc =
-  'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-
-const PT2MM = 25.4 / 72;
-const MM2PT = 72  / 25.4;
-
-// ═══════════════════════════════════════════════════════
-// STATE
-// ═══════════════════════════════════════════════════════
-const G = {
-  // PDF
-  pdfDoc:  null,
-  pdfBuf:  null,   // Uint8Array — NOT ArrayBuffer (avoids detach)
-  pdfName: '',
-  pdfW: 0, pdfH: 0,
-
-  // Multi-logo list
-  logos: [],        // [{id, name, url, buf, nw, nh, px, py, pw, ph, rot, opa}]
-  selId: null,      // currently selected logo id
-
-  // Interaction
-  drag: false, resize: null, rotating: false,
-  _dragLid: null,   // logo id being dragged/resized/rotated
-  _dragSx:0,_dragSy:0,_dragSpx:0,_dragSpy:0,
-  _resSx:0,_resSy:0,_resSpx:0,_resSpy:0,_resSpw:0,_resSph:0,_resDir:'',
-  _rotSa:0,_rotSr:0,
-  gsOk: false,
-
-  // Tool
-  tool: 'select',
-  zoom: 0.75,
-
-  // Measure
-  meas: { p1:null, p2:null, preview:null },
-};
-
-let _logoIdSeq = 0;
-const newId = () => 'L' + (++_logoIdSeq);
-
-const p2c  = v => v * G.zoom * (96/72);
-const c2p  = v => v / (G.zoom * (96/72));
-const ri   = v => Math.round(v);
-const pf   = id => parseFloat($('#'+id).val()) || 0;
-const sn   = v => $('#ckSnap').is(':checked') ? Math.round(v/5)*5 : v;
-const fmm  = v => (v * PT2MM).toFixed(2) + ' mm';
-
-function selLogo()  { return G.logos.find(l => l.id === G.selId) || null; }
-function logoById(id){ return G.logos.find(l => l.id === id) || null; }
-
-// ═══════════════════════════════════════════════════════
-// TOAST / LOADING / PROGRESS
-// ═══════════════════════════════════════════════════════
-let _tt;
-function toast(msg, type='') {
-  clearTimeout(_tt);
-  $('#toast').attr('class','toast on '+type).html(msg);
-  _tt = setTimeout(() => $('#toast').removeClass('on'), 4000);
-}
-function loading(on, msg='Đang xử lý…') {
-  $('#ldMsg').text(msg); $('#ld').toggleClass('on', on);
-}
-function prog(pct, txt) {
-  if (pct < 0) { $('#pgW').removeClass('on'); return; }
-  $('#pgW').addClass('on');
-  $('#pgF').css('width', pct+'%'); $('#pgT').text(txt);
-  if (pct >= 100) setTimeout(() => $('#pgW').removeClass('on'), 1200);
-}
-function updBtns() {
-  const hasLogo = G.logos.length > 0;
-  const hasPdf  = !!G.pdfDoc;
-  const ok = hasPdf && hasLogo;
-  $('#btnCtr,#btnRst,#btnSave,#btnExp').prop('disabled', !ok);
-}
-
-// ═══════════════════════════════════════════════════════
-// TOOL SWITCHING
-// ═══════════════════════════════════════════════════════
-function setTool(t) {
-  G.tool = t;
-  $('#toolSelect,#toolMeasure').removeClass('active');
-  if (t==='select')  $('#toolSelect').addClass('active');
-  if (t==='measure') $('#toolMeasure').addClass('active');
-  if (t === 'measure') {
-    G.meas = {p1:null,p2:null,preview:null};
-    drawMeasure();
-    $('#measureHint').text('Click điểm đầu trên canvas…');
-  }
-}
-
-// ═══════════════════════════════════════════════════════
-// GS STATUS
-// ═══════════════════════════════════════════════════════
-function gsStatus(ok, ver) {
-  G.gsOk = ok;
-  if (ok) {
-    $('#gsBadge').attr('class','gs-badge gs-ok');
-    $('#gsIcon').text('●'); $('#gsText').text('GS '+(ver||'OK'));
-    $('#gsPanel').hide();
-  } else {
-    $('#gsBadge').attr('class','gs-badge gs-err');
-    $('#gsIcon').text('●'); $('#gsText').text('GS chưa cài');
-    $('#gsPanel').show();
-  }
-}
-function gsUnknown(msg) {
-  $('#gsBadge').attr('class','gs-badge gs-unk');
-  $('#gsIcon').text('⬡'); $('#gsText').text(msg||'Offline');
-}
-async function checkGs() {
-  try {
-    const r = await fetch(`${API}/api/ping`,{signal:AbortSignal.timeout(5000)});
-    if(!r.ok) throw new Error('HTTP '+r.status);
-    const p = await r.json();
-    gsStatus(p.gs_ok, p.gs_version);
-    return p;
-  } catch(e) { gsUnknown('Server offline'); return null; }
-}
-async function applyGsPath() {
-  const path = $('#gsPathInput').val().trim();
-  if (!path) { toast('Nhập đường dẫn gswin64c.exe','warn'); return; }
-  loading(true,'Đang kiểm tra GS…');
-  try {
-    const r = await fetch(`${API}/api/set-gs-path`,{
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({path}),
-    });
-    const d = await r.json();
-    if (!r.ok||!d.success) throw new Error(d.error||'Thất bại');
-    gsStatus(true, d.gs_version);
-    toast(`✓ GS ${d.gs_version}`,'ok');
-  } catch(e) { toast('✗ '+e.message.split('\n')[0],'err'); }
-  finally { loading(false); }
-}
-
-// ═══════════════════════════════════════════════════════
-// PDF UPLOAD
-// ═══════════════════════════════════════════════════════
-setupDrop($('#pdfZone'),$('#pdfFile'),['pdf'],handlePdf);
-function handlePdf(file) {
-  G.pdfName = file.name; loading(true,'Đang tải PDF…');
-  const fr = new FileReader();
-  fr.onload = async e => {
-    G.pdfBuf = new Uint8Array(e.target.result);
-    try {
-      const data = G.pdfBuf.slice(); // copy — pdf.js transfers ownership
-      G.pdfDoc = await pdfjsLib.getDocument({data}).promise;
-      const pg = await G.pdfDoc.getPage(1);
-      const vp = pg.getViewport({scale:1});
-      G.pdfW=vp.width; G.pdfH=vp.height;
-      await renderPdf();
-      $('#pdfZone').addClass('done');
-      $('#pdfFn').text(file.name).show();
-      $('#hPdf').text(`${file.name}  |  ${ri(G.pdfW)}×${ri(G.pdfH)} pt  |  ${(G.pdfW*PT2MM).toFixed(1)}×${(G.pdfH*PT2MM).toFixed(1)} mm`);
-      $('#sPdf').text(`${ri(G.pdfW)}×${ri(G.pdfH)} pt`);
-      updBtns(); toast('Đã tải PDF ✓','ok');
-    } catch(e) { toast('Lỗi PDF: '+e.message,'err'); }
-    finally { loading(false); }
-  };
-  fr.readAsArrayBuffer(file);
-}
-
-// ═══════════════════════════════════════════════════════
-// RENDER PDF
-// ═══════════════════════════════════════════════════════
-async function renderPdf() {
-  if (!G.pdfDoc) return;
-  const pg = await G.pdfDoc.getPage(1);
-  const sc = G.zoom*(96/72);
-  const vp = pg.getViewport({scale:sc});
-  const cv = document.getElementById('pdfCv');
-  cv.width=vp.width; cv.height=vp.height;
-  await pg.render({canvasContext:cv.getContext('2d'),viewport:vp}).promise;
-  ['gridCv','measCv'].forEach(id=>{
-    const c=document.getElementById(id);
-    c.width=vp.width; c.height=vp.height;
-    c.style.width=vp.width+'px'; c.style.height=vp.height+'px';
-  });
-  drawGrid(); drawRulers();
-  // Re-render all logo overlays
-  G.logos.forEach(l => updateOverlay(l.id));
-  drawMeasure();
-  const pct=ri(G.zoom*100)+'%';
-  $('#hZoom').text(pct); $('#vZ').text(pct);
-}
-
-// ═══════════════════════════════════════════════════════
-// LOGO UPLOAD — multiple files
-// ═══════════════════════════════════════════════════════
-// Override setupDrop to support multiple files
-$('#epsZone').on('click', () => $('#epsFile').trigger('click'));
-$('#epsFile').on('change', function() {
-  [...this.files].forEach(f => handleLogoFile(f));
-  this.value = ''; // reset so same file can be added again
-});
-$('#epsZone').on('dragover', e => { e.preventDefault(); $('#epsZone').addClass('drag'); });
-$('#epsZone').on('dragleave drop', () => $('#epsZone').removeClass('drag'));
-$('#epsZone').on('drop', e => {
-  e.preventDefault(); $('#epsZone').removeClass('drag');
-  [...e.originalEvent.dataTransfer.files].forEach(f => {
-    const ext = f.name.split('.').pop().toLowerCase();
-    if (['eps','ai','png','jpg','jpeg','svg'].includes(ext)) handleLogoFile(f);
-    else toast(`.${ext} không hỗ trợ`,'err');
-  });
-});
-
-async function handleLogoFile(file) {
-  const ext = file.name.split('.').pop().toLowerCase();
-  if (['eps','ai'].includes(ext)) await convertEps(file);
-  else await loadImgFile(file);
-}
-
-async function convertEps(file) {
-  $('#epsZone').addClass('busy');
-  prog(10,'Kiểm tra server…');
-  let ping;
-  try {
-    const r=await fetch(`${API}/api/ping`,{signal:AbortSignal.timeout(5000)});
-    if(!r.ok) throw new Error('HTTP '+r.status);
-    ping=await r.json();
-  } catch(e) {
-    prog(-1); $('#epsZone').removeClass('busy'); gsUnknown('Offline');
-    toast(`⚠ <b>Không kết nối API server</b><br><small>${API}</small>`,'err');
-    return;
-  }
-  gsStatus(ping.gs_ok,ping.gs_version);
-  if(!ping.gs_ok){
-    prog(-1); $('#epsZone').removeClass('busy');
-    toast(`⚠ <b>GS chưa cài</b> — upload PNG/JPG thay vì EPS`,'err');
-    return;
-  }
-  prog(35,`GS ${ping.gs_version} — Upload ${file.name} (${_fmtSz(file.size)})…`);
-  const fd=new FormData();
-  fd.append('file',file,file.name);
-  try {
-    prog(55,'Chuyển EPS → PNG…');
-    const resp=await fetch(`${API}/api/convert-eps`,{method:'POST',body:fd});
-    let result;
-    try{result=await resp.json();}catch(e){throw new Error(`HTTP ${resp.status}`);}
-    if(!resp.ok||!result.success) throw new Error(result.message||result.error||`HTTP ${resp.status}`);
-    prog(90,'Hiển thị…');
-    const url='data:image/png;base64,'+result.png_base64;
-    addLogo(url,result.filename||file.name,result.width,result.height,b64u8(result.png_base64));
-    prog(100,`✓ ${result.width}×${result.height}px`);
-    toast(`${file.name} → PNG ✓`,'ok');
-  } catch(e){
-    prog(-1);
-    toast(`✗ ${file.name}: ${(e.message||'').slice(0,150)}`,'err');
-  } finally {$('#epsZone').removeClass('busy');}
-}
-
-async function loadImgFile(file) {
-  const url=await fr2url(file);
-  const img=new Image();
-  img.onload=()=>{addLogo(url,file.name,img.naturalWidth,img.naturalHeight,url2u8(url));toast(`${file.name} đã tải ✓`,'ok');};
-  img.onerror=()=>toast(`Không đọc được ${file.name}`,'err');
-  img.src=url;
-}
-
-// ═══════════════════════════════════════════════════════
-// ADD / REMOVE / SELECT LOGO
-// ═══════════════════════════════════════════════════════
-function addLogo(url, name, nw, nh, buf) {
-  const id = newId();
-  const logo = {
-    id, name, url, buf, nw, nh,
-    px: 20 + G.logos.length*15,  // stagger position
-    py: 20 + G.logos.length*15,
-    pw: 150,
-    ph: ri(150*nh/nw),
-    rot: 0, opa: 1.0,
-  };
-  G.logos.push(logo);
-  createOverlayEl(id);
-  updateOverlay(id);
-  renderLogoList();
-  selectLogo(id);
-  updBtns();
-  $('#sLogo').text(G.logos.length);
-}
-
-function removeLogo(id) {
-  // Remove overlay element
-  $(`#ov-${id}`).remove();
-  G.logos = G.logos.filter(l=>l.id!==id);
-  // Select another logo if needed
-  if (G.selId===id) {
-    G.selId = G.logos.length ? G.logos[G.logos.length-1].id : null;
-  }
-  renderLogoList();
-  syncIn();
-  updBtns();
-  $('#sLogo').text(G.logos.length);
-  if (!G.logos.length) {
-    $('#selLogoName').text('—');
-    ['nX','nY','nW','nH','nXmm','nYmm','nWmm','nHmm'].forEach(id=>$('#'+id).val(''));
-    $('#sRot').val(0);$('#vRot').text('0°');
-    $('#sOpa').val(100);$('#vOpa').text('100%');
-  }
-}
-
-function selectLogo(id) {
-  const prev = G.selId;
-  G.selId = id;
-  // Update overlay classes
-  G.logos.forEach(l => {
-    const el = document.getElementById(`ov-${l.id}`);
-    if (!el) return;
-    if (l.id===id) { el.className='logo-ov on selected'; }
-    else           { el.className='logo-ov on unselected'; }
-    // Show/hide handles
-    el.querySelectorAll('.rh,.rstem,.rRot').forEach(h=>{
-      h.style.display = l.id===id ? '' : 'none';
-    });
-  });
-  renderLogoList();
-  syncIn();
-  const logo = logoById(id);
-  if (logo) $('#selLogoName').text(logo.name);
-}
-
-// ═══════════════════════════════════════════════════════
-// LOGO LIST in sidebar
-// ═══════════════════════════════════════════════════════
-function renderLogoList() {
-  const $list = $('#logoList');
-  $list.empty();
-  if (!G.logos.length) {
-    $list.html('<div class="logo-empty">Chưa có logo nào</div>');
-    return;
-  }
-  G.logos.forEach(logo => {
-    const isActive = logo.id === G.selId;
-    const $item = $(`
-      <div class="logo-item ${isActive?'active':''}" data-id="${logo.id}">
-        <img class="logo-item-thumb" src="${logo.url}" alt="">
-        <div class="logo-item-info">
-          <div class="logo-item-name" title="${logo.name}">${logo.name}</div>
-          <div class="logo-item-dim">${ri(logo.pw)}×${ri(logo.ph)} pt</div>
+      <!-- ① Current-file quick-add banner (hidden when no PDF open) -->
+      <div class="combine-current-banner hidden" id="combineCurrBanner">
+        <span class="ccb-icon">📄</span>
+        <div class="ccb-info">
+          <div class="ccb-name" id="combineCurrName">—</div>
+          <div class="ccb-meta" id="combineCurrMeta">—</div>
         </div>
-        <div class="logo-item-del" title="Xóa logo này">✕</div>
+        <button class="ccb-btn add" id="combineCurrBtn" onclick="addCurrentFileToCombine()">＋ Thêm file này</button>
       </div>
-    `);
-    $item.on('click', function(e) {
-      if ($(e.target).hasClass('logo-item-del')) return;
-      selectLogo(logo.id);
-    });
-    $item.find('.logo-item-del').on('click', e => {
-      e.stopPropagation();
-      removeLogo(logo.id);
-    });
-    $list.append($item);
-  });
-}
 
-// ═══════════════════════════════════════════════════════
-// CREATE / UPDATE OVERLAY ELEMENT
-// ═══════════════════════════════════════════════════════
-function createOverlayEl(id) {
-  const el = document.createElement('div');
-  el.id = `ov-${id}`;
-  el.className = 'logo-ov';
-  el.innerHTML = `
-    <img src="" alt="" draggable="false">
-    <div class="lsbd"></div>
-    <div class="rh rNW"></div><div class="rh rNE"></div>
-    <div class="rh rSW"></div><div class="rh rSE"></div>
-    <div class="rstem"></div>
-    <div class="rRot">↻</div>
-    <div class="dl dPos"></div>
-    <div class="dl dW"></div>
-    <div class="dl dH"></div>
-  `;
-  document.getElementById('cw').appendChild(el);
+      <!-- ② Drop zone — collapses when files are present -->
+      <div class="combine-drop-zone" id="combineDrop" style="padding:20px;margin-bottom:10px">
+        <div class="drop-icon" style="font-size:32px;margin-bottom:6px">📎</div>
+        <p style="font-size:.85rem;font-weight:600;margin-bottom:2px" id="combineDropTitle">Kéo thả hoặc nhấn để thêm file PDF</p>
+        <p style="font-size:.72rem;color:var(--muted)" id="combineDropSub">Hỗ trợ chọn nhiều file cùng lúc</p>
+      </div>
+      <!-- File input OUTSIDE drop zone -->
+      <input type="file" id="combineInput" accept=".pdf,application/pdf" multiple style="display:none">
 
-  // Set logo image
-  el.querySelector('img').src = logoById(id)?.url || '';
+      <!-- ③ Empty state — sibling of file list, never wiped by innerHTML='' -->
+      <div id="combineEmpty" style="display:none;text-align:center;padding:18px;color:var(--muted);font-size:.82rem;background:var(--warm);border-radius:8px;border:1.5px dashed var(--border)" id="combineEmpty">
+        Chưa có file nào · Thêm ít nhất 2 file PDF để ghép
+      </div>
 
-  // Bind drag
-  $(el).on('mousedown', e => {
-    if (G.tool !== 'select') return;
-    if ($(e.target).hasClass('rh')||$(e.target).hasClass('rRot')) return;
-    e.preventDefault(); e.stopPropagation();
-    selectLogo(id);
-    G.drag=true; G._dragLid=id;
-    G._dragSx=e.clientX; G._dragSy=e.clientY;
-    const l=logoById(id);
-    G._dragSpx=l.px; G._dragSpy=l.py;
-    el.style.cursor='grabbing';
-  });
+      <!-- ④ Hint (shown only when ≥1 file) -->
+      <div class="combine-order-hint" id="combineOrderHint" style="display:none">
+        ↕ Kéo để sắp xếp thứ tự · Nhập dải trang (vd: 1-3,5) để lấy một số trang từ mỗi file
+      </div>
 
-  // Bind resize handles
-  el.querySelectorAll('.rh').forEach(rh => {
-    $(rh).on('mousedown', e => {
-      if (G.tool !== 'select') return;
-      e.preventDefault(); e.stopPropagation();
-      selectLogo(id);
-      const dir = [...rh.classList].find(c=>['rNW','rNE','rSW','rSE'].includes(c))||'';
-      G.resize=true; G._dragLid=id; G._resDir=dir.toLowerCase().slice(1);
-      G._resSx=e.clientX; G._resSy=e.clientY;
-      const l=logoById(id);
-      G._resSpx=l.px; G._resSpy=l.py; G._resSpw=l.pw; G._resSph=l.ph;
-    });
-  });
+      <!-- ⑤ File rows list -->
+      <div class="combine-file-list" id="combineFileList"></div>
 
-  // Bind rotate handle
-  const rotH = el.querySelector('.rRot');
-  $(rotH).on('mousedown', e => {
-    if (G.tool !== 'select') return;
-    e.preventDefault(); e.stopPropagation();
-    selectLogo(id);
-    G.rotating=true; G._dragLid=id;
-    const rc=el.getBoundingClientRect();
-    G._rotSa=Math.atan2(e.clientY-rc.top-rc.height/2,e.clientX-rc.left-rc.width/2)*180/Math.PI;
-    G._rotSr=logoById(id)?.rot||0;
-  });
-}
+      <!-- ⑥ Bottom bar: add more + limit meter + summary -->
+      <div id="combineBottomBar" style="display:none;flex-direction:column;gap:6px;margin-top:8px">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <button class="ccb-btn add" onclick="document.getElementById('combineInput').click()">＋ Thêm file PDF</button>
+          <button class="ccb-btn" id="combineCurrBtnBottom" style="background:#fef3c7;color:#92400e;border:1px solid #f59e0b;display:none" onclick="addCurrentFileToCombine()">＋ Thêm file đang mở</button>
+          <span id="combineLimitInfo" style="font-family:var(--mono);font-size:.68rem;color:var(--muted);margin-left:auto"></span>
+        </div>
+        <!-- Page-limit progress bar -->
+        <div style="height:5px;background:var(--border);border-radius:3px;overflow:hidden">
+          <div id="combineLimitBar" style="height:100%;width:0%;background:var(--teal);border-radius:3px;transition:width .3s,background .3s"></div>
+        </div>
+        <div class="combine-summary" id="combineSummary">
+          <span id="combineSummaryText">0 file · 0 trang</span>
+          <span style="font-size:.7rem;color:var(--muted)">→ xuất PDF mới</span>
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot" style="background:#f0fdfa">
+      <button class="btn btn-warm" onclick="closeCombineModal()">Hủy</button>
+      <button class="btn" style="background:var(--teal);color:#fff" id="combineExecBtn" onclick="executeCombine()" disabled>🔗 Ghép PDF</button>
+    </div>
+  </div>
+</div>
 
-function updateOverlay(id) {
-  const logo = logoById(id);
-  if (!logo) return;
-  const el = document.getElementById(`ov-${id}`);
-  if (!el) return;
-  const isSel = id===G.selId;
-  el.className = `logo-ov on ${isSel?'selected':'unselected'}`;
-  el.style.cssText = `left:${p2c(logo.px)}px;top:${p2c(logo.py)}px;width:${p2c(logo.pw)}px;height:${p2c(logo.ph)}px;transform:rotate(${logo.rot}deg);opacity:${logo.opa};`;
-  el.querySelector('.dPos').textContent=`${ri(logo.px)},${ri(logo.py)} pt`;
-  el.querySelector('.dW').textContent=fmm(logo.pw);
-  el.querySelector('.dH').textContent=fmm(logo.ph);
-  // Show/hide handles
-  el.querySelectorAll('.rh,.rstem,.rRot').forEach(h=>{h.style.display=isSel?'':'none';});
-}
+<div class="loading" id="loading">
+  <div class="lo-spin"></div>
+  <div class="lo-txt" id="loTxt">Đang xử lý...</div>
+  <div class="lo-bar"><div class="lo-fill" id="loFill"></div></div>
+</div>
+<div class="toasts" id="toasts"></div>
 
-// ═══════════════════════════════════════════════════════
-// SYNC INPUTS ↔ SELECTED LOGO
-// ═══════════════════════════════════════════════════════
-function syncIn() {
-  const l=selLogo();
-  if(!l){return;}
-  $('#nX').val(ri(l.px));   $('#nY').val(ri(l.py));
-  $('#nW').val(ri(l.pw));   $('#nH').val(ri(l.ph));
-  $('#nXmm').val((l.px*PT2MM).toFixed(2));
-  $('#nYmm').val((l.py*PT2MM).toFixed(2));
-  $('#nWmm').val((l.pw*PT2MM).toFixed(2));
-  $('#nHmm').val((l.ph*PT2MM).toFixed(2));
-  $('#sRot').val(l.rot);  $('#vRot').text(l.rot+'°');
-  $('#sOpa').val(ri(l.opa*100)); $('#vOpa').text(ri(l.opa*100)+'%');
-  $('#sPos').text(`x=${ri(l.px)} y=${ri(l.py)} w=${ri(l.pw)} h=${ri(l.ph)}`);
-}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>
+try{
+  pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+}catch(e){pdfjsLib.GlobalWorkerOptions.workerSrc='';}
+</script>
+<script>
+// ═══════════════════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════════════════
+const S={
+  pdfDoc:null,pjsDoc:null,pageCount:0,current:1,
+  rotations:{},filename:'doc.pdf',rendering:false,
+  cvW:0,cvH:0,sigUrl:null,signMode:false,commentMode:false,
+  signatures:{},comments:{},exportPages:new Set(),exportSelMode:false,
+  // Zoom state
+  zoom:1.0,      // current scale multiplier (1 = fit to viewport)
+  zoomFit:true,  // true = auto-fit mode; false = manual zoom
+  baseScale:1.0, // the scale that produces fit-to-viewport at zoom=1
+};
+const D={color:'#0d0f14',size:2,drawing:false,lx:0,ly:0,inited:false};
+const T={font:'Dancing Script',color:'#0d0f14'};
+let _tab='draw';
+let _lang='vi';
 
-function fromInPt() {
-  const l=selLogo(); if(!l) return;
-  l.px=pf('nX'); l.py=pf('nY');
-  l.pw=Math.max(1,pf('nW')); l.ph=Math.max(1,pf('nH'));
-  $('#nXmm').val((l.px*PT2MM).toFixed(2));
-  $('#nYmm').val((l.py*PT2MM).toFixed(2));
-  $('#nWmm').val((l.pw*PT2MM).toFixed(2));
-  $('#nHmm').val((l.ph*PT2MM).toFixed(2));
-  updateOverlay(l.id);
-}
-function fromInMm() {
-  const l=selLogo(); if(!l) return;
-  l.px=pf('nXmm')*MM2PT; l.py=pf('nYmm')*MM2PT;
-  l.pw=Math.max(1,pf('nWmm')*MM2PT); l.ph=Math.max(1,pf('nHmm')*MM2PT);
-  $('#nX').val(ri(l.px));$('#nY').val(ri(l.py));
-  $('#nW').val(ri(l.pw));$('#nH').val(ri(l.ph));
-  updateOverlay(l.id);
-}
-
-$('#nX,#nY,#nW,#nH').on('input change', fromInPt);
-$('#nXmm,#nYmm,#nWmm,#nHmm').on('input change', fromInMm);
-$('#sRot').on('input', function(){const l=selLogo();if(!l)return;l.rot=+$(this).val();$('#vRot').text(l.rot+'°');updateOverlay(l.id);});
-$('#sOpa').on('input', function(){const l=selLogo();if(!l)return;l.opa=+$(this).val()/100;$('#vOpa').text($(this).val()+'%');updateOverlay(l.id);});
-$('#btnCtr').on('click',()=>{const l=selLogo();if(!l)return;l.px=(G.pdfW-l.pw)/2;l.py=(G.pdfH-l.ph)/2;syncIn();updateOverlay(l.id);});
-$('#btnRst').on('click',()=>{const l=selLogo();if(!l)return;l.px=0;l.py=0;l.pw=150;l.ph=ri(150*l.nh/l.nw);l.rot=0;l.opa=1;syncIn();updateOverlay(l.id);});
-
-// ═══════════════════════════════════════════════════════
-// GLOBAL MOUSE EVENTS (drag / resize / rotate all logos)
-// ═══════════════════════════════════════════════════════
-$(document).on('mousemove', e => {
-  if (G.drag && G._dragLid) {
-    const l=logoById(G._dragLid); if(!l) return;
-    l.px=sn(G._dragSpx+c2p(e.clientX-G._dragSx));
-    l.py=sn(G._dragSpy+c2p(e.clientY-G._dragSy));
-    updateOverlay(l.id); syncIn();
+// ═══════════════════════════════════════════════════════════════════════
+// I18N
+// ═══════════════════════════════════════════════════════════════════════
+const I18N={
+  vi:{
+    appTitle:'Xoay trang & Ký tên PDF · Chạy hoàn toàn trên trình duyệt',
+    openNew:'📂 Mở file mới',createSig:'✍ Tạo chữ ký',exportPages:'📑 Xuất trang',download:'⬇ Tải xuống PDF',
+    dragTitle:'Kéo thả file PDF',dragSub:'hoặc nhấn để chọn file',dragSub2:'Xử lý ngay trên trình duyệt · Không gửi lên server',
+    chooseFile:'📂 Chọn file PDF',dragNote:'CHỈ NHẬN PDF · KHÔNG GIỚI HẠN KÍCH THƯỚC',
+    pageList:'Danh sách trang',rotateAll:'Xoay tất cả:',
+    zoomLbl:'Zoom',rotateLbl:'Xoay',sigLbl:'Chữ ký',cmtLbl:'Comment',
+    trang:'Trang',rotated:'đã xoay',signed:'chữ ký',commented:'comment',
+    placeBtn:'✍ Đặt chữ ký',modeBar:'✍ Chế độ ký — Click vào trang để đặt chữ ký · ESC thoát',
+    commentBtn:'💬 Thêm comment',commentModeBar:'💬 Chế độ comment — Click vào trang để thêm · ESC thoát',
+    toastReady:'✅ Chữ ký sẵn sàng! Nhấn "Đặt chữ ký" rồi click vào trang',
+    toastPlaced:'Đã đặt chữ ký lên trang',toastDeleted:'Đã xóa chữ ký',toastDeletedAll:'Đã xóa tất cả chữ ký',
+    cmtAdded:'Đã thêm comment lên trang',cmtDeleted:'Đã xóa comment',cmtDeletedAll:'Đã xóa tất cả comment',
+    confirmClearSigs:'Xóa tất cả chữ ký trên tất cả trang?',
+    confirmClearCmts:'Xóa tất cả comment trên tất cả trang?',
+    confirmBulkReset:'Reset tất cả góc xoay về 0°?',
+    confirmNewFile:'Mở file mới? Thay đổi chưa lưu sẽ bị mất.',
+    noInk:'Vui lòng vẽ chữ ký trước!',noName:'Vui lòng nhập tên!',noImage:'Vui lòng chọn ảnh!',
+    notPdf:'Vui lòng chọn file PDF!',cantRead:'Không thể đọc PDF: ',
+    processing:'Đang xử lý chữ ký...',preparing:'Đang chuẩn bị...',
+    processingPage:'Đang xử lý trang',saving:'Đang lưu...',done:'Xong!',
+    downloaded:'✅ Đã tải xuống: ',pdfError:'Lỗi tạo PDF: ',sigNeedFirst:'Hãy tạo chữ ký trước',
+    noPageSelected:'Chưa chọn trang nào để xuất!',exportDone:'✅ Đã xuất ',
+    exportTitle:'📑 Xuất trang đã chọn',expSummaryFmt:(n,t)=>`Đã chọn <strong>${n}</strong> / ${t} trang để xuất`,
+    previewDefault:'Tên của bạn',
+    zoomFit:'Vừa trang',zoomFitOff:'Tỉ lệ tự do',
+    // Combine
+    combineTitle:'🔗 Ghép nhiều PDF thành một',combineDropTitle:'Kéo thả hoặc nhấn để thêm file PDF',
+    combineDropSub:'Có thể thêm nhiều file cùng lúc · Kéo để sắp xếp thứ tự',
+    combineOrderHint:'↕ Kéo để sắp xếp thứ tự · Nhập dải trang (vd: 1-3,5) để chỉ lấy một số trang từ mỗi file',
+    combineEmpty:'Chưa có file nào · Thêm ít nhất 2 file PDF để ghép',
+    combinePageRange:'Trang:',combineBtn:'🔗 Ghép PDF',combineDone:'✅ Đã ghép thành công: ',
+    combineErr:'Lỗi khi ghép: ',combineNeedFiles:'Cần ít nhất 2 file PDF!',
+    combineProcessing:'Đang ghép PDF...',combineFile:'file',combinePages:'trang',
+    combineInvalidRange:(f)=>`Dải trang không hợp lệ ở file "${f}", bỏ qua dải này.`,
+    combineAddCurrent:'＋ Thêm file đang mở',combineAddCurrentDone:'✓ Đã thêm file đang mở',
+    combineNoFileOpen:'Chưa có file nào đang mở',combineFromCurrent:'★ Đang mở',combineFromFile:'↑ File',
+  },
+  en:{
+    appTitle:'Rotate Pages & Sign PDF · Runs entirely in browser',
+    openNew:'📂 Open new file',createSig:'✍ Create signature',exportPages:'📑 Export pages',download:'⬇ Download PDF',
+    dragTitle:'Drop PDF here',dragSub:'or click to choose file',dragSub2:'Processed locally · Never sent to server',
+    chooseFile:'📂 Choose PDF file',dragNote:'PDF ONLY · NO SIZE LIMIT',
+    pageList:'Page list',rotateAll:'Rotate all:',
+    zoomLbl:'Zoom',rotateLbl:'Rotate',sigLbl:'Signature',cmtLbl:'Comment',
+    trang:'Page',rotated:'rotated',signed:'signatures',commented:'comments',
+    placeBtn:'✍ Place signature',modeBar:'✍ Sign mode — Click on page to place · ESC to exit',
+    commentBtn:'💬 Add comment',commentModeBar:'💬 Comment mode — Click on page to add · ESC to exit',
+    toastReady:'✅ Signature ready! Click "Place signature" then click on page',
+    toastPlaced:'Signature placed on page',toastDeleted:'Signature deleted',toastDeletedAll:'All signatures cleared',
+    cmtAdded:'Comment added to page',cmtDeleted:'Comment deleted',cmtDeletedAll:'All comments cleared',
+    confirmClearSigs:'Delete all signatures on all pages?',
+    confirmClearCmts:'Delete all comments on all pages?',
+    confirmBulkReset:'Reset all rotation angles to 0°?',
+    confirmNewFile:'Open new file? Unsaved changes will be lost.',
+    noInk:'Please draw a signature first!',noName:'Please enter a name!',noImage:'Please choose an image!',
+    notPdf:'Please choose a PDF file!',cantRead:'Cannot read PDF: ',
+    processing:'Processing signature...',preparing:'Preparing...',
+    processingPage:'Processing page',saving:'Saving...',done:'Done!',
+    downloaded:'✅ Downloaded: ',pdfError:'PDF error: ',sigNeedFirst:'Please create a signature first',
+    noPageSelected:'No pages selected for export!',exportDone:'✅ Exported ',
+    exportTitle:'📑 Export selected pages',expSummaryFmt:(n,t)=>`Selected <strong>${n}</strong> / ${t} pages to export`,
+    previewDefault:'Your name',
+    zoomFit:'Fit page',zoomFitOff:'Free zoom',
+    combineTitle:'🔗 Merge multiple PDFs into one',combineDropTitle:'Drop or click to add PDF files',
+    combineDropSub:'Add multiple files at once · Drag to reorder',
+    combineOrderHint:'↕ Drag to reorder · Enter page range (e.g. 1-3,5) to extract specific pages from each file',
+    combineEmpty:'No files yet · Add at least 2 PDF files to merge',
+    combinePageRange:'Pages:',combineBtn:'🔗 Merge PDFs',combineDone:'✅ Merged successfully: ',
+    combineErr:'Error merging: ',combineNeedFiles:'Need at least 2 PDF files!',
+    combineProcessing:'Merging PDFs...',combineFile:'file',combinePages:'pages',
+    combineInvalidRange:(f)=>`Invalid page range in file "${f}", skipping range.`,
+    combineAddCurrent:'＋ Add current file',combineAddCurrentDone:'✓ Current file added',
+    combineNoFileOpen:'No file is currently open',combineFromCurrent:'★ Open',combineFromFile:'↑ File',
+  },
+  th:{
+    appTitle:'หมุนหน้า & เซ็นชื่อ PDF · ทำงานบนเบราว์เซอร์ทั้งหมด',
+    openNew:'📂 เปิดไฟล์ใหม่',createSig:'✍ สร้างลายเซ็น',exportPages:'📑 ส่งออกหน้า',download:'⬇ ดาวน์โหลด PDF',
+    dragTitle:'วางไฟล์ PDF ที่นี่',dragSub:'หรือคลิกเพื่อเลือกไฟล์',dragSub2:'ประมวลผลในเบราว์เซอร์ · ไม่ส่งขึ้นเซิร์ฟเวอร์',
+    chooseFile:'📂 เลือกไฟล์ PDF',dragNote:'รับเฉพาะ PDF · ไม่จำกัดขนาด',
+    pageList:'รายการหน้า',rotateAll:'หมุนทั้งหมด:',
+    zoomLbl:'ซูม',rotateLbl:'หมุน',sigLbl:'ลายเซ็น',cmtLbl:'คอมเมนต์',
+    trang:'หน้า',rotated:'หมุนแล้ว',signed:'ลายเซ็น',commented:'คอมเมนต์',
+    placeBtn:'✍ วางลายเซ็น',modeBar:'✍ โหมดเซ็น — คลิกบนหน้าเพื่อวางลายเซ็น · ESC เพื่อออก',
+    commentBtn:'💬 เพิ่มคอมเมนต์',commentModeBar:'💬 โหมดคอมเมนต์ — คลิกบนหน้าเพื่อเพิ่ม · ESC เพื่อออก',
+    toastReady:'✅ ลายเซ็นพร้อม! คลิก "วางลายเซ็น" แล้วคลิกบนหน้า',
+    toastPlaced:'วางลายเซ็นบนหน้า',toastDeleted:'ลบลายเซ็นแล้ว',toastDeletedAll:'ลบลายเซ็นทั้งหมดแล้ว',
+    cmtAdded:'เพิ่มคอมเมนต์บนหน้า',cmtDeleted:'ลบคอมเมนต์แล้ว',cmtDeletedAll:'ลบคอมเมนต์ทั้งหมดแล้ว',
+    confirmClearSigs:'ลบลายเซ็นทั้งหมดในทุกหน้า?',
+    confirmClearCmts:'ลบคอมเมนต์ทั้งหมดในทุกหน้า?',
+    confirmBulkReset:'รีเซ็ตมุมหมุนทั้งหมดเป็น 0°?',
+    confirmNewFile:'เปิดไฟล์ใหม่? การเปลี่ยนแปลงที่ยังไม่บันทึกจะหายไป',
+    noInk:'กรุณาวาดลายเซ็นก่อน!',noName:'กรุณาพิมพ์ชื่อ!',noImage:'กรุณาเลือกรูปภาพ!',
+    notPdf:'กรุณาเลือกไฟล์ PDF!',cantRead:'ไม่สามารถอ่าน PDF ได้: ',
+    processing:'กำลังประมวลผลลายเซ็น...',preparing:'กำลังเตรียม...',
+    processingPage:'กำลังประมวลผลหน้า',saving:'กำลังบันทึก...',done:'เสร็จสิ้น!',
+    downloaded:'✅ ดาวน์โหลดแล้ว: ',pdfError:'ข้อผิดพลาด PDF: ',sigNeedFirst:'กรุณาสร้างลายเซ็นก่อน',
+    noPageSelected:'ยังไม่ได้เลือกหน้าสำหรับส่งออก!',exportDone:'✅ ส่งออกแล้ว ',
+    exportTitle:'📑 ส่งออกหน้าที่เลือก',expSummaryFmt:(n,t)=>`เลือก <strong>${n}</strong> / ${t} หน้าสำหรับส่งออก`,
+    previewDefault:'ชื่อของคุณ',
+    zoomFit:'พอดีหน้า',zoomFitOff:'ซูมอิสระ',
+    combineTitle:'🔗 รวม PDF หลายไฟล์เป็นหนึ่งเดียว',combineDropTitle:'วางหรือคลิกเพื่อเพิ่มไฟล์ PDF',
+    combineDropSub:'เพิ่มหลายไฟล์พร้อมกัน · ลากเพื่อจัดลำดับ',
+    combineOrderHint:'↕ ลากเพื่อจัดลำดับ · ใส่ช่วงหน้า (เช่น 1-3,5) เพื่อเลือกเฉพาะบางหน้าจากแต่ละไฟล์',
+    combineEmpty:'ยังไม่มีไฟล์ · เพิ่มไฟล์ PDF อย่างน้อย 2 ไฟล์เพื่อรวม',
+    combinePageRange:'หน้า:',combineBtn:'🔗 รวม PDF',combineDone:'✅ รวมสำเร็จ: ',
+    combineErr:'เกิดข้อผิดพลาดในการรวม: ',combineNeedFiles:'ต้องการไฟล์ PDF อย่างน้อย 2 ไฟล์!',
+    combineProcessing:'กำลังรวม PDF...',combineFile:'ไฟล์',combinePages:'หน้า',
+    combineInvalidRange:(f)=>`ช่วงหน้าไม่ถูกต้องในไฟล์ "${f}" ข้ามช่วงนี้`,
+    combineAddCurrent:'＋ เพิ่มไฟล์ที่เปิดอยู่',combineAddCurrentDone:'✓ เพิ่มไฟล์แล้ว',
+    combineNoFileOpen:'ยังไม่ได้เปิดไฟล์',combineFromCurrent:'★ เปิดอยู่',combineFromFile:'↑ ไฟล์',
   }
-  if (G.resize && G._dragLid) {
-    const l=logoById(G._dragLid); if(!l) return;
-    const dx=c2p(e.clientX-G._resSx), dy=c2p(e.clientY-G._resSy);
-    const d=G._resDir;
-    let nx=G._resSpx,ny=G._resSpy,nw=G._resSpw,nh=G._resSph;
-    if(d.includes('e')) nw=Math.max(5,G._resSpw+dx);
-    if(d.includes('w')){nx=G._resSpx+dx;nw=Math.max(5,G._resSpw-dx);}
-    if(d.includes('s')) nh=Math.max(5,G._resSph+dy);
-    if(d.includes('n')){ny=G._resSpy+dy;nh=Math.max(5,G._resSph-dy);}
-    l.px=sn(nx);l.py=sn(ny);l.pw=sn(nw);l.ph=sn(nh);
-    updateOverlay(l.id); syncIn();
-  }
-  if (G.rotating && G._dragLid) {
-    const l=logoById(G._dragLid); if(!l) return;
-    const el=document.getElementById(`ov-${l.id}`);
-    if(!el) return;
-    const rc=el.getBoundingClientRect();
-    const a=Math.atan2(e.clientY-rc.top-rc.height/2,e.clientX-rc.left-rc.width/2)*180/Math.PI;
-    l.rot=ri(G._rotSr+a-G._rotSa);
-    $('#sRot').val(l.rot);$('#vRot').text(l.rot+'°');
-    updateOverlay(l.id);
-  }
-  // Measure preview
-  if (G.tool==='measure' && G.meas.p1 && !G.meas.p2) {
-    G.meas.preview=cwPt(e); drawMeasure();
-  }
-});
+};
+function t(k){const L=I18N[_lang]||I18N.vi;return L[k]!==undefined?L[k]:((I18N.vi)[k]||k);}
 
-$(document).on('mouseup', () => {
-  if (G.drag) {
-    G.drag=false;
-    const el=document.getElementById(`ov-${G._dragLid}`);
-    if(el) el.style.cursor='move';
-    // Update list dim display
-    renderLogoList();
+const LANG_META={vi:{flag:'🇻🇳',name:'Tiếng Việt'},en:{flag:'🇬🇧',name:'English'},th:{flag:'🇹🇭',name:'ภาษาไทย'}};
+function toggleLangDrop(){document.getElementById('langWrap').classList.toggle('open');}
+function pickLang(lang){document.getElementById('langWrap').classList.remove('open');setLang(lang);}
+document.addEventListener('click',e=>{const w=document.getElementById('langWrap');if(w&&!w.contains(e.target))w.classList.remove('open');});
+function setLang(lang){
+  _lang=lang;const m=LANG_META[lang];
+  if(m){document.getElementById('langFlag').textContent=m.flag;document.getElementById('langName').textContent=m.name;}
+  document.querySelectorAll('.lang-opt').forEach(el=>el.classList.toggle('active',el.dataset.lang===lang));
+  applyLang();
+}
+function applyLang(){
+  document.documentElement.lang=_lang==='th'?'th':_lang==='en'?'en':'vi';
+  document.getElementById('hdrInfo').innerHTML=t('appTitle');
+  const hr=document.getElementById('hdrRight');
+  if(hr&&hr.style.display!=='none'){
+    hr.innerHTML=`<button class="btn btn-ghost btn-sm" onclick="openNewFile()">${t('openNew')}</button>
+    <button class="btn btn-sm" style="background:#1e40af;color:#fff" onclick="openSigModal()">${t('createSig')}</button>
+    <button class="btn btn-purple btn-sm" onclick="openExportModal()">${t('exportPages')}</button>
+    <button class="btn btn-acc btn-sm" id="dlBtn" onclick="savePdf()">${t('download')}</button>`;
   }
-  G.drag=false; G.resize=false; G.rotating=false;
-  G._dragLid=null;
-});
-
-// Click on canvas background → deselect
-$('#cw').on('mousedown', e => {
-  if (G.tool==='select' && e.target.id==='cw' || e.target.id==='pdfCv' || e.target.id==='gridCv') {
-    G.selId=null;
-    G.logos.forEach(l=>{
-      const el=document.getElementById(`ov-${l.id}`);
-      if(el){el.className='logo-ov on unselected';el.querySelectorAll('.rh,.rstem,.rRot').forEach(h=>h.style.display='none');}
-    });
-    renderLogoList();
-    $('#selLogoName').text('—');
-  }
-});
-
-// ═══════════════════════════════════════════════════════
-// MEASURE TOOL
-// ═══════════════════════════════════════════════════════
-function cwPt(e) {
-  const rc=document.getElementById('cw').getBoundingClientRect();
-  return { x:c2p(e.clientX-rc.left), y:c2p(e.clientY-rc.top) };
+  const sbT=document.getElementById('sbTitleLbl');if(sbT)sbT.textContent=t('pageList');
+  const sbR=document.getElementById('sbRotateLbl');if(sbR)sbR.textContent=t('rotateAll');
+  const tbls=document.querySelectorAll('.tlbl');
+  if(tbls[0])tbls[0].textContent=t('zoomLbl');
+  if(tbls[1])tbls[1].textContent=t('rotateLbl');
+  if(tbls[2])tbls[2].textContent=t('sigLbl');
+  if(tbls[3])tbls[3].textContent=t('cmtLbl');
+  const pgd=document.querySelector('.pgdisp');
+  if(pgd){const cur=document.getElementById('pgCur').textContent;const tot=document.getElementById('pgTotal').textContent;pgd.innerHTML=`${t('trang')} <strong id="pgCur">${cur}</strong>/<span id="pgTotal">${tot}</span>`;}
+  const btnSign=document.getElementById('btnSign');if(btnSign)btnSign.textContent=t('placeBtn');
+  const btnCmt=document.getElementById('btnComment');if(btnCmt)btnCmt.textContent=t('commentBtn');
+  document.getElementById('modeBar').textContent=t('modeBar');
+  document.getElementById('commentModeBar').textContent=t('commentModeBar');
+  const dt=document.getElementById('dropTitle');if(dt)dt.textContent=t('dragTitle');
+  const ds=document.getElementById('dropSub');if(ds)ds.innerHTML=t('dragSub')+'<br>'+t('dragSub2');
+  const dn=document.getElementById('dropNote');if(dn)dn.textContent=t('dragNote');
+  const cf=document.getElementById('chooseFileBtn');if(cf)cf.innerHTML=t('chooseFile');
+  const zfb=document.getElementById('zoomFitBtn');if(zfb)zfb.textContent=S.zoomFit?t('zoomFit'):t('zoomFitOff');
+  // Combine modal
+  const cdt=document.getElementById('combineDropTitle');if(cdt)cdt.textContent=t('combineDropTitle');
+  const cds=document.getElementById('combineDropSub');if(cds)cds.textContent=t('combineDropSub');
+  const coh=document.getElementById('combineOrderHint');if(coh)coh.textContent=t('combineOrderHint');
+  const ce=document.getElementById('combineEmpty');if(ce)ce.textContent=t('combineEmpty');
+  updateTPrev();
 }
 
-$('#cw').on('click', function(e) {
-  if (G.tool!=='measure' || !G.pdfDoc) return;
-  const pt=cwPt(e);
-  if (!G.meas.p1 || (G.meas.p1 && G.meas.p2)) {
-    G.meas.p1=pt; G.meas.p2=null; G.meas.preview=null;
-    $('#measureHint').text('Click điểm cuối để hoàn thành…');
-    drawMeasure();
-  } else {
-    G.meas.p2=pt;
-    updateMeasurePanel(); drawMeasure();
-    $('#measureHint').text('Click điểm đầu để đo lại.');
-  }
-});
+// ═══════════════════════════════════════════════════════════════════════
+// ZOOM SYSTEM
+// ═══════════════════════════════════════════════════════════════════════
+const ZOOM_STEPS=[0.25,0.33,0.5,0.67,0.75,0.9,1.0,1.1,1.25,1.5,1.75,2.0,2.5,3.0,4.0];
+const ZOOM_MIN=0.1, ZOOM_MAX=5.0;
 
-$('#cw').on('mousemove', function(e) {
-  if (G.tool==='measure' && G.meas.p1 && !G.meas.p2) {
-    G.meas.preview=cwPt(e); drawMeasure();
+function zoomStep(delta){
+  S.zoomFit=false;
+  const cur=S.zoom;
+  if(delta>0){
+    // Find next step up
+    const next=ZOOM_STEPS.find(z=>z>cur+0.01);
+    S.zoom=next||Math.min(ZOOM_MAX,cur+0.25);
+  }else{
+    // Find next step down
+    const prev=[...ZOOM_STEPS].reverse().find(z=>z<cur-0.01);
+    S.zoom=prev||Math.max(ZOOM_MIN,cur-0.25);
   }
-});
-
-function updateMeasurePanel() {
-  if(!G.meas.p1||!G.meas.p2) return;
-  const dx=G.meas.p2.x-G.meas.p1.x, dy=G.meas.p2.y-G.meas.p1.y;
-  const dist=Math.sqrt(dx*dx+dy*dy);
-  const angle=Math.atan2(dy,dx)*180/Math.PI;
-  $('#measDist').text(`${(dist*PT2MM).toFixed(2)} mm  (${ri(dist)} pt)`);
-  $('#measDX').text(`${(Math.abs(dx)*PT2MM).toFixed(2)} mm`);
-  $('#measDY').text(`${(Math.abs(dy)*PT2MM).toFixed(2)} mm`);
-  $('#measAngle').text(`${angle.toFixed(1)}°`);
-  $('#stMeasWrap').show(); $('#stMeas').text(`${(dist*PT2MM).toFixed(2)} mm`);
+  applyZoom();
 }
 
-function clearMeasure() {
-  G.meas={p1:null,p2:null,preview:null};
-  $('#measDist,#measDX,#measDY,#measAngle').text('—');
-  $('#measureHint').text('Chọn tool ⟷ Đo mm rồi\nclick điểm đầu → click điểm cuối');
-  $('#stMeasWrap').hide(); drawMeasure();
+function zoomReset(){
+  S.zoomFit=false;S.zoom=1.0;applyZoom();
 }
 
-function drawMeasure() {
-  const cv=document.getElementById('measCv');
-  if(!cv||!cv.width) return;
-  const ctx=cv.getContext('2d');
-  ctx.clearRect(0,0,cv.width,cv.height);
-  const p1=G.meas.p1, p2=G.meas.p2||G.meas.preview;
-  if(!p1) return;
-  const x1=p2c(p1.x),y1=p2c(p1.y);
-  _drawMeasPt(ctx,x1,y1,'#1e60a0');
-  if(!p2) return;
-  const x2=p2c(p2.x),y2=p2c(p2.y);
-  const dx=p2.x-p1.x,dy=p2.y-p1.y;
-  const dist=Math.sqrt(dx*dx+dy*dy);
-  const distMm=(dist*PT2MM).toFixed(2);
-  const angle=Math.atan2(y2-y1,x2-x1);
-  const perp=angle+Math.PI/2;
-  // dashed line
-  ctx.save(); ctx.setLineDash([4,3]);
-  ctx.strokeStyle=G.meas.p2?'#1e60a0':'#5090c0'; ctx.lineWidth=1.5;
-  ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();
-  ctx.restore();
-  // end ticks
-  [[x1,y1],[x2,y2]].forEach(([px,py])=>{
-    ctx.save();ctx.strokeStyle='#1e60a0';ctx.lineWidth=2;
-    ctx.beginPath();ctx.moveTo(px+Math.cos(perp)*8,py+Math.sin(perp)*8);ctx.lineTo(px-Math.cos(perp)*8,py-Math.sin(perp)*8);ctx.stroke();ctx.restore();
-  });
-  _drawArrow(ctx,x1,y1,x2,y2,'#1e60a0');
-  _drawArrow(ctx,x2,y2,x1,y1,'#1e60a0');
-  // distance label
-  const mx=(x1+x2)/2,my=(y1+y2)/2;
-  ctx.save();ctx.font='bold 11px "JetBrains Mono",monospace';
-  const tw=ctx.measureText(distMm+' mm').width;
-  ctx.fillStyle='rgba(30,96,160,.92)';
-  ctx.beginPath();ctx.roundRect(mx-tw/2-5,my-14,tw+10,18,3);ctx.fill();
-  ctx.fillStyle='#fff';ctx.textAlign='center';ctx.textBaseline='middle';
-  ctx.fillText(distMm+' mm',mx,my);ctx.restore();
-  // delta lines
-  if(G.meas.p2&&(Math.abs(dx)>5||Math.abs(dy)>5)){
-    ctx.save();ctx.setLineDash([2,4]);ctx.strokeStyle='rgba(80,140,220,.5)';ctx.lineWidth=1;
-    ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y1);ctx.stroke();
-    ctx.beginPath();ctx.moveTo(x2,y1);ctx.lineTo(x2,y2);ctx.stroke();
-    ctx.restore();
-    if(Math.abs(dx)>20) _measLbl(ctx,(x1+x2)/2,y1-13,`ΔX ${(Math.abs(dx)*PT2MM).toFixed(1)}mm`);
-    if(Math.abs(dy)>20) _measLbl(ctx,x2+4,(y1+y2)/2,`ΔY ${(Math.abs(dy)*PT2MM).toFixed(1)}mm`,true);
+function toggleZoomFit(){
+  S.zoomFit=!S.zoomFit;
+  const btn=document.getElementById('zoomFitBtn');
+  if(btn)btn.textContent=S.zoomFit?t('zoomFit'):t('zoomFitOff');
+  btn.classList.toggle('on',S.zoomFit);
+  if(S.zoomFit){renderMainZoom();}
+  else{S.zoom=1.0;applyZoom();}
+}
+
+function applyZoom(){
+  if(!S.pjsDoc)return;
+  const zv=document.getElementById('zoomVal');
+  if(zv)zv.textContent=Math.round(S.zoom*100)+'%';
+  const btn=document.getElementById('zoomFitBtn');
+  if(btn){btn.classList.toggle('on',S.zoomFit);btn.textContent=S.zoomFit?t('zoomFit'):t('zoomFitOff');}
+  const viewer=document.getElementById('viewer');
+  if(viewer){
+    viewer.classList.toggle('zoom-fit-mode',S.zoomFit);
   }
-  _drawMeasPt(ctx,x2,y2,G.meas.p2?'#1e60a0':'#5090c0');
+  renderMainZoom();
 }
-function _drawMeasPt(ctx,x,y,c){ctx.save();ctx.strokeStyle=c;ctx.lineWidth=1.5;ctx.fillStyle='#fff';ctx.beginPath();ctx.moveTo(x-8,y);ctx.lineTo(x+8,y);ctx.stroke();ctx.beginPath();ctx.moveTo(x,y-8);ctx.lineTo(x,y+8);ctx.stroke();ctx.beginPath();ctx.arc(x,y,4,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.restore();}
-function _drawArrow(ctx,x1,y1,x2,y2,c){const a=Math.atan2(y2-y1,x2-x1),s=6;ctx.save();ctx.fillStyle=c;ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x1+Math.cos(a+2.5)*s,y1+Math.sin(a+2.5)*s);ctx.lineTo(x1+Math.cos(a-2.5)*s,y1+Math.sin(a-2.5)*s);ctx.closePath();ctx.fill();ctx.restore();}
-function _measLbl(ctx,x,y,text,vertical=false){ctx.save();ctx.font='9px "JetBrains Mono",monospace';if(vertical){ctx.translate(x,y);ctx.rotate(-Math.PI/2);x=0;y=0;}const tw=ctx.measureText(text).width;ctx.fillStyle='rgba(80,140,200,.85)';ctx.beginPath();ctx.roundRect(x-tw/2-3,y-7,tw+6,14,2);ctx.fill();ctx.fillStyle='#fff';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(text,x,y);ctx.restore();}
 
-// ═══════════════════════════════════════════════════════
-// CROSSHAIR + COORD
-// ═══════════════════════════════════════════════════════
-$('#cw').on('mousemove', function(e) {
-  const rc=this.getBoundingClientRect(), vp=document.getElementById('vp');
-  const px=e.clientX-rc.left, py=e.clientY-rc.top;
-  const cx=px+22-vp.scrollLeft, cy=py+22-vp.scrollTop;
-  $('#chx').css({display:'block',left:cx+'px'});
-  $('#chy').css({display:'block',top:cy+'px'});
-  const ptX=c2p(px), ptY=c2p(py);
-  $('#ctip').css({display:'block',left:(cx+8)+'px',top:(cy+3)+'px'})
-    .text(`${(ptX*PT2MM).toFixed(2)}, ${(ptY*PT2MM).toFixed(2)} mm  (${ri(ptX)}, ${ri(ptY)} pt)`);
-  $('#sCur').text(`${(ptX*PT2MM).toFixed(1)}, ${(ptY*PT2MM).toFixed(1)} mm`);
-}).on('mouseleave', ()=>$('#chx,#chy,#ctip').hide());
-
-$('#vp').on('scroll', drawRulers);
-
-// ═══════════════════════════════════════════════════════
-// RULERS (mm)
-// ═══════════════════════════════════════════════════════
-function drawRulers(){drawRX();drawRY();}
-function drawRX(){
-  const W=$('#rx')[0].offsetWidth, cv=document.getElementById('rxCv');
-  cv.width=W; const ctx=cv.getContext('2d');
-  ctx.fillStyle='#d4d4d4';ctx.fillRect(0,0,W,22);
-  const cs=G.zoom*(96/72), off=20-$('#vp')[0].scrollLeft;
-  const step_mm=pickMmStep(PT2MM/cs), step_pt=step_mm*MM2PT;
-  ctx.strokeStyle='#888';ctx.fillStyle='#444';ctx.font='8px "JetBrains Mono",monospace';ctx.lineWidth=1;
-  for(let pt=Math.floor(-off/cs/step_pt)*step_pt;pt<=(W-off)/cs;pt+=step_pt){
-    const x=Math.round(off+pt*cs)+.5;if(x<0||x>W)continue;
-    const mm=pt*PT2MM,mj=Math.abs(mm%(step_mm*5))<0.01;
-    ctx.beginPath();ctx.moveTo(x,mj?5:12);ctx.lineTo(x,22);ctx.stroke();
-    if(mj&&x>5)ctx.fillText(ri(mm),x+2,9);
-  }
-  ctx.fillStyle='#666';ctx.font='7px sans-serif';ctx.fillText('mm',2,9);
-}
-function drawRY(){
-  const H=$('#ry')[0].offsetHeight, cv=document.getElementById('ryCv');
-  cv.height=H; const ctx=cv.getContext('2d');
-  ctx.fillStyle='#d4d4d4';ctx.fillRect(0,0,22,H);
-  const cs=G.zoom*(96/72), off=20-$('#vp')[0].scrollTop;
-  const step_mm=pickMmStep(PT2MM/cs), step_pt=step_mm*MM2PT;
-  ctx.strokeStyle='#888';ctx.fillStyle='#444';ctx.font='8px "JetBrains Mono",monospace';ctx.lineWidth=1;
-  for(let pt=Math.floor(-off/cs/step_pt)*step_pt;pt<=(H-off)/cs;pt+=step_pt){
-    const y=Math.round(off+pt*cs)+.5;if(y<0||y>H)continue;
-    const mm=pt*PT2MM,mj=Math.abs(mm%(step_mm*5))<0.01;
-    ctx.beginPath();ctx.moveTo(22,y);ctx.lineTo(mj?5:12,y);ctx.stroke();
-    if(mj&&y>12){ctx.save();ctx.translate(10,y-2);ctx.rotate(-Math.PI/2);ctx.fillText(ri(mm),0,0);ctx.restore();}
-  }
-}
-function pickMmStep(mmPerPx){for(const s of[0.5,1,2,5,10,20,50,100])if(s/mmPerPx>=18)return s;return 100;}
-
-// ═══════════════════════════════════════════════════════
-// GRID
-// ═══════════════════════════════════════════════════════
-function drawGrid(){
-  const cv=document.getElementById('gridCv');
-  const W=document.getElementById('pdfCv').width||0;
-  const H=document.getElementById('pdfCv').height||0;
-  cv.width=W;cv.height=H;cv.style.width=W+'px';cv.style.height=H+'px';
-  const ctx=cv.getContext('2d');ctx.clearRect(0,0,W,H);
-  if(!$('#ckGrid').is(':checked'))return;
-  const cs=G.zoom*(96/72);
-  const step=(pickMmStep(PT2MM/cs)*5)*MM2PT*cs;
-  ctx.strokeStyle='rgba(0,80,200,.07)';ctx.lineWidth=.5;
-  for(let x=0;x<W;x+=step){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
-  for(let y=0;y<H;y+=step){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
-}
-$('#ckGrid').on('change',drawGrid);
-
-// ═══════════════════════════════════════════════════════
-// ZOOM
-// ═══════════════════════════════════════════════════════
-$('#sZ').on('input', async function(){
-  G.zoom=+$(this).val()/100;$('#vZ').text($(this).val()+'%');
-  if(G.pdfDoc){loading(true,'Rendering…');await renderPdf();loading(false);}
-});
-$('#btnFit').on('click', async()=>{
-  if(!G.pdfDoc)return;
-  const vp=document.getElementById('vp');
-  G.zoom=Math.max(.2,Math.min(3,Math.min((vp.offsetWidth-40)/G.pdfW,(vp.offsetHeight-40)/G.pdfH)/(96/72)));
-  $('#sZ').val(ri(G.zoom*100));
-  loading(true,'Rendering…');await renderPdf();loading(false);
-});
-$('#btnZ1').on('click',async()=>{G.zoom=72/96;$('#sZ').val(ri(G.zoom*100));if(G.pdfDoc){loading(true,'Rendering…');await renderPdf();loading(false);}});
-$('#btnZ2').on('click',async()=>{G.zoom=144/96;$('#sZ').val(ri(G.zoom*100));if(G.pdfDoc){loading(true,'Rendering…');await renderPdf();loading(false);}});
-
-// ═══════════════════════════════════════════════════════
-// KEYBOARD
-// ═══════════════════════════════════════════════════════
-$(document).on('keydown', e => {
-  if(e.key==='v'||e.key==='V'){setTool('select');return;}
-  if(e.key==='m'||e.key==='M'){setTool('measure');return;}
-  if(e.key==='Escape'){clearMeasure();setTool('select');return;}
-  if(e.key==='Delete'||e.key==='Backspace'){
-    if(G.selId&&!['INPUT','TEXTAREA'].includes(document.activeElement.tagName)){
-      e.preventDefault();removeLogo(G.selId);return;
-    }
-  }
-  if(!G.pdfDoc||!G.selId)return;
-  if(['INPUT','TEXTAREA'].includes(document.activeElement.tagName))return;
-  const l=selLogo();if(!l)return;
-  const s=e.shiftKey?10:1;
-  if     (e.key==='ArrowLeft') l.px-=s;
-  else if(e.key==='ArrowRight')l.px+=s;
-  else if(e.key==='ArrowUp')   l.py-=s;
-  else if(e.key==='ArrowDown') l.py+=s;
-  else return;
-  e.preventDefault();syncIn();updateOverlay(l.id);
-});
-
-// ═══════════════════════════════════════════════════════
-// SAVE → SERVER
-// ═══════════════════════════════════════════════════════
-$('#btnSave').on('click', async()=>{
-  if(!G.logos.length){toast('Chưa có logo nào','err');return;}
-  const payload={
-    pdf_name:G.pdfName,
-    pdf_width_pts:ri(G.pdfW),pdf_height_pts:ri(G.pdfH),
-    logos:G.logos.map((l,i)=>({
-      index:i+1, name:l.name,
-      x:ri(l.px),y:ri(l.py),w:ri(l.pw),h:ri(l.ph),
-      x_mm:+(l.px*PT2MM).toFixed(2),y_mm:+(l.py*PT2MM).toFixed(2),
-      w_mm:+(l.pw*PT2MM).toFixed(2),h_mm:+(l.ph*PT2MM).toFixed(2),
-      rotation:l.rot,opacity:l.opa,page:1,
-    })),
-  };
-  loading(true,'Đang lưu…');
+// Re-render main canvas at current zoom (no page change)
+async function renderMainZoom(){
+  if(!S.pjsDoc||S.rendering)return;
+  const pageNum=S.current;
+  S.rendering=true;
   try{
-    const r=await fetch(`${API}/api/save-placement`,{
-      method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({pdf_name:payload.pdf_name,logo_name:G.logos.map(l=>l.name).join(', '),pdf_width_pts:payload.pdf_width_pts,pdf_height_pts:payload.pdf_height_pts,placements:payload.logos}),
-    });
-    const d=await r.json();
-    if(!r.ok)throw new Error(d.error);
-    showJson(payload);
-    toast(`Đã lưu ${G.logos.length} logo ✓`,'ok');
-  }catch(e){showJson(payload);toast('Server offline — JSON local','warn');}
-  finally{loading(false);}
-});
-
-$('#btnLoad').on('click',async()=>{
-  try{
-    const r=await fetch(`${API}/api/load-placements`);
-    const list=await r.json();
-    if(!list.length){toast('Chưa có dữ liệu','warn');return;}
-    showJson(list[list.length-1]);
-    toast('Đã tải placement','ok');
-  }catch(e){toast('Server offline','warn');}
-});
-
-// ═══════════════════════════════════════════════════════
-// EXPORT PDF — all logos
-// ═══════════════════════════════════════════════════════
-$('#btnExp').on('click',async()=>{
-  if(!G.pdfDoc||!G.logos.length){toast('Cần PDF và ít nhất 1 logo!','err');return;}
-  loading(true,`Đang ghép ${G.logos.length} logo vào PDF…`);
-  try{
-    // Browser export via pdf-lib (handles multiple logos)
-    await exportBrowser();
-    toast(`PDF đã xuất với ${G.logos.length} logo ✓`,'ok');
-  }catch(e){toast('Lỗi xuất PDF: '+e.message,'err');console.error(e);}
-  finally{loading(false);}
-});
-
-async function exportBrowser(){
-  const doc=await PDFLib.PDFDocument.load(G.pdfBuf.slice());
-  const page=doc.getPages()[0];
-  const{width:pw,height:ph}=page.getSize();
-
-  for(const l of G.logos){
-    let pngBytes=l.buf instanceof Uint8Array?l.buf:null;
-    if(!pngBytes){
-      const cv2=document.createElement('canvas');
-      const im=await iLoad(l.url);
-      cv2.width=im.naturalWidth;cv2.height=im.naturalHeight;
-      cv2.getContext('2d').drawImage(im,0,0);
-      pngBytes=url2u8(cv2.toDataURL('image/png'));
-    }
-    const img=await doc.embedPng(pngBytes);
-    page.drawImage(img,{
-      x:l.px, y:ph-l.py-l.ph,
-      width:l.pw, height:l.ph,
-      opacity:l.opa,
-      rotate:PDFLib.degrees(l.rot),
-    });
-  }
-  dlBlob(new Blob([await doc.save()],{type:'application/pdf'}),
-         G.pdfName.replace('.pdf','')+'_logos.pdf');
-}
-
-// ═══════════════════════════════════════════════════════
-// UTILS
-// ═══════════════════════════════════════════════════════
-function setupDrop($z,$i,exts,fn){
-  $z.on('click',()=>$i.trigger('click'));
-  $i.on('change',function(){if(this.files[0])fn(this.files[0]);});
-  $z.on('dragover',e=>{e.preventDefault();$z.addClass('drag');});
-  $z.on('dragleave drop',()=>$z.removeClass('drag'));
-  $z.on('drop',e=>{
-    e.preventDefault();
-    const f=e.originalEvent.dataTransfer.files[0];if(!f)return;
-    if(!exts.includes(f.name.split('.').pop().toLowerCase())){toast('.'+f.name.split('.').pop()+' không hỗ trợ','err');return;}
-    fn(f);
-  });
-}
-function fr2url(f){return new Promise((res,rej)=>{const r=new FileReader();r.onload=e=>res(e.target.result);r.onerror=rej;r.readAsDataURL(f);});}
-function b64u8(b){const bin=atob(b);const a=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)a[i]=bin.charCodeAt(i);return a;}
-function url2u8(u){return b64u8(u.split(',')[1]);}
-function iLoad(s){return new Promise((res,rej)=>{const i=new Image();i.onload=()=>res(i);i.onerror=rej;i.src=s;});}
-function dlBlob(blob,name){const u=URL.createObjectURL(blob);const a=document.createElement('a');a.href=u;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(u),3000);}
-function showJson(o){$('#jbox').text(JSON.stringify(o,null,2)).addClass('on');}
-function _fmtSz(b){return b<1048576?(b/1024).toFixed(1)+'KB':(b/1048576).toFixed(1)+'MB';}
-
-// ═══════════════════════════════════════════════════════
-// INIT
-// ═══════════════════════════════════════════════════════
-$(document).ready(function(){
-  updBtns();
-  $(window).on('resize',drawRulers);
-  drawRulers();
-  checkGs().then(ping=>{
-    if(!ping){
-      toast(`⚠ <b>Không kết nối API server</b><br><small>${API}</small>`,'warn');
-    }else if(!ping.gs_ok){
-      toast(`⚠ <b>GS chưa cài</b> — dùng PNG/JPG thay EPS`,'warn');
+    const page=await S.pjsDoc.getPage(pageNum);
+    const rot=S.rotations[pageNum]||0;
+    const viewer=document.getElementById('viewer');
+    const maxW=viewer.clientWidth-56, maxH=viewer.clientHeight-56;
+    const raw=page.getViewport({scale:1,rotation:rot});
+    // base scale = fit to viewport
+    S.baseScale=Math.min(maxW/raw.width, maxH/raw.height, 2.5);
+    let sc;
+    if(S.zoomFit){
+      sc=S.baseScale;
+      S.zoom=1.0;
+      const zv=document.getElementById('zoomVal');
+      if(zv)zv.textContent='100%';
     }else{
-      toast(`Sẵn sàng — GS ${ping.gs_version} ✓  |  V=Chọn  M=Đo  Del=Xóa logo`,'ok');
+      sc=S.baseScale*S.zoom;
+    }
+    const vp=page.getViewport({scale:sc,rotation:rot});
+    const canvas=document.getElementById('mainCanvas');
+    canvas.width=Math.round(vp.width);canvas.height=Math.round(vp.height);
+    S.cvW=canvas.width;S.cvH=canvas.height;
+    await page.render({canvasContext:canvas.getContext('2d'),viewport:vp}).promise;
+    const ovl=document.getElementById('sigOvl');ovl.width=canvas.width;ovl.height=canvas.height;
+    const covl=document.getElementById('commentOvl');covl.width=canvas.width;covl.height=canvas.height;
+    renderSigBoxes(pageNum);renderCommentLabels(pageNum);
+    const deg=rot;
+    const ab=document.getElementById('angBadge');
+    ab.textContent=deg+'°';ab.className='ang'+(deg?' on':'');
+  }catch(e){console.error(e);}
+  S.rendering=false;
+}
+
+// Pinch-to-zoom support
+let _pinchDist=0;
+document.getElementById('viewer').addEventListener('touchstart',e=>{
+  if(e.touches.length===2){
+    _pinchDist=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);
+    e.preventDefault();
+  }
+},{passive:false});
+document.getElementById('viewer').addEventListener('touchmove',e=>{
+  if(e.touches.length===2&&_pinchDist>0){
+    const d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);
+    const ratio=d/_pinchDist;
+    if(Math.abs(ratio-1)>0.04){
+      S.zoomFit=false;
+      S.zoom=Math.max(ZOOM_MIN,Math.min(ZOOM_MAX,S.zoom*ratio));
+      _pinchDist=d;
+      const zv=document.getElementById('zoomVal');if(zv)zv.textContent=Math.round(S.zoom*100)+'%';
+      renderMainZoom();
+    }
+    e.preventDefault();
+  }
+},{passive:false});
+
+// Mouse wheel zoom (Ctrl+scroll)
+document.getElementById('viewer').addEventListener('wheel',e=>{
+  if(!e.ctrlKey&&!e.metaKey)return;
+  e.preventDefault();
+  S.zoomFit=false;
+  const delta=e.deltaY>0?-0.1:0.1;
+  S.zoom=Math.max(ZOOM_MIN,Math.min(ZOOM_MAX,S.zoom+delta));
+  const zv=document.getElementById('zoomVal');if(zv)zv.textContent=Math.round(S.zoom*100)+'%';
+  renderMainZoom();
+},{passive:false});
+
+// Middle-click / drag to pan when zoomed in
+(()=>{
+  const viewer=document.getElementById('viewer');
+  let panning=false,px=0,py=0,sl=0,st=0;
+  viewer.addEventListener('mousedown',e=>{
+    if(e.button===1||(e.button===0&&!S.signMode&&!S.commentMode)){
+      if(e.button===0&&e.target.closest('.sig-box,.cmt-label,.cmt-composer,.mode-bar'))return;
+      if(e.button===0&&S.zoom<=1.05)return;
+      panning=true;px=e.clientX;py=e.clientY;sl=viewer.scrollLeft;st=viewer.scrollTop;
+      viewer.classList.add('grabbing');e.preventDefault();
     }
   });
+  document.addEventListener('mousemove',e=>{
+    if(!panning)return;
+    viewer.scrollLeft=sl-(e.clientX-px);
+    viewer.scrollTop=st-(e.clientY-py);
+  });
+  document.addEventListener('mouseup',()=>{panning=false;viewer.classList.remove('grabbing');});
+})();
+
+// ═══════════════════════════════════════════════════════════════════════
+// TIMESTAMP HELPERS
+// ═══════════════════════════════════════════════════════════════════════
+const TS={draw:{enable:true,fmt:'full'},type:{enable:true,fmt:'full'},upload:{enable:true,fmt:'full'}};
+function fmtNow(fmt){
+  const now=new Date(),p=n=>String(n).padStart(2,'0');
+  const d=p(now.getDate()),mo=p(now.getMonth()+1),y=now.getFullYear();
+  const h=p(now.getHours()),mi=p(now.getMinutes()),s=p(now.getSeconds());
+  switch(fmt){
+    case 'date':return`${d}/${mo}/${y}`;case 'datetime':return`${d}/${mo}/${y} ${h}:${mi}`;
+    case 'full':return`${d}/${mo}/${y} ${h}:${mi}:${s}`;case 'iso':return`${y}-${mo}-${d} ${h}:${mi}:${s}`;
+    default:return`${d}/${mo}/${y} ${h}:${mi}:${s}`;
+  }
+}
+function setTsFmt(el){TS.draw.fmt=el.dataset.fmt;document.querySelectorAll('#tsFmtRow .ts-fmt-btn').forEach(e=>e.classList.remove('on'));el.classList.add('on');}
+function toggleTsFmt(){TS.draw.enable=document.getElementById('tsEnable').checked;const r=document.getElementById('tsFmtRow');r.style.opacity=TS.draw.enable?'1':'0.4';r.style.pointerEvents=TS.draw.enable?'':'none';}
+function setTsFmtType(el){TS.type.fmt=el.dataset.fmt;document.querySelectorAll('#tsFmtRowType .ts-fmt-btn').forEach(e=>e.classList.remove('on'));el.classList.add('on');}
+function toggleTsFmtType(){TS.type.enable=document.getElementById('tsEnableType').checked;const r=document.getElementById('tsFmtRowType');r.style.opacity=TS.type.enable?'1':'0.4';r.style.pointerEvents=TS.type.enable?'':'none';}
+function setTsFmtUpload(el){TS.upload.fmt=el.dataset.fmt;document.querySelectorAll('#tsFmtRowUpload .ts-fmt-btn').forEach(e=>e.classList.remove('on'));el.classList.add('on');}
+function toggleTsFmtUpload(){TS.upload.enable=document.getElementById('tsEnableUpload').checked;const r=document.getElementById('tsFmtRowUpload');r.style.opacity=TS.upload.enable?'1':'0.4';r.style.pointerEvents=TS.upload.enable?'':'none';}
+
+// ═══════════════════════════════════════════════════════════════════════
+// COMPOSE SIG + TIMESTAMP
+// ═══════════════════════════════════════════════════════════════════════
+function composeSigWithTs(sigDataUrl,tsText){
+  return new Promise(resolve=>{
+    const img=new Image();
+    img.onload=()=>{
+      const sw=img.naturalWidth||400,sh=img.naturalHeight||120;
+      const mctx=document.createElement('canvas').getContext('2d');
+      const fontSize=22;mctx.font=`${fontSize}px 'DM Mono',monospace`;
+      const tw=mctx.measureText(tsText).width;
+      const pillPadX=16,canvasW=Math.max(sw,Math.ceil(tw)+pillPadX*2);
+      const lineH=Math.round(fontSize*1.6),gap=8,padV=6,totalH=sh+gap+lineH+padV*2;
+      const cv=document.createElement('canvas');cv.width=canvasW;cv.height=totalH;
+      const ctx=cv.getContext('2d');ctx.clearRect(0,0,canvasW,totalH);
+      ctx.drawImage(img,Math.round((canvasW-sw)/2),0,sw,sh);
+      const pillW=Math.ceil(tw)+pillPadX*2,pillX=Math.round((canvasW-pillW)/2),pillY=sh+gap,pillH=lineH+padV*2;
+      ctx.fillStyle='rgba(255,255,255,0.92)';ctx.beginPath();
+      if(ctx.roundRect)ctx.roundRect(pillX,pillY,pillW,pillH,5);else ctx.rect(pillX,pillY,pillW,pillH);
+      ctx.fill();ctx.strokeStyle='rgba(0,0,0,0.14)';ctx.lineWidth=1;ctx.stroke();
+      ctx.fillStyle='#1e293b';ctx.font=`${fontSize}px 'DM Mono',monospace`;ctx.textBaseline='middle';ctx.textAlign='center';
+      ctx.fillText(tsText,canvasW/2,pillY+pillH/2);
+      resolve(cv.toDataURL('image/png'));
+    };
+    img.onerror=()=>resolve(sigDataUrl);img.src=sigDataUrl;
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════════════════════════════════════
+function toast(msg,type='info',ms=2800){
+  const el=document.createElement('div');
+  const ic={ok:'✅',err:'❌',warn:'⚠️',info:'ℹ️'};
+  el.className='toast '+type;el.innerHTML=`<span>${ic[type]||''}</span><span>${msg}</span>`;
+  document.getElementById('toasts').appendChild(el);
+  setTimeout(()=>{el.style.cssText+='transition:all .22s;opacity:0;transform:translateY(6px)';setTimeout(()=>el.remove(),230);},ms);
+}
+function showLoad(txt,pct){
+  document.getElementById('loading').classList.add('on');
+  document.getElementById('loTxt').textContent=txt||'...';
+  if(pct!=null)document.getElementById('loFill').style.width=Math.min(100,pct)+'%';
+}
+function hideLoad(){document.getElementById('loading').classList.remove('on');document.getElementById('loFill').style.width='0';}
+
+// ═══════════════════════════════════════════════════════════════════════
+// LOAD PDF
+// ═══════════════════════════════════════════════════════════════════════
+async function loadPdfBytes(bytes,filename){
+  showLoad(t('preparing'),5);
+  try{
+    S.filename=filename;S.rotations={};S.signatures={};S.comments={};S.sigUrl=null;S.current=1;S.exportPages=new Set();
+    S.zoom=1.0;S.zoomFit=true;
+    S.pdfDoc=await PDFLib.PDFDocument.load(bytes,{ignoreEncryption:true});
+    S.pageCount=S.pdfDoc.getPageCount();
+    S.pdfDoc.getPages().forEach((p,i)=>{const r=p.getRotation().angle;if(r)S.rotations[i+1]=((r%360)+360)%360;});
+    const loadTask=pdfjsLib.getDocument({data:bytes.slice(0)});
+    S.pjsDoc=await loadTask.promise;
+    document.getElementById('uploadScreen').style.display='none';
+    document.getElementById('sidebar').style.display='';
+    document.getElementById('mainArea').style.display='';
+    document.getElementById('hdrRight').style.display='';
+    document.getElementById('pgTotal').textContent=S.pageCount;
+    updateHdrInfo();buildThumbList();await renderMain(1);
+    setTimeout(loadThumbs,200);
+    hideLoad();toast(`${filename} (${S.pageCount} ${t('trang')})`,'ok');
+    applyLang();
+  }catch(e){hideLoad();toast(t('cantRead')+e.message,'err');console.error(e);}
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// THUMBNAILS
+// ═══════════════════════════════════════════════════════════════════════
+function buildThumbList(){
+  const list=document.getElementById('pageList');list.innerHTML='';
+  for(let i=1;i<=S.pageCount;i++){
+    const d=document.createElement('div');
+    const cls=['pg-card',i===1?'active':'',S.rotations[i]?'rotated':''].filter(Boolean).join(' ');
+    d.className=cls;d.id='card-'+i;
+    d.innerHTML=`<div class="pg-sel-check" id="psc-${i}" onclick="toggleExportPage(event,${i})">✓</div><div class="pg-thumb"><div class="pg-thumb-ld" id="thl-${i}"><div class="spin" style="width:14px;height:14px;border:2px solid var(--border);border-top-color:var(--accent)"></div></div><canvas id="thc-${i}" style="display:none;max-width:100%;max-height:100%"></canvas></div><div class="pg-foot"><span class="pg-num">${i}</span><span class="badges"><span class="badge badge-r" id="br-${i}">${S.rotations[i]||0}°</span><span class="badge badge-s" id="bs-${i}">✍</span><span class="badge badge-c" id="bc-${i}">💬</span></span></div>`;
+    d.addEventListener('click',e=>{
+      if(e.target.classList.contains('pg-sel-check')||e.target.closest('.pg-sel-check'))return;
+      if(S.exportSelMode){toggleExportPage(e,i);return;}
+      selectPage(i);
+    });
+    list.appendChild(d);
+  }
+}
+async function loadThumbs(){for(let i=1;i<=S.pageCount;i++)await renderThumb(i);}
+async function renderThumb(p){
+  try{
+    const page=await S.pjsDoc.getPage(p);const rot=S.rotations[p]||0;
+    const vp=page.getViewport({scale:.29,rotation:rot});
+    const cv=document.getElementById('thc-'+p);const ld=document.getElementById('thl-'+p);
+    if(!cv)return;
+    cv.width=vp.width;cv.height=vp.height;
+    await page.render({canvasContext:cv.getContext('2d'),viewport:vp}).promise;
+    if(ld)ld.style.display='none';cv.style.display='block';
+  }catch(e){}
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// MAIN VIEWER
+// ═══════════════════════════════════════════════════════════════════════
+async function renderMain(pageNum){
+  if(S.rendering)return;S.rendering=true;
+  const vi=document.getElementById('vi'),empty=document.getElementById('vEmpty');
+  vi.style.display='none';empty.style.display='flex';
+  try{
+    const page=await S.pjsDoc.getPage(pageNum);
+    const rot=S.rotations[pageNum]||0;
+    const viewer=document.getElementById('viewer');
+    const maxW=viewer.clientWidth-56,maxH=viewer.clientHeight-56;
+    const raw=page.getViewport({scale:1,rotation:rot});
+    S.baseScale=Math.min(maxW/raw.width,maxH/raw.height,2.5);
+    const sc=S.zoomFit?S.baseScale:S.baseScale*S.zoom;
+    const vp=page.getViewport({scale:sc,rotation:rot});
+    const canvas=document.getElementById('mainCanvas');
+    canvas.width=Math.round(vp.width);canvas.height=Math.round(vp.height);
+    S.cvW=canvas.width;S.cvH=canvas.height;
+    await page.render({canvasContext:canvas.getContext('2d'),viewport:vp}).promise;
+    const ovl=document.getElementById('sigOvl');ovl.width=canvas.width;ovl.height=canvas.height;
+    const covl=document.getElementById('commentOvl');covl.width=canvas.width;covl.height=canvas.height;
+    empty.style.display='none';vi.style.display='block';
+    const viewer2=document.getElementById('viewer');
+    viewer2.classList.toggle('zoom-fit-mode',S.zoomFit);
+    renderSigBoxes(pageNum);renderCommentLabels(pageNum);
+    const deg=rot;
+    const ab=document.getElementById('angBadge');ab.textContent=deg+'°';ab.className='ang'+(deg?' on':'');
+    const zv=document.getElementById('zoomVal');
+    if(zv)zv.textContent=S.zoomFit?'100%':Math.round(S.zoom*100)+'%';
+    const zfb=document.getElementById('zoomFitBtn');
+    if(zfb){zfb.classList.toggle('on',S.zoomFit);zfb.textContent=S.zoomFit?t('zoomFit'):t('zoomFitOff');}
+  }catch(e){
+    empty.innerHTML='<span style="font-size:36px">⚠️</span><p>Error page '+pageNum+'</p>';
+    empty.style.display='flex';console.error(e);
+  }
+  S.rendering=false;
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════════════════════════════════
+async function selectPage(num){
+  if(num<1||num>S.pageCount)return;
+  document.querySelectorAll('.pg-card').forEach(c=>c.classList.remove('active'));
+  const card=document.getElementById('card-'+num);
+  if(card){card.classList.add('active');card.scrollIntoView({block:'nearest',behavior:'smooth'});}
+  S.current=num;document.getElementById('pgCur').textContent=num;
+  await renderMain(num);
+}
+const prevPage=()=>{if(S.current>1)selectPage(S.current-1);};
+const nextPage=()=>{if(S.current<S.pageCount)selectPage(S.current+1);};
+
+// ═══════════════════════════════════════════════════════════════════════
+// ROTATION
+// ═══════════════════════════════════════════════════════════════════════
+async function rotateCurrent(delta){
+  const p=S.current,cur=S.rotations[p]||0;
+  S.rotations[p]=((cur+delta)%360+360)%360;
+  updateCard(p);invalidateThumb(p);await renderMain(p);renderThumb(p);updateHdrInfo();
+  toast(`${t('trang')} ${p}: ${delta>0?'+':''}${delta}° → ${S.rotations[p]}°`,'ok',1600);
+}
+function resetRot(){const p=S.current;S.rotations[p]=0;updateCard(p);invalidateThumb(p);renderMain(p);renderThumb(p);updateHdrInfo();}
+async function bulkRotate(delta){
+  showLoad(`${t('rotateLbl')} ${delta}°...`,10);
+  for(let i=1;i<=S.pageCount;i++){S.rotations[i]=(((S.rotations[i]||0)+delta)%360+360)%360;updateCard(i);invalidateThumb(i);}
+  await renderMain(S.current);hideLoad();loadThumbs();updateHdrInfo();
+  toast(`${S.pageCount} ${t('trang')} +${delta}°`,'ok');
+}
+function bulkReset(){
+  if(!confirm(t('confirmBulkReset')))return;
+  S.rotations={};for(let i=1;i<=S.pageCount;i++){updateCard(i);invalidateThumb(i);}
+  renderMain(S.current);loadThumbs();updateHdrInfo();
+}
+function invalidateThumb(p){
+  const ld=document.getElementById('thl-'+p),cv=document.getElementById('thc-'+p);
+  if(ld){ld.innerHTML='<div class="spin" style="width:14px;height:14px;border:2px solid var(--border);border-top-color:var(--accent)"></div>';ld.style.display='flex';}
+  if(cv)cv.style.display='none';
+}
+function updateCard(p){
+  const card=document.getElementById('card-'+p);const br=document.getElementById('br-'+p);
+  const rot=S.rotations[p]||0,hasSig=(S.signatures[p]||[]).length>0,hasCmt=(S.comments[p]||[]).length>0;
+  if(card){card.classList.toggle('rotated',rot!==0);card.classList.toggle('signed',hasSig);card.classList.toggle('has-comment',hasCmt);}
+  if(br)br.textContent=rot+'°';
+}
+function updateHdrInfo(){
+  const rc=Object.values(S.rotations).filter(r=>r>0).length;
+  const sc=Object.values(S.signatures).reduce((a,v)=>a+v.length,0);
+  const cc=Object.values(S.comments).reduce((a,v)=>a+v.length,0);
+  const name=S.filename.length>26?S.filename.slice(0,23)+'…':S.filename;
+  let info=`<strong>${name}</strong> &nbsp;·&nbsp; ${S.pageCount} ${t('trang')}`;
+  if(rc)info+=` &nbsp;·&nbsp; <span style="color:#f59e0b;font-weight:600">${rc} ${t('rotated')}</span>`;
+  if(sc)info+=` &nbsp;·&nbsp; <span style="color:#16a34a;font-weight:600">${sc} ${t('signed')}</span>`;
+  if(cc)info+=` &nbsp;·&nbsp; <span style="color:#7c3aed;font-weight:600">${cc} ${t('commented')}</span>`;
+  document.getElementById('hdrInfo').innerHTML=info;
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// SIGNATURE MODAL
+// ═══════════════════════════════════════════════════════════════════════
+const openSigModal=()=>{document.getElementById('sigModal').classList.remove('hidden');switchTab('draw');};
+const closeSigModal=()=>document.getElementById('sigModal').classList.add('hidden');
+function switchTab(tab){
+  _tab=tab;
+  ['draw','type','upload'].forEach(x=>{
+    document.getElementById('tab-'+x).classList.toggle('on',x===tab);
+    document.getElementById('pane-'+x).style.display=x===tab?'':'none';
+  });
+  if(tab==='draw')initDraw();
+}
+function initDraw(){
+  if(D.inited)return;D.inited=true;
+  const cv=document.getElementById('drawCanvas'),ctx=cv.getContext('2d');
+  ctx.fillStyle='#fff';ctx.fillRect(0,0,cv.width,cv.height);
+  const pos=e=>{const r=cv.getBoundingClientRect(),s=e.touches?e.touches[0]:e;return{x:(s.clientX-r.left)*(cv.width/r.width),y:(s.clientY-r.top)*(cv.height/r.height)};};
+  const down=e=>{e.preventDefault();D.drawing=true;const p=pos(e);D.lx=p.x;D.ly=p.y;};
+  const move=e=>{
+    e.preventDefault();if(!D.drawing)return;
+    const p=pos(e),c=cv.getContext('2d');
+    c.strokeStyle=D.color;c.lineWidth=D.size;c.lineCap='round';c.lineJoin='round';
+    c.beginPath();c.moveTo(D.lx,D.ly);c.lineTo(p.x,p.y);c.stroke();D.lx=p.x;D.ly=p.y;
+  };
+  const up=()=>{D.drawing=false;};
+  cv.addEventListener('mousedown',down);cv.addEventListener('mousemove',move);
+  cv.addEventListener('mouseup',up);cv.addEventListener('mouseleave',up);
+  cv.addEventListener('touchstart',down,{passive:false});cv.addEventListener('touchmove',move,{passive:false});cv.addEventListener('touchend',up);
+}
+function clearDraw(){const cv=document.getElementById('drawCanvas'),ctx=cv.getContext('2d');ctx.fillStyle='#fff';ctx.fillRect(0,0,cv.width,cv.height);}
+function setDColor(c,el){D.color=c;document.querySelectorAll('#pane-draw .cswatch').forEach(e=>e.classList.remove('on'));el.classList.add('on');}
+function setDSize(sz,el){D.size=sz;document.querySelectorAll('.sz-btn').forEach(e=>e.classList.remove('on'));el.classList.add('on');}
+function setTFont(el){T.font=el.dataset.font;document.querySelectorAll('.fopt').forEach(e=>e.classList.remove('on'));el.classList.add('on');document.getElementById('typeInput').style.fontFamily=`'${T.font}',cursive`;updateTPrev();}
+function setTColor(c,el){T.color=c;document.querySelectorAll('#pane-type .cswatch').forEach(e=>e.classList.remove('on'));el.classList.add('on');updateTPrev();}
+function updateTPrev(){
+  const v=document.getElementById('typeInput')?.value||t('previewDefault');
+  const prev=document.getElementById('typePrev');
+  if(prev)prev.innerHTML=`<span style="font-family:'${T.font}',cursive;font-size:2.2rem;color:${T.color}">${v}</span>`;
+}
+document.getElementById('imgInput').addEventListener('change',e=>{
+  const f=e.target.files[0];if(!f)return;
+  const r=new FileReader();r.onload=ev=>{const img=document.getElementById('sigPreviewImg');img.src=ev.target.result;img.style.display='block';};r.readAsDataURL(f);
 });
+async function confirmSig(){
+  let rawUrl=null;const tab=_tab;const tsConf=TS[tab];
+  if(tab==='draw'){
+    const cv=document.getElementById('drawCanvas'),ctx=cv.getContext('2d');
+    const d=ctx.getImageData(0,0,cv.width,cv.height).data;
+    let ink=false;for(let i=0;i<d.length;i+=4){if(d[i]<230||d[i+1]<230||d[i+2]<230){ink=true;break;}}
+    if(!ink){toast(t('noInk'),'warn');return;}rawUrl=trimDrawSig(cv);
+  }else if(tab==='type'){
+    const v=document.getElementById('typeInput').value.trim();
+    if(!v){toast(t('noName'),'warn');return;}rawUrl=typeToDataUrl(v,T.font,T.color);
+  }else{
+    const src=document.getElementById('sigPreviewImg').src;
+    if(!src||src===location.href){toast(t('noImage'),'warn');return;}rawUrl=src;
+  }
+  if(tsConf.enable){showLoad(t('processing'));try{S.sigUrl=await composeSigWithTs(rawUrl,fmtNow(tsConf.fmt));}catch(e){S.sigUrl=rawUrl;}hideLoad();}
+  else{S.sigUrl=rawUrl;}
+  const prevDiv=document.getElementById('sigCompositePreview');const prevImg=document.getElementById('sigCompositeImg');
+  if(prevDiv&&prevImg){prevImg.src=S.sigUrl;prevDiv.style.display='block';prevDiv.style.padding='10px 18px';await new Promise(r=>setTimeout(r,1400));prevDiv.style.display='none';}
+  closeSigModal();toast(t('toastReady'),'ok',4000);
+}
+function trimDrawSig(srcCV){
+  const ctx=srcCV.getContext('2d');const{data,width,height}=ctx.getImageData(0,0,srcCV.width,srcCV.height);
+  let x0=width,y0=height,x1=0,y1=0;
+  for(let y=0;y<height;y++)for(let x=0;x<width;x++){
+    const i=(y*width+x)*4;
+    if(data[i]<230||data[i+1]<230||data[i+2]<230){x0=Math.min(x0,x);y0=Math.min(y0,y);x1=Math.max(x1,x);y1=Math.max(y1,y);}
+  }
+  if(x1<x0)return srcCV.toDataURL('image/png');
+  const pad=10,w=x1-x0+pad*2,h=y1-y0+pad*2;
+  const out=document.createElement('canvas');out.width=w;out.height=h;
+  const oc=out.getContext('2d');oc.drawImage(srcCV,x0-pad,y0-pad,w,h,0,0,w,h);
+  const od=oc.getImageData(0,0,w,h);
+  for(let i=0;i<od.data.length;i+=4){if(od.data[i]>228&&od.data[i+1]>228&&od.data[i+2]>228)od.data[i+3]=0;}
+  oc.putImageData(od,0,0);return out.toDataURL('image/png');
+}
+function typeToDataUrl(text,font,color){
+  const tmp=document.createElement('canvas');tmp.width=600;tmp.height=120;
+  const tc=tmp.getContext('2d');tc.font=`68px '${font}',cursive`;
+  const m=tc.measureText(text);const w=Math.ceil(m.width)+28,h=108;
+  tmp.width=w;tmp.height=h;tc.font=`64px '${font}',cursive`;tc.fillStyle=color;tc.textBaseline='middle';
+  tc.fillText(text,14,h/2);return tmp.toDataURL('image/png');
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// SIGN MODE
+// ═══════════════════════════════════════════════════════════════════════
+function toggleSignMode(){
+  if(!S.sigUrl){openSigModal();toast(t('sigNeedFirst'),'warn');return;}
+  if(S.commentMode)exitCommentMode();
+  S.signMode=!S.signMode;
+  document.getElementById('sigOvl').classList.toggle('signing',S.signMode);
+  document.getElementById('btnSign').classList.toggle('on',S.signMode);
+  document.getElementById('modeBar').classList.toggle('on',S.signMode);
+}
+function exitSignMode(){S.signMode=false;document.getElementById('sigOvl').classList.remove('signing');document.getElementById('btnSign').classList.remove('on');document.getElementById('modeBar').classList.remove('on');}
+document.getElementById('sigOvl').addEventListener('click',e=>{
+  if(!S.signMode||!S.sigUrl)return;
+  const rect=e.currentTarget.getBoundingClientRect();
+  const clickX=e.clientX-rect.left,clickY=e.clientY-rect.top;
+  const nw=0.22;
+  const _pImg=new Image();
+  _pImg.onload=()=>{
+    const ar=(_pImg.naturalHeight||1)/(_pImg.naturalWidth||1);
+    const nh=nw*ar*(S.cvW/S.cvH);
+    placeSig(S.current,(clickX/S.cvW)-nw/2,(clickY/S.cvH)-nh/2,nw,nh,S.sigUrl);
+  };
+  _pImg.onerror=()=>{placeSig(S.current,(clickX/S.cvW)-0.11,(clickY/S.cvH)-0.07,0.22,0.14,S.sigUrl);};
+  _pImg.src=S.sigUrl;exitSignMode();toast(t('toastPlaced')+' '+S.current,'ok');
+});
+function placeSig(page,nx,ny,nw,nh,dataUrl){
+  if(!S.signatures[page])S.signatures[page]=[];
+  const id='sig_'+Date.now()+'_'+Math.random().toString(36).slice(2,6);
+  S.signatures[page].push({id,nx,ny,nw,nh,dataUrl});renderSigBoxes(page);updateCard(page);updateHdrInfo();
+}
+function renderSigBoxes(page){
+  const vi=document.getElementById('vi');vi.querySelectorAll('.sig-box').forEach(el=>el.remove());
+  (S.signatures[page]||[]).forEach(sig=>makeSigBox(sig,page));
+}
+function makeSigBox(sig,page){
+  const vi=document.getElementById('vi');
+  const box=document.createElement('div');box.className='sig-box';box.id='sb-'+sig.id;
+  const toPixels=()=>({left:sig.nx*S.cvW,top:sig.ny*S.cvH,width:sig.nw*S.cvW,height:sig.nh*S.cvH});
+  const applyStyle=()=>{const p=toPixels();box.style.cssText=`left:${p.left}px;top:${p.top}px;width:${p.width}px;height:${p.height}px;`;};
+  applyStyle();
+  const img=document.createElement('img');img.src=sig.dataUrl;img.draggable=false;box.appendChild(img);
+  const del=document.createElement('button');del.className='sig-del';del.textContent='✕';
+  del.addEventListener('click',e=>{e.stopPropagation();deleteSig(page,sig.id);});box.appendChild(del);
+  const rsz=document.createElement('div');rsz.className='sig-rsz';box.appendChild(rsz);
+  let dx0,dy0,nx0,ny0;
+  const dragDown=e=>{
+    if(e.target===del||e.target===rsz)return;
+    e.preventDefault();e.stopPropagation();
+    const s=e.touches?e.touches[0]:e;dx0=s.clientX;dy0=s.clientY;nx0=sig.nx;ny0=sig.ny;
+    const onMove=ev=>{const s2=ev.touches?ev.touches[0]:ev;sig.nx=nx0+(s2.clientX-dx0)/S.cvW;sig.ny=ny0+(s2.clientY-dy0)/S.cvH;const p=toPixels();box.style.left=p.left+'px';box.style.top=p.top+'px';};
+    const onUp=()=>{document.removeEventListener('mousemove',onMove);document.removeEventListener('mouseup',onUp);document.removeEventListener('touchmove',onMove);document.removeEventListener('touchend',onUp);};
+    document.addEventListener('mousemove',onMove);document.addEventListener('mouseup',onUp);
+    document.addEventListener('touchmove',onMove,{passive:false});document.addEventListener('touchend',onUp);
+  };
+  box.addEventListener('mousedown',dragDown);box.addEventListener('touchstart',dragDown,{passive:false});
+  let rx0,ry0,nw0,nh0;
+  const rszDown=e=>{
+    e.preventDefault();e.stopPropagation();
+    const s=e.touches?e.touches[0]:e;rx0=s.clientX;ry0=s.clientY;nw0=sig.nw;nh0=sig.nh;
+    const onMove=ev=>{const s2=ev.touches?ev.touches[0]:ev;sig.nw=Math.max(40/S.cvW,nw0+(s2.clientX-rx0)/S.cvW);sig.nh=Math.max(18/S.cvH,nh0+(s2.clientY-ry0)/S.cvH);const p=toPixels();box.style.width=p.width+'px';box.style.height=p.height+'px';};
+    const onUp=()=>{document.removeEventListener('mousemove',onMove);document.removeEventListener('mouseup',onUp);document.removeEventListener('touchmove',onMove);document.removeEventListener('touchend',onUp);};
+    document.addEventListener('mousemove',onMove);document.addEventListener('mouseup',onUp);
+    document.addEventListener('touchmove',onMove,{passive:false});document.addEventListener('touchend',onUp);
+  };
+  rsz.addEventListener('mousedown',rszDown);rsz.addEventListener('touchstart',rszDown,{passive:false});
+  vi.appendChild(box);
+}
+function deleteSig(page,id){S.signatures[page]=(S.signatures[page]||[]).filter(s=>s.id!==id);const el=document.getElementById('sb-'+id);if(el)el.remove();updateCard(page);updateHdrInfo();toast(t('toastDeleted'),'info',1600);}
+function clearAllSigs(){
+  const total=Object.values(S.signatures).reduce((a,v)=>a+v.length,0);if(!total)return;
+  if(!confirm(t('confirmClearSigs')))return;
+  S.signatures={};renderSigBoxes(S.current);for(let i=1;i<=S.pageCount;i++)updateCard(i);updateHdrInfo();toast(t('toastDeletedAll'),'info');
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// COMMENT MODE
+// ═══════════════════════════════════════════════════════════════════════
+const CMT_COLORS=['#7c3aed','#dc2626','#1e40af','#15803d','#b45309','#0d0f14','#fff'];
+const CMT_BG={'#7c3aed':'rgba(245,243,255,0.92)','#dc2626':'rgba(255,241,242,0.92)','#1e40af':'rgba(239,246,255,0.92)','#15803d':'rgba(240,253,244,0.92)','#b45309':'rgba(255,251,235,0.92)','#0d0f14':'rgba(30,32,40,0.92)','#fff':'rgba(255,255,255,0.96)'};
+const CMT_SIZES=[12,14,16,20];
+let _cmtDefColor='#7c3aed',_cmtDefSize=14;
+
+function toggleCommentMode(){
+  if(S.signMode)exitSignMode();S.commentMode=!S.commentMode;
+  document.getElementById('commentOvl').classList.toggle('commenting',S.commentMode);
+  document.getElementById('btnComment').classList.toggle('on',S.commentMode);
+  document.getElementById('commentModeBar').classList.toggle('on',S.commentMode);
+  if(!S.commentMode)removeComposer();
+}
+function exitCommentMode(){
+  S.commentMode=false;document.getElementById('commentOvl').classList.remove('commenting');
+  document.getElementById('btnComment').classList.remove('on');document.getElementById('commentModeBar').classList.remove('on');removeComposer();
+}
+document.getElementById('commentOvl').addEventListener('click',e=>{
+  if(!S.commentMode)return;e.stopPropagation();
+  const rect=e.currentTarget.getBoundingClientRect();
+  exitCommentMode();spawnComposer(e.clientX-rect.left,e.clientY-rect.top);
+});
+function removeComposer(){const old=document.getElementById('cmt-composer-el');if(old)old.remove();}
+function spawnComposer(px,py){
+  removeComposer();const vi=document.getElementById('vi');if(!vi)return;
+  const comp=document.createElement('div');comp.className='cmt-composer';comp.id='cmt-composer-el';
+  const CWIDTH=240;let left=px+4,top=py+4;
+  if(left+CWIDTH>S.cvW-8)left=Math.max(4,px-CWIDTH-4);
+  if(top+200>S.cvH-8)top=Math.max(4,py-200-4);
+  comp.style.cssText=`left:${left}px;top:${top}px;width:${CWIDTH}px;`;
+  const hdr=document.createElement('div');hdr.className='cmt-composer-hdr';
+  hdr.innerHTML=`<span>💬 Nhập comment</span>`;
+  const closeBtn=document.createElement('button');closeBtn.className='cmt-composer-close';closeBtn.textContent='✕';
+  closeBtn.onclick=e=>{e.stopPropagation();removeComposer();};hdr.appendChild(closeBtn);comp.appendChild(hdr);
+  const ta=document.createElement('textarea');ta.className='cmt-composer-textarea';ta.placeholder='Nhập nội dung...';ta.style.color=_cmtDefColor;ta.id='cmt-composer-ta';comp.appendChild(ta);
+  const foot=document.createElement('div');foot.className='cmt-composer-footer';
+  const clrWrap=document.createElement('div');clrWrap.className='cmt-composer-colors';
+  CMT_COLORS.forEach(c=>{
+    const sw=document.createElement('div');sw.className='cmt-comp-swatch'+(c===_cmtDefColor?' on':'');
+    sw.style.cssText=`background:${c};${c==='#fff'?'border:1.5px solid #d6d0c4':''}`;
+    sw.onclick=e=>{e.stopPropagation();_cmtDefColor=c;ta.style.color=c;comp.querySelectorAll('.cmt-comp-swatch').forEach(s=>s.classList.remove('on'));sw.classList.add('on');};
+    clrWrap.appendChild(sw);
+  });
+  const szWrap=document.createElement('div');szWrap.style.cssText='display:flex;gap:2px;margin-left:4px';
+  CMT_SIZES.forEach(sz=>{
+    const sb=document.createElement('button');sb.className='cmt-comp-size'+(sz===_cmtDefSize?' on':'');sb.textContent=sz;
+    sb.onclick=e=>{e.stopPropagation();_cmtDefSize=sz;comp.querySelectorAll('.cmt-comp-size').forEach(s=>s.classList.remove('on'));sb.classList.add('on');};
+    szWrap.appendChild(sb);
+  });
+  foot.appendChild(clrWrap);foot.appendChild(szWrap);
+  const okBtn=document.createElement('button');okBtn.className='cmt-composer-ok';okBtn.textContent='OK ↵';
+  okBtn.onclick=e=>{e.stopPropagation();commitComposer(px,py,comp,ta);};foot.appendChild(okBtn);comp.appendChild(foot);
+  comp.addEventListener('click',e=>e.stopPropagation());comp.addEventListener('mousedown',e=>e.stopPropagation());
+  ta.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();commitComposer(px,py,comp,ta);}if(e.key==='Escape'){e.preventDefault();removeComposer();}});
+  vi.appendChild(comp);setTimeout(()=>ta.focus(),50);
+}
+function commitComposer(px,py,comp,ta){
+  const text=ta.value.trim();if(!text){removeComposer();return;}
+  const page=S.current;if(!S.comments[page])S.comments[page]=[];
+  const id='cmt_'+Date.now()+'_'+Math.random().toString(36).slice(2,6);
+  S.comments[page].push({id,nx:px/S.cvW,ny:py/S.cvH,text,color:_cmtDefColor,size:_cmtDefSize,
+    nw:Math.max(0.15,Math.min(0.55,(text.length*_cmtDefSize*0.6+24)/S.cvW)),
+    nh:Math.max(0.04,(Math.ceil(text.split('\n').length)*_cmtDefSize*1.5+14)/S.cvH)});
+  removeComposer();renderCommentLabels(page);updateCard(page);updateHdrInfo();toast(t('cmtAdded')+' '+page,'ok',2000);
+}
+function renderCommentPins(page){renderCommentLabels(page);}
+function renderCommentLabels(page){
+  const vi=document.getElementById('vi');vi.querySelectorAll('.cmt-label').forEach(el=>el.remove());
+  (S.comments[page]||[]).forEach(cmt=>makeCommentLabel(cmt,page));
+}
+function makeCommentLabel(cmt,page){
+  const vi=document.getElementById('vi');
+  const COLOR=cmt.color||'#7c3aed',SIZE=cmt.size||14,BG=CMT_BG[COLOR]||'rgba(245,243,255,0.92)',TXTCOLOR=COLOR==='#fff'?'#0d0f14':COLOR;
+  const box=document.createElement('div');box.className='cmt-label';box.id='cb-'+cmt.id;
+  let w=Math.max(60,cmt.nw*S.cvW),h=Math.max(28,cmt.nh*S.cvH);
+  box.style.cssText=`left:${cmt.nx*S.cvW}px;top:${cmt.ny*S.cvH}px;width:${w}px;height:${h}px;`;
+  const tb=document.createElement('div');tb.className='cmt-label-toolbar';
+  CMT_COLORS.forEach(c=>{
+    const sw=document.createElement('div');sw.className='cmt-tb-swatch'+(c===COLOR?' on':'');
+    sw.style.cssText=`background:${c};${c==='#fff'?'border-color:#999':'border-color:transparent'}`;
+    sw.onclick=e=>{e.stopPropagation();cmt.color=c;renderCommentLabels(page);updateCard(page);};tb.appendChild(sw);
+  });
+  const tbSep=document.createElement('div');tbSep.className='cmt-tb-sep';tb.appendChild(tbSep);
+  CMT_SIZES.forEach(sz=>{
+    const sb=document.createElement('button');sb.className='cmt-tb-btn';sb.textContent=sz;if(sz===SIZE)sb.style.color='#fff';
+    sb.onclick=e=>{e.stopPropagation();cmt.size=sz;renderCommentLabels(page);};tb.appendChild(sb);
+  });
+  const tbSep2=document.createElement('div');tbSep2.className='cmt-tb-sep';tb.appendChild(tbSep2);
+  const delBtn=document.createElement('button');delBtn.className='cmt-tb-btn del';delBtn.textContent='🗑';
+  delBtn.onclick=e=>{e.stopPropagation();deleteComment(page,cmt.id);};tb.appendChild(delBtn);box.appendChild(tb);
+  const body=document.createElement('div');body.className='cmt-label-body';
+  body.style.cssText=`background:${BG};color:${TXTCOLOR};font-size:${SIZE}px;width:100%;height:100%;min-height:${SIZE*1.8}px;border-color:${COLOR==='#fff'?'rgba(0,0,0,.2)':COLOR};`;
+  body.textContent=cmt.text;box.appendChild(body);
+  const editor=document.createElement('textarea');editor.className='cmt-label-editor';editor.value=cmt.text;editor.style.cssText=`color:${TXTCOLOR};font-size:${SIZE}px;display:none;`;
+  editor.oninput=()=>{cmt.text=editor.value;body.textContent=editor.value;};
+  editor.onblur=()=>{editor.style.display='none';body.style.display='';box.classList.remove('editing');};
+  editor.onkeydown=e=>{if(e.key==='Escape')editor.blur();};
+  body.addEventListener('dblclick',e=>{e.stopPropagation();body.style.display='none';editor.style.display='block';editor.focus();box.classList.add('editing');});
+  box.appendChild(editor);
+  const rsz=document.createElement('div');rsz.className='cmt-label-rsz';
+  let rx0,ry0,rw0,rh0;
+  rsz.addEventListener('mousedown',e=>{
+    e.preventDefault();e.stopPropagation();rx0=e.clientX;ry0=e.clientY;rw0=w;rh0=h;
+    const onMove=ev=>{w=Math.max(60,rw0+(ev.clientX-rx0));h=Math.max(28,rh0+(ev.clientY-ry0));box.style.width=w+'px';box.style.height=h+'px';cmt.nw=w/S.cvW;cmt.nh=h/S.cvH;};
+    const onUp=()=>{document.removeEventListener('mousemove',onMove);document.removeEventListener('mouseup',onUp);};
+    document.addEventListener('mousemove',onMove);document.addEventListener('mouseup',onUp);
+  });box.appendChild(rsz);
+  let dx0,dy0,nx0,ny0;
+  const dragStart=e=>{
+    if(e.target===editor||e.target===rsz||e.target.classList.contains('cmt-tb-swatch')||e.target.classList.contains('cmt-tb-btn'))return;
+    e.preventDefault();e.stopPropagation();
+    const s=e.touches?e.touches[0]:e;dx0=s.clientX;dy0=s.clientY;nx0=cmt.nx;ny0=cmt.ny;
+    const onMove=ev=>{const s2=ev.touches?ev.touches[0]:ev;cmt.nx=Math.max(0,Math.min((S.cvW-w)/S.cvW,nx0+(s2.clientX-dx0)/S.cvW));cmt.ny=Math.max(0,Math.min((S.cvH-h)/S.cvH,ny0+(s2.clientY-dy0)/S.cvH));box.style.left=cmt.nx*S.cvW+'px';box.style.top=cmt.ny*S.cvH+'px';};
+    const onUp=()=>{document.removeEventListener('mousemove',onMove);document.removeEventListener('mouseup',onUp);document.removeEventListener('touchmove',onMove);document.removeEventListener('touchend',onUp);};
+    document.addEventListener('mousemove',onMove);document.addEventListener('mouseup',onUp);
+    document.addEventListener('touchmove',onMove,{passive:false});document.addEventListener('touchend',onUp);
+  };
+  box.addEventListener('mousedown',dragStart);box.addEventListener('touchstart',dragStart,{passive:false});
+  vi.appendChild(box);
+}
+function deleteComment(page,id){S.comments[page]=(S.comments[page]||[]).filter(c=>c.id!==id);const el=document.getElementById('cb-'+id);if(el)el.remove();updateCard(page);updateHdrInfo();toast(t('cmtDeleted'),'info',1600);}
+function clearAllComments(){
+  const total=Object.values(S.comments).reduce((a,v)=>a+v.length,0);if(!total)return;
+  if(!confirm(t('confirmClearCmts')))return;
+  S.comments={};renderCommentLabels(S.current);for(let i=1;i<=S.pageCount;i++)updateCard(i);updateHdrInfo();toast(t('cmtDeletedAll'),'info');
+}
+document.addEventListener('click',e=>{const comp=document.getElementById('cmt-composer-el');if(comp&&!comp.contains(e.target))removeComposer();});
+
+// ═══════════════════════════════════════════════════════════════════════
+// PAGE EXPORT SELECTION
+// ═══════════════════════════════════════════════════════════════════════
+function toggleExportPage(e,pageNum){if(e)e.stopPropagation();if(S.exportPages.has(pageNum))S.exportPages.delete(pageNum);else S.exportPages.add(pageNum);syncExportPageUI(pageNum);updateExportModeBar();}
+function syncExportPageUI(pageNum){
+  const card=document.getElementById('card-'+pageNum);const check=document.getElementById('psc-'+pageNum);const selected=S.exportPages.has(pageNum);
+  if(card)card.classList.toggle('selected-for-export',selected);
+  if(check)check.style.cssText=selected?'display:flex;background:#1e40af;border-color:#1e40af;color:#fff':'';
+}
+function updateExportModeBar(){const count=S.exportPages.size;const badge=document.getElementById('exportCountBadge');if(badge)badge.textContent=count+' '+t('trang');}
+function exitExportSelMode(){S.exportSelMode=false;document.getElementById('pageList').classList.remove('export-mode');document.getElementById('exportModeBar').classList.remove('on');document.querySelectorAll('.pg-sel-check').forEach(el=>{el.style.display='';el.style.background='';el.style.borderColor='';el.style.color='';});document.querySelectorAll('.pg-card').forEach(c=>c.classList.remove('selected-for-export'));}
+
+// PAGE EXPORT MODAL
+function openExportModal(){if(!S.pdfDoc)return;buildExportGrid();updateExportSummary();document.getElementById('expRangeInput').value='';document.getElementById('exportModal').classList.remove('hidden');}
+function closeExportModal(){document.getElementById('exportModal').classList.add('hidden');}
+function buildExportGrid(){
+  const grid=document.getElementById('expPagesGrid');grid.innerHTML='';
+  for(let i=1;i<=S.pageCount;i++){
+    const chip=document.createElement('div');chip.className='exp-page-chip'+(S.exportPages.has(i)?' on':'');chip.id='epc-'+i;
+    const thumb=document.createElement('div');thumb.className='exp-page-thumb';
+    const existCV=document.getElementById('thc-'+i);
+    if(existCV&&existCV.style.display!=='none'){
+      const miniCV=document.createElement('canvas');miniCV.width=existCV.width;miniCV.height=existCV.height;miniCV.getContext('2d').drawImage(existCV,0,0);miniCV.style.cssText='max-width:100%;max-height:100%;display:block';thumb.appendChild(miniCV);
+    }else{thumb.innerHTML='<span style="font-size:.6rem;color:#8a8070">'+i+'</span>';}
+    chip.appendChild(thumb);const num=document.createElement('div');num.className='exp-page-num';num.textContent=i;chip.appendChild(num);
+    chip.onclick=()=>toggleExportChip(i);grid.appendChild(chip);
+  }
+}
+function toggleExportChip(i){if(S.exportPages.has(i))S.exportPages.delete(i);else S.exportPages.add(i);const chip=document.getElementById('epc-'+i);if(chip)chip.classList.toggle('on',S.exportPages.has(i));syncExportPageUI(i);updateExportSummary();}
+function updateExportSummary(){const n=S.exportPages.size;const fmt=t('expSummaryFmt');document.getElementById('expSummary').innerHTML=typeof fmt==='function'?fmt(n,S.pageCount):`${n} / ${S.pageCount}`;const lbl=document.getElementById('exportCountLabel');if(lbl)lbl.textContent=n;const btn=document.getElementById('exportExecBtn');if(btn)btn.disabled=n===0;}
+function expSelectAll(){for(let i=1;i<=S.pageCount;i++){S.exportPages.add(i);const c=document.getElementById('epc-'+i);if(c)c.classList.add('on');syncExportPageUI(i);}updateExportSummary();}
+function expSelectNone(){S.exportPages.clear();document.querySelectorAll('.exp-page-chip').forEach(c=>c.classList.remove('on'));for(let i=1;i<=S.pageCount;i++)syncExportPageUI(i);updateExportSummary();}
+function expSelectOdd(){expSelectNone();for(let i=1;i<=S.pageCount;i+=2){S.exportPages.add(i);const c=document.getElementById('epc-'+i);if(c)c.classList.add('on');syncExportPageUI(i);}updateExportSummary();}
+function expSelectEven(){expSelectNone();for(let i=2;i<=S.pageCount;i+=2){S.exportPages.add(i);const c=document.getElementById('epc-'+i);if(c)c.classList.add('on');syncExportPageUI(i);}updateExportSummary();}
+function expSelectCurrent(){if(S.exportPages.has(S.current))S.exportPages.delete(S.current);else S.exportPages.add(S.current);const c=document.getElementById('epc-'+S.current);if(c)c.classList.toggle('on',S.exportPages.has(S.current));syncExportPageUI(S.current);updateExportSummary();}
+function applyRangeInput(){
+  const val=document.getElementById('expRangeInput').value.trim();if(!val)return;
+  S.exportPages.clear();
+  val.split(',').forEach(part=>{part=part.trim();if(part.includes('-')){const[a,b]=part.split('-').map(Number);if(!isNaN(a)&&!isNaN(b)){for(let i=Math.min(a,b);i<=Math.max(a,b);i++){if(i>=1&&i<=S.pageCount)S.exportPages.add(i);}}}else{const n=Number(part);if(!isNaN(n)&&n>=1&&n<=S.pageCount)S.exportPages.add(n);}});
+  document.querySelectorAll('.exp-page-chip').forEach(c=>c.classList.remove('on'));
+  S.exportPages.forEach(i=>{const c=document.getElementById('epc-'+i);if(c)c.classList.add('on');syncExportPageUI(i);});updateExportSummary();
+}
+
+// COMMENT RENDER TO CANVAS (for PDF export)
+function renderCmtToCanvas(ctx,cmt,exportW,exportH){
+  const COLOR=cmt.color||'#7c3aed',SIZE=Math.round((cmt.size||14)*2),TXTCOLOR=COLOR==='#fff'?'#0d0f14':COLOR;
+  const BG_MAP={'#7c3aed':'rgba(245,243,255,0.93)','#dc2626':'rgba(255,241,242,0.93)','#1e40af':'rgba(239,246,255,0.93)','#15803d':'rgba(240,253,244,0.93)','#b45309':'rgba(255,251,235,0.93)','#0d0f14':'rgba(28,30,38,0.93)','#fff':'rgba(255,255,255,0.97)'};
+  const BG=BG_MAP[COLOR]||'rgba(245,243,255,0.93)';
+  const px=cmt.nx*exportW,py=cmt.ny*exportH,bw=Math.max(80,cmt.nw*exportW),bh=Math.max(SIZE*1.8,cmt.nh*exportH);
+  const lines=cmt.text.split('\n'),PAD=SIZE*0.55;
+  ctx.save();ctx.fillStyle=BG;ctx.strokeStyle=COLOR==='#fff'?'rgba(0,0,0,.25)':COLOR;ctx.lineWidth=Math.max(2,SIZE*0.12);
+  ctx.beginPath();if(ctx.roundRect)ctx.roundRect(px,py,bw,bh,6);else ctx.rect(px,py,bw,bh);
+  ctx.fill();ctx.stroke();
+  ctx.fillStyle=TXTCOLOR;ctx.font=`600 ${SIZE}px 'DM Sans',sans-serif`;ctx.textBaseline='top';ctx.textAlign='left';
+  lines.forEach((line,i)=>{ctx.fillText(line,px+PAD,py+PAD+i*SIZE*1.48,bw-PAD*2);});
+  ctx.restore();
+}
+
+// EXECUTE EXPORT (selected pages)
+async function executeExport(){
+  if(S.exportPages.size===0){toast(t('noPageSelected'),'warn');return;}
+  closeExportModal();const pages=Array.from(S.exportPages).sort((a,b)=>a-b);
+  showLoad(t('preparing'),2);document.getElementById('exportExecBtn').disabled=true;
+  try{
+    const outDoc=await PDFLib.PDFDocument.create();const PX_PER_PT=2.0;
+    for(let pi=0;pi<pages.length;pi++){
+      const pn=pages[pi];showLoad(`${t('processingPage')} ${pn} (${pi+1}/${pages.length})...`,Math.round(pi/pages.length*88)+2);
+      await new Promise(r=>setTimeout(r,0));
+      const rot=S.rotations[pn]||0,sigs=S.signatures[pn]||[],cmts=S.comments[pn]||[];
+      const hasMod=rot!==0||sigs.length>0||cmts.length>0;
+      if(!hasMod){const[cp]=await outDoc.copyPages(S.pdfDoc,[pn-1]);outDoc.addPage(cp);continue;}
+      const pjsPage=await S.pjsDoc.getPage(pn);
+      const exportVP=pjsPage.getViewport({scale:PX_PER_PT,rotation:rot});
+      const exportW=Math.round(exportVP.width),exportH=Math.round(exportVP.height);
+      const offscr=document.createElement('canvas');offscr.width=exportW;offscr.height=exportH;
+      const ctx=offscr.getContext('2d');await pjsPage.render({canvasContext:ctx,viewport:exportVP}).promise;
+      for(const sig of sigs){await new Promise(res=>{const imgEl=new Image();imgEl.onload=()=>{ctx.drawImage(imgEl,sig.nx*exportW,sig.ny*exportH,sig.nw*exportW,sig.nh*exportH);res();};imgEl.onerror=()=>res();imgEl.src=sig.dataUrl;});}
+      for(const cmt of cmts)renderCmtToCanvas(ctx,cmt,exportW,exportH);
+      const pngUrl=offscr.toDataURL('image/png'),b64=pngUrl.split(',')[1];
+      const bin=atob(b64);const bytes=new Uint8Array(bin.length);for(let k=0;k<bin.length;k++)bytes[k]=bin.charCodeAt(k);
+      const embImg=await outDoc.embedPng(bytes);const pgW=exportW/PX_PER_PT,pgH=exportH/PX_PER_PT;
+      const newPg=outDoc.addPage([pgW,pgH]);newPg.drawImage(embImg,{x:0,y:0,width:pgW,height:pgH});
+    }
+    showLoad(t('saving'),96);await new Promise(r=>setTimeout(r,0));const out=await outDoc.save();showLoad(t('done'),100);await new Promise(r=>setTimeout(r,300));
+    const blob=new Blob([out],{type:'application/pdf'});const url=URL.createObjectURL(blob);const a=document.createElement('a');
+    const name=S.filename.replace(/\.pdf$/i,'')+'_pages_'+pages.join('-')+'.pdf';a.href=url;a.download=name;a.click();URL.revokeObjectURL(url);
+    toast(t('exportDone')+pages.length+' '+t('trang')+' → '+name,'ok',5000);
+  }catch(e){toast(t('pdfError')+e.message,'err',7000);console.error(e);}
+  hideLoad();document.getElementById('exportExecBtn').disabled=false;
+}
+
+// SAVE FULL PDF
+async function savePdf(){
+  showLoad(t('preparing'),2);document.getElementById('dlBtn').disabled=true;
+  try{
+    const outDoc=await PDFLib.PDFDocument.create();const PX_PER_PT=2.0;
+    for(let pn=1;pn<=S.pageCount;pn++){
+      showLoad(`${t('processingPage')} ${pn}/${S.pageCount}...`,Math.round((pn-1)/S.pageCount*88)+2);await new Promise(r=>setTimeout(r,0));
+      const rot=S.rotations[pn]||0,sigs=S.signatures[pn]||[],cmts=S.comments[pn]||[];
+      const hasMod=rot!==0||sigs.length>0||cmts.length>0;
+      if(!hasMod){const[cp]=await outDoc.copyPages(S.pdfDoc,[pn-1]);outDoc.addPage(cp);continue;}
+      const pjsPage=await S.pjsDoc.getPage(pn);
+      const exportVP=pjsPage.getViewport({scale:PX_PER_PT,rotation:rot});
+      const exportW=Math.round(exportVP.width),exportH=Math.round(exportVP.height);
+      const offscr=document.createElement('canvas');offscr.width=exportW;offscr.height=exportH;
+      const ctx=offscr.getContext('2d');await pjsPage.render({canvasContext:ctx,viewport:exportVP}).promise;
+      for(const sig of sigs){await new Promise(res=>{const imgEl=new Image();imgEl.onload=()=>{ctx.drawImage(imgEl,sig.nx*exportW,sig.ny*exportH,sig.nw*exportW,sig.nh*exportH);res();};imgEl.onerror=()=>res();imgEl.src=sig.dataUrl;});}
+      for(const cmt of cmts)renderCmtToCanvas(ctx,cmt,exportW,exportH);
+      const pngUrl=offscr.toDataURL('image/png'),b64=pngUrl.split(',')[1];
+      const bin=atob(b64);const bytes=new Uint8Array(bin.length);for(let k=0;k<bin.length;k++)bytes[k]=bin.charCodeAt(k);
+      const embImg=await outDoc.embedPng(bytes);const pgW=exportW/PX_PER_PT,pgH=exportH/PX_PER_PT;
+      const newPg=outDoc.addPage([pgW,pgH]);newPg.drawImage(embImg,{x:0,y:0,width:pgW,height:pgH});
+    }
+    showLoad(t('saving'),96);await new Promise(r=>setTimeout(r,0));const out=await outDoc.save();showLoad(t('done'),100);await new Promise(r=>setTimeout(r,300));
+    const blob=new Blob([out],{type:'application/pdf'});const url=URL.createObjectURL(blob);const a=document.createElement('a');
+    const name=S.filename.replace(/\.pdf$/i,'')+'_signed.pdf';a.href=url;a.download=name;a.click();URL.revokeObjectURL(url);
+    toast(t('downloaded')+name,'ok',5000);
+  }catch(e){toast(t('pdfError')+e.message,'err',7000);console.error(e);}
+  hideLoad();document.getElementById('dlBtn').disabled=false;
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// COMBINE PDF
+// ═══════════════════════════════════════════════════════════════════════
+// Each item: { id, file, name, size, bytes(ArrayBuffer), pageCount, rangeInput }
+let _combineFiles=[];
+let _combineDragSrc=null;
+
+function openCombineModal(){
+  document.getElementById('combineModal').classList.remove('hidden');
+  updateCombineCurrentBanner();
+  renderCombineList();
+}
+function closeCombineModal(){document.getElementById('combineModal').classList.add('hidden');}
+
+// Show/update the "add current file" banner at the top of modal
+function updateCombineCurrentBanner(){
+  const banner  = document.getElementById('combineCurrBanner');
+  const nameEl  = document.getElementById('combineCurrName');
+  const metaEl  = document.getElementById('combineCurrMeta');
+  const addBtn  = document.getElementById('combineCurrBtn');
+  const botBtn  = document.getElementById('combineCurrBtnBottom');
+  if(!banner) return;
+
+  if(!S.pdfDoc || !S.filename){
+    banner.classList.add('hidden');
+    if(botBtn) botBtn.style.display = 'none';
+    return;
+  }
+
+  banner.classList.remove('hidden');
+  nameEl.textContent = S.filename;
+  metaEl.textContent = S.pageCount + ' trang';
+
+  // Check if already added (match by name + pageCount as proxy)
+  const alreadyAdded = _combineFiles.some(f => f.name === S.filename && f.pageCount === S.pageCount && f._fromCurrent);
+  if(addBtn){
+    addBtn.textContent = alreadyAdded ? '✓ Đã thêm' : '＋ Thêm file này';
+    addBtn.className   = alreadyAdded ? 'ccb-btn added' : 'ccb-btn add';
+    addBtn.disabled    = alreadyAdded;
+  }
+  if(botBtn){
+    botBtn.style.display = '';
+    botBtn.textContent = alreadyAdded ? '✓ Đã thêm file đang mở' : '＋ Thêm file đang mở';
+    botBtn.disabled    = alreadyAdded;
+  }
+}
+
+// Add the currently open PDF bytes into combine list
+async function addCurrentFileToCombine(){
+  if(!S.pdfDoc || !S.pjsDoc){ toast('Chưa có file nào đang mở', 'warn'); return; }
+
+  // Check limit
+  const currentTotal = _combineFiles.reduce((sum, item) => {
+    const pgs = typeof item.pageCount === 'number' ? item.pageCount : 0;
+    return sum + (item.rangeInput ? countRangePages(item.rangeInput, pgs) : pgs);
+  }, 0);
+  if(_combineFiles.length > 0 && currentTotal + S.pageCount > MAX_TOTAL_PAGES){
+    toast('⚠️ Thêm file này sẽ vượt giới hạn ' + MAX_TOTAL_PAGES + ' trang', 'warn', 3500);
+    return;
+  }
+
+  showLoad('Đang đọc file...', 20);
+  try{
+    // Re-save current doc (with any rotations already embedded) to bytes
+    const outDoc = await PDFLib.PDFDocument.create();
+    const pages  = await outDoc.copyPages(S.pdfDoc, Array.from({length: S.pageCount}, (_,i) => i));
+    pages.forEach(p => outDoc.addPage(p));
+    const bytes  = (await outDoc.save()).buffer;
+
+    _combineFiles.push({
+      id: 'cf_' + Date.now() + '_curr',
+      name: S.filename,
+      size: bytes.byteLength,
+      bytes,
+      pageCount: S.pageCount,
+      rangeInput: '',
+      _fromCurrent: true,   // flag so banner knows it was added
+    });
+    hideLoad();
+    renderCombineList();
+    updateCombineCurrentBanner();
+    toast('✅ Đã thêm file đang mở vào danh sách ghép', 'ok', 2500);
+  }catch(e){
+    hideLoad();
+    toast('Lỗi khi đọc file: ' + e.message, 'err');
+    console.error(e);
+  }
+}
+
+// ── COMBINE FILE INPUT & DROP ZONE ──────────────────────────────────
+const MAX_TOTAL_PAGES = 100;
+
+// Click on drop zone → trigger file picker
+document.getElementById('combineDrop').addEventListener('click', e => {
+  document.getElementById('combineInput').click();
+});
+
+// File input change handler
+document.getElementById('combineInput').addEventListener('change', async e => {
+  const files = [...e.target.files];
+  if(files.length === 0) return;
+  showLoad(t('preparing'), 10);
+  let added = 0, skipped = 0;
+  for(const f of files){
+    if(f.type !== 'application/pdf' && !f.name.endsWith('.pdf')){
+      toast(t('notPdf'), 'warn'); skipped++; continue;
+    }
+    const result = await addCombineFile(f);
+    if(result === 'limit') { skipped++; }
+    else { added++; }
+  }
+  e.target.value = '';
+  hideLoad();
+  renderCombineList();
+  if(added > 0) toast(`✅ Đã thêm ${added} file`, 'ok', 2000);
+  if(skipped > 0 && added === 0) toast(`⚠️ Vượt giới hạn 100 trang hoặc file không hợp lệ`, 'warn', 3500);
+});
+
+// Drag-drop onto combine drop zone
+const _combineDrop = document.getElementById('combineDrop');
+_combineDrop.addEventListener('dragover', e => { e.preventDefault(); _combineDrop.classList.add('over'); });
+_combineDrop.addEventListener('dragleave', () => _combineDrop.classList.remove('over'));
+_combineDrop.addEventListener('drop', async e => {
+  e.preventDefault(); _combineDrop.classList.remove('over');
+  const files = [...e.dataTransfer.files];
+  showLoad(t('preparing'), 10);
+  let added = 0;
+  for(const f of files){
+    if(f.type !== 'application/pdf' && !f.name.endsWith('.pdf')){ toast(t('notPdf'), 'warn'); continue; }
+    const result = await addCombineFile(f);
+    if(result !== 'limit') added++;
+  }
+  hideLoad();
+  renderCombineList();
+  if(added > 0) toast(`✅ Đã thêm ${added} file`, 'ok', 2000);
+});
+
+// Returns 'ok' or 'limit'
+async function addCombineFile(file){
+  return new Promise(resolve => {
+    const reader = new FileReader();
+    reader.onload = async ev => {
+      const bytes = ev.target.result;
+      let pageCount = 0;
+      try{
+        const doc = await PDFLib.PDFDocument.load(bytes, {ignoreEncryption:true});
+        pageCount = doc.getPageCount();
+      }catch(e){ pageCount = 1; }
+
+      // Count current total pages (respecting range inputs)
+      const currentTotal = _combineFiles.reduce((sum, item) => {
+        const pgs = typeof item.pageCount === 'number' ? item.pageCount : 0;
+        return sum + (item.rangeInput ? countRangePages(item.rangeInput, pgs) : pgs);
+      }, 0);
+
+      const addPages = typeof pageCount === 'number' ? pageCount : 1;
+
+      // Check limit: if already 0 files allow any single file < 10 pages freely,
+      // otherwise cap total at MAX_TOTAL_PAGES
+      if(_combineFiles.length > 0 && currentTotal + addPages > MAX_TOTAL_PAGES){
+        toast(`⚠️ "${file.name}" sẽ vượt giới hạn ${MAX_TOTAL_PAGES} trang (hiện: ${currentTotal}/${MAX_TOTAL_PAGES})`, 'warn', 4000);
+        resolve('limit'); return;
+      }
+
+      _combineFiles.push({
+        id: 'cf_' + Date.now() + '_' + Math.random().toString(36).slice(2,5),
+        name: file.name,
+        size: file.size,
+        bytes, pageCount,
+        rangeInput: '',
+      });
+      resolve('ok');
+    };
+    reader.onerror = () => resolve('limit');
+    reader.readAsArrayBuffer(file);
+  });
+}
+
+function renderCombineList(){
+  const list    = document.getElementById('combineFileList');
+  const empty   = document.getElementById('combineEmpty');
+  const hint    = document.getElementById('combineOrderHint');
+  const bottom  = document.getElementById('combineBottomBar');
+  const execBtn = document.getElementById('combineExecBtn');
+  const drop    = document.getElementById('combineDrop');
+  // Guard: modal not yet in DOM
+  if(!list||!empty||!execBtn)return;
+
+  // Clear only the file rows (empty/hint/bottom are siblings, not children)
+  list.innerHTML='';
+
+  const hasFiles = _combineFiles.length > 0;
+
+  // Toggle UI sections
+  empty.style.display   = hasFiles ? 'none' : 'block';
+  if(hint)   hint.style.display   = hasFiles ? 'block' : 'none';
+  if(bottom) bottom.style.display = hasFiles ? 'flex'  : 'none';
+  execBtn.disabled = _combineFiles.length < 2;
+
+  // Shrink drop zone when files present
+  if(drop){
+    drop.style.padding = hasFiles ? '10px 14px' : '20px';
+    drop.style.marginBottom = hasFiles ? '6px' : '10px';
+    const di = drop.querySelector('.drop-icon');
+    if(di) di.style.display = hasFiles ? 'none' : '';
+  }
+
+  if(!hasFiles) return;
+
+  // Build file rows
+  _combineFiles.forEach((item, idx) => {
+    const row = document.createElement('div');
+    row.className = 'combine-file-item';
+    row.draggable = true;
+    row.dataset.id = item.id;
+
+    // Order badge
+    const ordBadge = document.createElement('div');
+    ordBadge.style.cssText = 'position:absolute;top:6px;left:28px;width:18px;height:18px;background:var(--teal);color:#fff;border-radius:50%;font-size:.62rem;font-weight:700;display:flex;align-items:center;justify-content:center;font-family:var(--mono);z-index:2';
+    ordBadge.textContent = idx + 1;
+    row.appendChild(ordBadge);
+
+    // Drag handle
+    const dh = document.createElement('span');
+    dh.className = 'cfi-drag-handle'; dh.textContent = '⋮⋮'; dh.title = 'Kéo để sắp xếp';
+    row.appendChild(dh);
+
+    // Icon
+    const icon = document.createElement('span');
+    icon.className = 'cfi-icon'; icon.textContent = item._fromCurrent ? '📂' : '📄';
+    row.appendChild(icon);
+
+    // Source badge
+    const srcBadge = document.createElement('span');
+    srcBadge.className = 'cfi-source ' + (item._fromCurrent ? 'from-current' : 'from-file');
+    srcBadge.textContent = item._fromCurrent ? '★ Đang mở' : '↑ File';
+    row.appendChild(srcBadge);
+
+    // Name + size
+    const info = document.createElement('div'); info.className = 'cfi-info';
+    const nameEl = document.createElement('div'); nameEl.className = 'cfi-name'; nameEl.textContent = item.name;
+    const metaEl = document.createElement('div'); metaEl.className = 'cfi-meta';
+    metaEl.textContent = (item.size/1024).toFixed(0) + ' KB · ' + item.pageCount + ' ' + t('combinePages');
+    info.appendChild(nameEl); info.appendChild(metaEl);
+    row.appendChild(info);
+
+    // Page range input
+    const rangeWrap = document.createElement('div');
+    rangeWrap.style.cssText = 'display:flex;flex-direction:column;align-items:flex-end;gap:2px;flex-shrink:0';
+    const rangeLbl = document.createElement('span');
+    rangeLbl.style.cssText = 'font-size:.6rem;color:var(--muted);font-family:var(--mono)';
+    rangeLbl.textContent = t('combinePageRange');
+    const rangeIn = document.createElement('input');
+    rangeIn.type = 'text'; rangeIn.className = 'cfi-range';
+    rangeIn.placeholder = '1-' + item.pageCount; rangeIn.value = item.rangeInput;
+    rangeIn.title = 'Dải trang, vd: 1-3,5 (trống = tất cả)';
+    rangeIn.oninput = () => { item.rangeInput = rangeIn.value.trim(); updateCombineSummary(); };
+    rangeIn.addEventListener('click', e => e.stopPropagation());
+    rangeIn.addEventListener('mousedown', e => e.stopPropagation());
+    rangeWrap.appendChild(rangeLbl); rangeWrap.appendChild(rangeIn);
+    row.appendChild(rangeWrap);
+
+    // Delete button
+    const delBtn = document.createElement('button');
+    delBtn.className = 'cfi-del'; delBtn.textContent = '✕'; delBtn.title = 'Xóa file này';
+    delBtn.addEventListener('click', e => { e.stopPropagation(); removeCombineFile(item.id); });
+    row.appendChild(delBtn);
+
+    // ── Drag-to-reorder ──
+    row.addEventListener('dragstart', e => {
+      _combineDragSrc = item.id; row.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+    });
+    row.addEventListener('dragend', () => {
+      row.classList.remove('dragging');
+      document.querySelectorAll('.combine-file-item').forEach(r => r.classList.remove('drag-over'));
+    });
+    row.addEventListener('dragover', e => {
+      e.preventDefault();
+      if(_combineDragSrc !== item.id) row.classList.add('drag-over');
+      e.dataTransfer.dropEffect = 'move';
+    });
+    row.addEventListener('dragleave', () => row.classList.remove('drag-over'));
+    row.addEventListener('drop', e => {
+      e.preventDefault(); row.classList.remove('drag-over');
+      if(_combineDragSrc === item.id) return;
+      const srcIdx = _combineFiles.findIndex(f => f.id === _combineDragSrc);
+      if(srcIdx < 0) return;
+      const [moved] = _combineFiles.splice(srcIdx, 1);
+      _combineFiles.splice(idx, 0, moved);
+      renderCombineList();
+    });
+
+    list.appendChild(row);
+  });
+
+  updateCombineSummary();
+  // Refresh "add current file" banner state (button enabled/disabled)
+  updateCombineCurrentBanner();
+}
+
+function countRangePages(rangeStr,maxPage){
+  if(!rangeStr.trim())return maxPage;
+  let count=0;
+  rangeStr.split(',').forEach(part=>{
+    part=part.trim();
+    if(part.includes('-')){
+      const[a,b]=part.split('-').map(Number);
+      if(!isNaN(a)&&!isNaN(b)){const lo=Math.min(a,b),hi=Math.min(Math.max(a,b),maxPage);if(lo>=1)count+=Math.max(0,hi-lo+1);}
+    }else{const n=Number(part);if(!isNaN(n)&&n>=1&&n<=maxPage)count++;}
+  });
+  return count;
+}
+
+function updateCombineSummary(){
+  const txt       = document.getElementById('combineSummaryText');
+  const limitInfo = document.getElementById('combineLimitInfo');
+  const limitBar  = document.getElementById('combineLimitBar');
+  const execBtn   = document.getElementById('combineExecBtn');
+  if(!txt) return;
+
+  let totalPages = 0;
+  _combineFiles.forEach(item => {
+    const pgs = typeof item.pageCount === 'number' ? item.pageCount : 0;
+    totalPages += item.rangeInput ? countRangePages(item.rangeInput, pgs) : pgs;
+  });
+
+  txt.innerHTML = '<strong>' + _combineFiles.length + '</strong> ' + t('combineFile') + ' · <strong>' + totalPages + '</strong> ' + t('combinePages');
+
+  const pct  = Math.min(100, Math.round(totalPages / MAX_TOTAL_PAGES * 100));
+  const remaining = MAX_TOTAL_PAGES - totalPages;
+  const color = totalPages >= MAX_TOTAL_PAGES ? '#dc2626'
+              : totalPages >= MAX_TOTAL_PAGES * 0.8 ? '#f59e0b'
+              : 'var(--teal)';
+
+  if(limitInfo){
+    limitInfo.innerHTML = '<span style="color:' + color + ';font-weight:600">' + totalPages + '/' + MAX_TOTAL_PAGES + ' ' + t('combinePages') + '</span>'
+      + (remaining > 0 ? ' · còn ' + remaining + ' trang' : ' · <span style="color:#dc2626">Đã đầy</span>');
+  }
+  if(limitBar){
+    limitBar.style.width = pct + '%';
+    limitBar.style.background = color;
+  }
+  if(execBtn) execBtn.disabled = _combineFiles.length < 2;
+}
+
+function removeCombineFile(id){
+  _combineFiles=_combineFiles.filter(f=>f.id!==id);renderCombineList();
+}
+
+async function executeCombine(){
+  if(_combineFiles.length<2){toast(t('combineNeedFiles'),'warn');return;}
+  showLoad(t('combineProcessing'),5);
+  document.getElementById('combineExecBtn').disabled=true;
+  try{
+    const outDoc=await PDFLib.PDFDocument.create();
+    let processed=0;
+    for(const item of _combineFiles){
+      showLoad(`${t('combineProcessing')} (${++processed}/${_combineFiles.length})...`,Math.round((processed-1)/_combineFiles.length*90)+5);
+      await new Promise(r=>setTimeout(r,0));
+      const srcDoc=await PDFLib.PDFDocument.load(item.bytes,{ignoreEncryption:true});
+      const totalPgs=srcDoc.getPageCount();
+      // Parse page range
+      let pageIdxs=[];
+      if(item.rangeInput&&item.rangeInput.trim()){
+        const rangeParts=item.rangeInput.split(',');
+        for(const part of rangeParts){
+          const p=part.trim();
+          if(p.includes('-')){
+            const[a,b]=p.split('-').map(n=>parseInt(n,10));
+            if(isNaN(a)||isNaN(b)){toast(t('combineInvalidRange')(item.name),'warn');continue;}
+            const lo=Math.min(a,b)-1,hi=Math.min(Math.max(a,b)-1,totalPgs-1);
+            for(let i=Math.max(0,lo);i<=hi;i++)pageIdxs.push(i);
+          }else{
+            const n=parseInt(p,10);
+            if(isNaN(n)){toast(t('combineInvalidRange')(item.name),'warn');continue;}
+            const idx=n-1;if(idx>=0&&idx<totalPgs)pageIdxs.push(idx);
+          }
+        }
+        // Deduplicate while preserving order
+        pageIdxs=[...new Set(pageIdxs)];
+      }else{
+        pageIdxs=Array.from({length:totalPgs},(_,i)=>i);
+      }
+      if(pageIdxs.length===0)continue;
+      const copiedPages=await outDoc.copyPages(srcDoc,pageIdxs);
+      copiedPages.forEach(p=>outDoc.addPage(p));
+    }
+    showLoad(t('saving'),96);await new Promise(r=>setTimeout(r,0));
+    const out=await outDoc.save();showLoad(t('done'),100);await new Promise(r=>setTimeout(r,300));
+    const blob=new Blob([out],{type:'application/pdf'});const url=URL.createObjectURL(blob);const a=document.createElement('a');
+    const outName='combined_'+Date.now()+'.pdf';a.href=url;a.download=outName;a.click();URL.revokeObjectURL(url);
+    toast(t('combineDone')+outName,'ok',5000);
+    closeCombineModal();
+  }catch(e){toast(t('combineErr')+e.message,'err',7000);console.error(e);}
+  hideLoad();document.getElementById('combineExecBtn').disabled=false;
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// FILE INPUT
+// ═══════════════════════════════════════════════════════════════════════
+(()=>{
+  const dz=document.getElementById('dropZone'),fi=document.getElementById('pdfInput');
+  dz.addEventListener('click',()=>fi.click());
+  fi.addEventListener('change',()=>{if(fi.files[0])readPdf(fi.files[0]);});
+  dz.addEventListener('dragover',e=>{e.preventDefault();dz.classList.add('over');});
+  dz.addEventListener('dragleave',()=>dz.classList.remove('over'));
+  dz.addEventListener('drop',e=>{e.preventDefault();dz.classList.remove('over');const f=e.dataTransfer.files[0];if(f)readPdf(f);});
+  document.body.addEventListener('dragover',e=>e.preventDefault());
+  document.body.addEventListener('drop',e=>{
+    e.preventDefault();const f=e.dataTransfer.files[0];
+    // Don't intercept drops onto combine modal
+    if(e.target.closest('#combineModal'))return;
+    if(f&&(f.type==='application/pdf'||f.name.endsWith('.pdf'))){if(!S.pdfDoc||confirm(t('confirmNewFile')))readPdf(f);}
+  });
+})();
+function readPdf(file){
+  if(file.type!=='application/pdf'&&!file.name.endsWith('.pdf')){toast(t('notPdf'),'err');return;}
+  const r=new FileReader();r.onload=e=>loadPdfBytes(new Uint8Array(e.target.result),file.name);r.readAsArrayBuffer(file);
+}
+function openNewFile(){
+  if(!S.pdfDoc||confirm(t('confirmNewFile'))){
+    S.pdfDoc=null;S.pjsDoc=null;S.rotations={};S.signatures={};S.comments={};S.sigUrl=null;S.exportPages=new Set();S.zoom=1.0;S.zoomFit=true;
+    document.getElementById('uploadScreen').style.display='';
+    document.getElementById('sidebar').style.display='none';
+    document.getElementById('mainArea').style.display='none';
+    document.getElementById('hdrRight').style.display='none';
+    document.getElementById('hdrInfo').innerHTML=t('appTitle');
+    document.getElementById('pdfInput').value='';exitExportSelMode();
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// KEYBOARD SHORTCUTS
+// ═══════════════════════════════════════════════════════════════════════
+document.addEventListener('keydown',e=>{
+  if(!S.pdfDoc)return;
+  if(e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA'||e.target.isContentEditable)return;
+  if(e.key==='Escape'){exitSignMode();exitCommentMode();return;}
+  // Zoom shortcuts: = or + to zoom in, - to zoom out, 0 to reset
+  if(e.key==='='||e.key==='+'){e.preventDefault();S.zoomFit=false;zoomStep(+0.25);return;}
+  if(e.key==='-'){e.preventDefault();S.zoomFit=false;zoomStep(-0.25);return;}
+  if(e.key==='0'){e.preventDefault();S.zoomFit=true;const btn=document.getElementById('zoomFitBtn');if(btn){btn.classList.add('on');btn.textContent=t('zoomFit');}renderMainZoom();return;}
+  switch(e.key){
+    case 'ArrowLeft':prevPage();break;case 'ArrowRight':nextPage();break;
+    case 'ArrowUp':e.preventDefault();rotateCurrent(90);break;case 'ArrowDown':e.preventDefault();rotateCurrent(-90);break;
+    case 'r':case 'R':rotateCurrent(180);break;
+    case 's':case 'S':toggleSignMode();break;
+    case 'c':case 'C':toggleCommentMode();break;
+  }
+});
+
+// ═══════════════════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded',()=>applyLang());
 </script>
 </body>
 </html>
