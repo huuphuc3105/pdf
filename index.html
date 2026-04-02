@@ -33,7 +33,6 @@ body{font-family:var(--sans);background:var(--paper);color:var(--ink);display:fl
 .btn-teal{background:var(--teal);color:#fff}.btn-teal:hover{background:#0f766e;transform:translateY(-1px)}
 .btn-sm{padding:5px 10px;font-size:.71rem}
 .layout{display:flex;flex:1;overflow:hidden}
-
 /* ── SIDEBAR ── */
 .sidebar{width:248px;flex-shrink:0;background:var(--warm);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
 .sb-head{padding:11px 13px 9px;border-bottom:1px solid var(--border);background:var(--paper)}
@@ -76,7 +75,6 @@ body{font-family:var(--sans);background:var(--paper);color:var(--ink);display:fl
 .pg-card.rotated .badge-r{display:inline}
 .pg-card.signed .badge-s{display:inline}
 .pg-card.has-comment .badge-c{display:inline}
-
 /* ── MAIN AREA ── */
 .main{flex:1;display:flex;flex-direction:column;overflow:hidden}
 .toolbar{padding:7px 14px;background:var(--paper);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px;flex-wrap:wrap;flex-shrink:0}
@@ -95,7 +93,6 @@ body{font-family:var(--sans);background:var(--paper);color:var(--ink);display:fl
 .sbtn:hover,.sbtn.on{background:var(--green);color:#fff;border-color:var(--green)}
 .cbtn{background:#f5f3ff;color:var(--purple);border:1.5px solid #c4b5fd;font-family:var(--mono);font-size:.7rem;font-weight:500;padding:4px 10px;border-radius:4px;cursor:pointer;transition:all .12s}
 .cbtn:hover,.cbtn.on{background:var(--purple);color:#fff;border-color:var(--purple)}
-
 /* ── ZOOM CONTROLS ── */
 .zoom-row{display:flex;align-items:center;gap:4px}
 .zbtn{font-family:var(--mono);font-size:.8rem;font-weight:700;width:25px;height:25px;border-radius:4px;background:var(--warm);border:1.5px solid var(--border);color:var(--ink);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .12s;flex-shrink:0;line-height:1}
@@ -105,9 +102,7 @@ body{font-family:var(--sans);background:var(--paper);color:var(--ink);display:fl
 .zoom-fit{font-family:var(--mono);font-size:.64rem;padding:4px 7px;border-radius:4px;background:var(--warm);border:1.5px solid var(--border);color:var(--muted);cursor:pointer;transition:all .12s;white-space:nowrap}
 .zoom-fit:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
 .zoom-fit.on{background:var(--accent);color:#fff;border-color:var(--accent)}
-
 .kbd{display:inline-block;font-family:var(--mono);font-size:.6rem;padding:1px 5px;background:var(--warm);border:1px solid var(--border);border-bottom-width:2px;border-radius:3px;color:var(--muted)}
-
 /* ── VIEWER ── */
 .viewer{flex:1;overflow:auto;display:flex;align-items:flex-start;justify-content:flex-start;padding:28px;background:#c8c4b7;position:relative;cursor:grab}
 .viewer.grabbing{cursor:grabbing}
@@ -138,7 +133,7 @@ body{font-family:var(--sans);background:var(--paper);color:var(--ink);display:fl
 .cmt-tb-btn:hover{background:rgba(255,255,255,.15);color:#fff}
 .cmt-tb-btn.del{color:#f87171}.cmt-tb-btn.del:hover{background:#7f1d1d;color:#fff}
 .cmt-label-editor{position:absolute;inset:0;resize:none;border:none;outline:none;background:transparent;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;line-height:1.45;padding:5px 10px;cursor:text;min-width:80px;min-height:28px;overflow:hidden}
-.cmt-label-rsz{position:absolute;bottom:-5px;right:-5px;width:12px;height:12px;background:#fff;border:1.5px solid rgba(0,0,0,.3);border-radius:2px;cursor:se-resize;opacity:0;transition:opacity .13s;z-index:36}
+.cmt-label-rsz{position:absolute;bottom:-5px;right:-5px;width:12px;height:12px;background:#fff;border:1.5px solid rgba(0,0,0,.3);border-radius:2px;cursor:se-resize;opacity:0;transition:opacity .13px;z-index:36}
 .cmt-label:hover .cmt-label-rsz{opacity:1}
 /* ── COMMENT COMPOSER ── */
 .cmt-composer{position:absolute;z-index:35;background:#fff;border-radius:8px;box-shadow:0 6px 24px rgba(0,0,0,.28),0 0 0 1.5px rgba(124,58,237,.4);overflow:hidden;min-width:220px;max-width:280px;animation:cmtPop .15s ease}
@@ -169,7 +164,6 @@ body{font-family:var(--sans);background:var(--paper);color:var(--ink);display:fl
 .drop-title{font-family:var(--display);font-size:1.65rem;font-weight:800;margin-bottom:8px}
 .drop-sub{font-size:.86rem;color:var(--muted);margin-bottom:24px;line-height:1.6}
 .drop-note{margin-top:12px;font-size:.69rem;font-family:var(--mono);color:var(--muted);letter-spacing:.04em}
-
 /* ── MODALS ── */
 .modal-bg{position:fixed;inset:0;background:rgba(13,15,20,.68);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(5px)}
 .modal-bg.hidden{display:none}
@@ -211,6 +205,21 @@ body{font-family:var(--sans);background:var(--paper);color:var(--ink);display:fl
 .ts-fmt-btn{font-family:var(--mono);font-size:.65rem;padding:3px 9px;border-radius:12px;border:1.5px solid var(--border);background:var(--paper);cursor:pointer;transition:all .12s;color:var(--muted)}
 .ts-fmt-btn.on{background:var(--green);color:#fff;border-color:var(--green)}
 
+/* ── QR BOX ── */
+.qr-box{margin-top:10px;padding:12px 14px;background:linear-gradient(135deg,#f0fdf4,#eff6ff);border-radius:8px;border:1.5px solid #86efac;position:relative;overflow:hidden}
+.qr-box::before{content:'';position:absolute;top:-20px;right:-20px;width:80px;height:80px;background:rgba(16,163,74,.07);border-radius:50%}
+.qr-box-title{font-family:var(--mono);font-size:.64rem;color:#15803d;text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px;display:flex;align-items:center;gap:5px;font-weight:700}
+.qr-toggle-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.qr-toggle-row label{display:flex;align-items:center;gap:6px;cursor:pointer;font-size:.8rem;font-weight:600;user-select:none;color:var(--ink)}
+.qr-toggle-row input[type=checkbox]{width:15px;height:15px;cursor:pointer;accent-color:var(--green)}
+.qr-info{font-size:.71rem;color:#15803d;font-family:var(--mono);background:rgba(22,163,74,.08);padding:6px 10px;border-radius:6px;border:1px solid rgba(22,163,74,.2);line-height:1.6}
+.qr-info strong{color:#166534;font-weight:700}
+.qr-badge{display:inline-flex;align-items:center;gap:4px;background:#166534;color:#fff;font-family:var(--mono);font-size:.6rem;font-weight:700;padding:2px 7px;border-radius:10px;margin-bottom:6px}
+.qr-ip-status{font-size:.67rem;font-family:var(--mono);color:var(--muted);margin-top:4px;display:flex;align-items:center;gap:4px}
+.qr-ip-status.fetching{color:#f59e0b}
+.qr-ip-status.ok{color:#15803d}
+.qr-ip-status.err{color:#dc2626}
+
 /* ── EXPORT MODAL ── */
 .export-modal{max-width:540px}
 .exp-summary{background:var(--warm);border-radius:8px;padding:12px 14px;margin-bottom:14px;font-size:.8rem;font-family:var(--mono);color:var(--muted)}
@@ -230,20 +239,12 @@ body{font-family:var(--sans);background:var(--paper);color:var(--ink);display:fl
 .exp-sel-btns{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px}
 .exp-sel-btn{font-family:var(--mono);font-size:.66rem;padding:3px 9px;border-radius:12px;border:1.5px solid var(--border);background:var(--paper);cursor:pointer;color:var(--ink);transition:all .12s}
 .exp-sel-btn:hover{background:var(--ink);color:var(--paper);border-color:var(--ink)}
-
 /* ── COMBINE MODAL ── */
 .combine-modal{max-width:620px}
-/* current-file source chip */
 .cfi-source{font-family:var(--mono);font-size:.6rem;padding:2px 7px;border-radius:10px;font-weight:600;flex-shrink:0;white-space:nowrap}
 .cfi-source.from-current{background:#fef3c7;color:#92400e;border:1px solid #f59e0b}
 .cfi-source.from-file{background:#f0fdf4;color:#15803d;border:1px solid #86efac}
-/* current file quick-add banner */
-.combine-current-banner{
-  display:flex;align-items:center;gap:10px;
-  padding:10px 13px;border-radius:8px;margin-bottom:10px;
-  background:linear-gradient(135deg,#fefce8,#ecfdf5);
-  border:1.5px solid #f59e0b;
-}
+.combine-current-banner{display:flex;align-items:center;gap:10px;padding:10px 13px;border-radius:8px;margin-bottom:10px;background:linear-gradient(135deg,#fefce8,#ecfdf5);border:1.5px solid #f59e0b;}
 .combine-current-banner.hidden{display:none}
 .ccb-icon{font-size:1.3rem;flex-shrink:0}
 .ccb-info{flex:1;min-width:0}
@@ -276,12 +277,10 @@ body{font-family:var(--sans);background:var(--paper);color:var(--ink);display:fl
 .combine-order-hint{font-size:.7rem;color:var(--muted);font-family:var(--mono);margin-bottom:8px;padding:5px 10px;background:var(--warm);border-radius:5px;display:flex;align-items:center;gap:6px}
 .combine-summary{background:var(--warm);border-radius:8px;padding:10px 14px;font-size:.8rem;font-family:var(--mono);color:var(--muted);display:flex;align-items:center;justify-content:space-between}
 .combine-summary strong{color:var(--ink)}
-
 /* ── EXPORT MODE BAR ── */
 .export-mode-bar{background:#1e40af;color:#fff;padding:6px 14px;display:none;align-items:center;gap:10px;font-family:var(--mono);font-size:.72rem;font-weight:600;flex-shrink:0;border-bottom:1px solid #1e3a8a}
 .export-mode-bar.on{display:flex}
 .export-count-badge{background:#fff;color:#1e40af;border-radius:10px;padding:1px 8px;font-size:.68rem;font-weight:700}
-
 /* ── LOADING ── */
 .loading{position:fixed;inset:0;background:rgba(13,15,20,.82);display:none;flex-direction:column;align-items:center;justify-content:center;gap:13px;z-index:300}
 .loading.on{display:flex}
@@ -293,7 +292,6 @@ body{font-family:var(--sans);background:var(--paper);color:var(--ink);display:fl
 .toast{background:var(--ink);color:var(--paper);padding:9px 14px;border-radius:6px;font-size:.78rem;display:flex;align-items:center;gap:7px;box-shadow:0 4px 16px rgba(0,0,0,.3);animation:fadeUp .2s ease;border-left:3px solid var(--accent);min-width:200px;max-width:340px}
 .toast.ok{border-left-color:#22c55e}.toast.err{border-left-color:#ef4444}.toast.warn{border-left-color:#f59e0b}
 @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-
 /* ── LANG SWITCHER ── */
 .lang-wrap{position:relative;display:flex;align-items:center;margin-left:4px;flex-shrink:0;user-select:none}
 .lang-selected{display:flex;align-items:center;gap:6px;font-family:var(--sans);font-size:.75rem;font-weight:600;padding:5px 28px 5px 10px;border-radius:6px;border:1.5px solid #2e3240;background:#1a1d2a;color:var(--paper);cursor:pointer;transition:all .14s;min-width:130px;white-space:nowrap}
@@ -335,7 +333,6 @@ body{font-family:var(--sans);background:var(--paper);color:var(--ink);display:fl
     <button class="btn btn-purple btn-sm" onclick="openExportModal()">📑 Xuất trang</button>
     <button class="btn btn-acc btn-sm" id="dlBtn" onclick="savePdf()">⬇ Tải xuống PDF</button>
   </div>
-  <!-- Combine button always visible -->
   <button class="btn btn-teal btn-sm" onclick="openCombineModal()" style="flex-shrink:0">🔗 Ghép PDF</button>
 </header>
 
@@ -381,7 +378,6 @@ body{font-family:var(--sans);background:var(--paper);color:var(--ink);display:fl
       <button class="btn btn-sm" style="background:rgba(255,255,255,.15);color:#fff;font-size:.66rem" onclick="exitExportSelMode()">✕ Thoát</button>
     </div>
     <div class="toolbar">
-      <!-- Page nav -->
       <div class="tg">
         <div class="pager">
           <button onclick="prevPage()">‹</button>
@@ -389,7 +385,6 @@ body{font-family:var(--sans);background:var(--paper);color:var(--ink);display:fl
           <button onclick="nextPage()">›</button>
         </div>
       </div>
-      <!-- Zoom -->
       <div class="tg">
         <span class="tlbl" id="toolZoomLbl">Zoom</span>
         <div class="zoom-row">
@@ -399,7 +394,6 @@ body{font-family:var(--sans);background:var(--paper);color:var(--ink);display:fl
           <button class="zoom-fit" id="zoomFitBtn" onclick="toggleZoomFit()">Vừa trang</button>
         </div>
       </div>
-      <!-- Rotate -->
       <div class="tg">
         <span class="tlbl" id="toolRotateLbl">Xoay</span>
         <button class="rbtn" onclick="rotateCurrent(90)">↻ +90°</button>
@@ -408,20 +402,17 @@ body{font-family:var(--sans);background:var(--paper);color:var(--ink);display:fl
         <button class="rbtn" onclick="resetRot()" style="border-color:#fca5a5;color:#dc2626">✕</button>
         <span class="ang" id="angBadge">0°</span>
       </div>
-      <!-- Signature -->
       <div class="tg">
         <span class="tlbl" id="toolSigLbl">Chữ ký</span>
         <button class="sbtn" id="btnSign" onclick="toggleSignMode()">✍ Đặt chữ ký</button>
         <button class="sbtn" onclick="openSigModal()" style="background:#eff6ff;color:#1d4ed8;border-color:#93c5fd">+ Tạo / Đổi</button>
         <button class="sbtn" onclick="clearAllSigs()" style="background:#fff1f2;color:#dc2626;border-color:#fca5a5">🗑 Xóa tất cả</button>
       </div>
-      <!-- Comment -->
       <div class="tg">
         <span class="tlbl" id="toolCmtLbl">Comment</span>
         <button class="cbtn" id="btnComment" onclick="toggleCommentMode()">💬 Thêm comment</button>
         <button class="cbtn" onclick="clearAllComments()" style="background:#fff1f2;color:#dc2626;border-color:#fca5a5">🗑 Xóa tất cả</button>
       </div>
-      <!-- Shortcuts -->
       <div class="tg" style="border:none;margin-left:auto">
         <span class="kbd">±</span><span style="font-size:.68rem;color:var(--muted);margin-right:4px"> zoom</span>
         <span class="kbd">←→</span><span style="font-size:.68rem;color:var(--muted);margin-right:4px"> trang</span>
@@ -478,8 +469,18 @@ body{font-family:var(--sans);background:var(--paper);color:var(--ink);display:fl
           <span class="ts-fmt-btn on" data-fmt="full"     onclick="setTsFmt(this)">DD/MM/YYYY HH:mm:ss</span>
           <span class="ts-fmt-btn"    data-fmt="date"     onclick="setTsFmt(this)">DD/MM/YYYY</span>
           <span class="ts-fmt-btn"    data-fmt="datetime" onclick="setTsFmt(this)">DD/MM/YYYY HH:mm</span>
-          <span class="ts-fmt-btn"    data-fmt="iso"      onclick="setTsFmt(this)">YYYY-MM-DD HH:mm:ss</span>
+          <span class="ts-fmt-btn"    data-fmt="iso"      onclick="setTsFmtType(this)">YYYY-MM-DD HH:mm:ss</span>
         </div>
+      </div>
+      <!-- QR BOX DRAW -->
+      <div class="qr-box">
+        <div class="qr-box-title"><span class="qr-badge">🔐 BẢO MẬT</span> QR Code xác thực — Góc phải phía dưới chữ ký</div>
+        <div class="qr-toggle-row"><label><input type="checkbox" id="qrEnableDraw" checked onchange="updateQrIpStatus('draw')"> Nhúng QR Code vào chữ ký</label></div>
+        <div class="qr-info" id="qrInfoDraw">
+          QR Code mã hoá: <strong>Thời gian ký · IP thiết bị · Phiên bản</strong><br>
+          Đặt tại <strong>góc phải phía dưới</strong> chữ ký · Quét bằng bất kỳ ứng dụng QR nào để xác minh.
+        </div>
+        <div class="qr-ip-status" id="qrIpStatusDraw">⏳ Đang lấy IP...</div>
       </div>
     </div>
     <!-- TYPE -->
@@ -509,6 +510,16 @@ body{font-family:var(--sans);background:var(--paper);color:var(--ink);display:fl
           <span class="ts-fmt-btn"    data-fmt="iso"      onclick="setTsFmtType(this)">YYYY-MM-DD HH:mm:ss</span>
         </div>
       </div>
+      <!-- QR BOX TYPE -->
+      <div class="qr-box">
+        <div class="qr-box-title"><span class="qr-badge">🔐 BẢO MẬT</span> QR Code xác thực — Góc phải phía dưới chữ ký</div>
+        <div class="qr-toggle-row"><label><input type="checkbox" id="qrEnableType" checked onchange="updateQrIpStatus('type')"> Nhúng QR Code vào chữ ký</label></div>
+        <div class="qr-info" id="qrInfoType">
+          QR Code mã hoá: <strong>Thời gian ký · IP thiết bị · Phiên bản</strong><br>
+          Đặt tại <strong>góc phải phía dưới</strong> chữ ký · Quét bằng bất kỳ ứng dụng QR nào để xác minh.
+        </div>
+        <div class="qr-ip-status" id="qrIpStatusType">⏳ Đang lấy IP...</div>
+      </div>
     </div>
     <!-- UPLOAD -->
     <div class="modal-body" id="pane-upload" style="display:none">
@@ -528,6 +539,16 @@ body{font-family:var(--sans);background:var(--paper);color:var(--ink);display:fl
           <span class="ts-fmt-btn"    data-fmt="datetime" onclick="setTsFmtUpload(this)">DD/MM/YYYY HH:mm</span>
           <span class="ts-fmt-btn"    data-fmt="iso"      onclick="setTsFmtUpload(this)">YYYY-MM-DD HH:mm:ss</span>
         </div>
+      </div>
+      <!-- QR BOX UPLOAD -->
+      <div class="qr-box">
+        <div class="qr-box-title"><span class="qr-badge">🔐 BẢO MẬT</span> QR Code xác thực — Góc phải phía dưới chữ ký</div>
+        <div class="qr-toggle-row"><label><input type="checkbox" id="qrEnableUpload" checked onchange="updateQrIpStatus('upload')"> Nhúng QR Code vào chữ ký</label></div>
+        <div class="qr-info" id="qrInfoUpload">
+          QR Code mã hoá: <strong>Thời gian ký · IP thiết bị · Phiên bản</strong><br>
+          Đặt tại <strong>góc phải phía dưới</strong> chữ ký · Quét bằng bất kỳ ứng dụng QR nào để xác minh.
+        </div>
+        <div class="qr-ip-status" id="qrIpStatusUpload">⏳ Đang lấy IP...</div>
       </div>
     </div>
     <div id="sigCompositePreview"><img id="sigCompositeImg" src="" alt="preview"></div>
@@ -573,8 +594,6 @@ body{font-family:var(--sans);background:var(--paper);color:var(--ink);display:fl
       <button class="modal-x" onclick="closeCombineModal()">✕</button>
     </div>
     <div class="modal-body" style="padding:14px 18px">
-
-      <!-- ① Current-file quick-add banner (hidden when no PDF open) -->
       <div class="combine-current-banner hidden" id="combineCurrBanner">
         <span class="ccb-icon">📄</span>
         <div class="ccb-info">
@@ -583,37 +602,25 @@ body{font-family:var(--sans);background:var(--paper);color:var(--ink);display:fl
         </div>
         <button class="ccb-btn add" id="combineCurrBtn" onclick="addCurrentFileToCombine()">＋ Thêm file này</button>
       </div>
-
-      <!-- ② Drop zone — collapses when files are present -->
       <div class="combine-drop-zone" id="combineDrop" style="padding:20px;margin-bottom:10px">
         <div class="drop-icon" style="font-size:32px;margin-bottom:6px">📎</div>
         <p style="font-size:.85rem;font-weight:600;margin-bottom:2px" id="combineDropTitle">Kéo thả hoặc nhấn để thêm file PDF</p>
         <p style="font-size:.72rem;color:var(--muted)" id="combineDropSub">Hỗ trợ chọn nhiều file cùng lúc</p>
       </div>
-      <!-- File input OUTSIDE drop zone -->
       <input type="file" id="combineInput" accept=".pdf,application/pdf" multiple style="display:none">
-
-      <!-- ③ Empty state — sibling of file list, never wiped by innerHTML='' -->
-      <div id="combineEmpty" style="display:none;text-align:center;padding:18px;color:var(--muted);font-size:.82rem;background:var(--warm);border-radius:8px;border:1.5px dashed var(--border)" id="combineEmpty">
+      <div id="combineEmpty" style="display:none;text-align:center;padding:18px;color:var(--muted);font-size:.82rem;background:var(--warm);border-radius:8px;border:1.5px dashed var(--border)">
         Chưa có file nào · Thêm ít nhất 2 file PDF để ghép
       </div>
-
-      <!-- ④ Hint (shown only when ≥1 file) -->
       <div class="combine-order-hint" id="combineOrderHint" style="display:none">
         ↕ Kéo để sắp xếp thứ tự · Nhập dải trang (vd: 1-3,5) để lấy một số trang từ mỗi file
       </div>
-
-      <!-- ⑤ File rows list -->
       <div class="combine-file-list" id="combineFileList"></div>
-
-      <!-- ⑥ Bottom bar: add more + limit meter + summary -->
       <div id="combineBottomBar" style="display:none;flex-direction:column;gap:6px;margin-top:8px">
         <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
           <button class="ccb-btn add" onclick="document.getElementById('combineInput').click()">＋ Thêm file PDF</button>
           <button class="ccb-btn" id="combineCurrBtnBottom" style="background:#fef3c7;color:#92400e;border:1px solid #f59e0b;display:none" onclick="addCurrentFileToCombine()">＋ Thêm file đang mở</button>
           <span id="combineLimitInfo" style="font-family:var(--mono);font-size:.68rem;color:var(--muted);margin-left:auto"></span>
         </div>
-        <!-- Page-limit progress bar -->
         <div style="height:5px;background:var(--border);border-radius:3px;overflow:hidden">
           <div id="combineLimitBar" style="height:100%;width:0%;background:var(--teal);border-radius:3px;transition:width .3s,background .3s"></div>
         </div>
@@ -637,8 +644,10 @@ body{font-family:var(--sans);background:var(--paper);color:var(--ink);display:fl
 </div>
 <div class="toasts" id="toasts"></div>
 
+<!-- Libraries -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
 try{
   pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
@@ -653,15 +662,259 @@ const S={
   rotations:{},filename:'doc.pdf',rendering:false,
   cvW:0,cvH:0,sigUrl:null,signMode:false,commentMode:false,
   signatures:{},comments:{},exportPages:new Set(),exportSelMode:false,
-  // Zoom state
-  zoom:1.0,      // current scale multiplier (1 = fit to viewport)
-  zoomFit:true,  // true = auto-fit mode; false = manual zoom
-  baseScale:1.0, // the scale that produces fit-to-viewport at zoom=1
+  zoom:1.0,zoomFit:true,baseScale:1.0,
 };
 const D={color:'#0d0f14',size:2,drawing:false,lx:0,ly:0,inited:false};
 const T={font:'Dancing Script',color:'#0d0f14'};
 let _tab='draw';
 let _lang='vi';
+
+// ═══════════════════════════════════════════════════════════════════════
+// QR CODE STATE & IP FETCH
+// ═══════════════════════════════════════════════════════════════════════
+const QR={
+  draw:{enable:true},
+  type:{enable:true},
+  upload:{enable:true},
+};
+let _clientIp = null;
+let _ipFetching = false;
+let _ipFetchPromise = null;
+
+async function fetchClientIp(){
+  if(_clientIp) return _clientIp;
+  if(_ipFetching) return _ipFetchPromise;
+  _ipFetching = true;
+  _ipFetchPromise = (async()=>{
+    try{
+      const r = await Promise.race([
+        fetch('https://api.ipify.org?format=json'),
+        new Promise((_,rej)=>setTimeout(()=>rej(new Error('timeout')),4000))
+      ]);
+      const d = await r.json();
+      _clientIp = d.ip || 'unknown';
+    }catch(e){
+      _clientIp = 'unknown';
+    }
+    _ipFetching = false;
+    return _clientIp;
+  })();
+  return _ipFetchPromise;
+}
+
+async function updateQrIpStatus(tabId){
+  const key = tabId.charAt(0).toUpperCase()+tabId.slice(1);
+  const el = document.getElementById('qrIpStatus'+key);
+  const enabled = document.getElementById('qrEnable'+key)?.checked;
+  QR[tabId].enable = enabled;
+  if(!el) return;
+  if(!enabled){ el.textContent=''; el.className='qr-ip-status'; return; }
+  el.textContent='⏳ Đang lấy địa chỉ IP...'; el.className='qr-ip-status fetching';
+  const ip = await fetchClientIp();
+  if(ip && ip !== 'unknown'){
+    el.innerHTML='✅ IP: <strong>'+ip+'</strong> &nbsp;·&nbsp; Sẽ được nhúng vào QR Code';
+    el.className='qr-ip-status ok';
+  }else{
+    el.textContent='⚠️ Không lấy được IP — QR vẫn sẽ ghi nhận thời gian ký';
+    el.className='qr-ip-status err';
+  }
+}
+
+// Generate QR canvas — returns Promise<HTMLCanvasElement|null>
+async function generateQrCanvas(payload, size){
+  return new Promise((resolve)=>{
+    try{
+      const container = document.createElement('div');
+      container.style.cssText = 'position:fixed;top:-9999px;left:-9999px;width:'+size+'px;height:'+size+'px';
+      document.body.appendChild(container);
+      new QRCode(container, {
+        text: JSON.stringify(payload),
+        width: size,
+        height: size,
+        colorDark: '#0d0f14',
+        colorLight: '#ffffff',
+        correctLevel: QRCode.CorrectLevel.M,
+      });
+      setTimeout(()=>{
+        const cv = container.querySelector('canvas');
+        const img = container.querySelector('img');
+        if(cv){
+          document.body.removeChild(container);
+          resolve(cv);
+        }else if(img){
+          const c2 = document.createElement('canvas');
+          c2.width = size; c2.height = size;
+          const ctx2 = c2.getContext('2d');
+          const i2 = new Image();
+          i2.onload = ()=>{ ctx2.drawImage(i2,0,0,size,size); document.body.removeChild(container); resolve(c2); };
+          i2.onerror = ()=>{ document.body.removeChild(container); resolve(null); };
+          i2.src = img.src;
+        }else{
+          document.body.removeChild(container);
+          resolve(null);
+        }
+      }, 120);
+    }catch(e){ resolve(null); }
+  });
+}
+
+// ─────────────────────────────────────────────────────────────────────
+// composeSigFull — chữ ký + timestamp dưới + QR ở GÓC PHẢI PHÍA DƯỚI
+//
+// Layout (tổng canvas):
+//
+//   ┌──────────────────────────────────────┐
+//   │                                      │
+//   │          CHỮ KÝ CHÍNH               │
+//   │                                      │
+//   ├──────────────────────────────────────┤
+//   │  [Timestamp pill — canh giữa]        │
+//   ├──────────────────────────────────────┤
+//   │                       ┌────────────┐ │
+//   │                       │  QR CODE   │ │
+//   │                       │ (góc phải) │ │
+//   │                       └────────────┘ │
+//   │                       QUÉT XÁC THỰC │
+//   └──────────────────────────────────────┘
+//
+// Returns Promise<dataURL string>
+// ─────────────────────────────────────────────────────────────────────
+async function composeSigFull(sigDataUrl, tsText, qrPayload){
+  return new Promise(async resolve=>{
+    const img = new Image();
+    img.onload = async ()=>{
+      const sw = img.naturalWidth || 400;
+      const sh = img.naturalHeight || 120;
+
+      // ── Timestamp metrics ──
+      const tsFontSize = 20;
+      const tsLineH = Math.round(tsFontSize * 1.6);
+      const tsPadV = 7;
+      const tsPadX = 18;
+      const tsGap = 10; // gap between sig bottom and ts pill
+      let tsH = 0, tsPillW = 0;
+
+      const _tmpCtx = document.createElement('canvas').getContext('2d');
+      _tmpCtx.font = `${tsFontSize}px 'DM Mono',monospace`;
+
+      if(tsText){
+        const tw = _tmpCtx.measureText(tsText).width;
+        tsPillW = Math.ceil(tw) + tsPadX * 2;
+        tsH = tsPadV * 2 + tsLineH + tsGap;
+      }
+
+      // ── QR metrics ──
+      const QR_SIZE   = 50;  // rendered px on output canvas
+      const QR_GEN    = 200;  // generate at higher res, then scale down
+      const QR_PAD    = 8;    // inner padding around QR
+      const QR_LBL_H  = 18;  // height for "QUÉT XÁC THỰC" label
+      const QR_BLOCK_H = QR_SIZE + QR_PAD * 2 + QR_LBL_H; // total block height
+      const QR_BLOCK_W = QR_SIZE + QR_PAD * 2;
+      const QR_GAP    = 8;   // gap between ts row and qr block
+
+      let qrCv = null;
+      if(qrPayload){
+        qrCv = await generateQrCanvas(qrPayload, QR_GEN);
+      }
+
+      // ── Canvas dimensions ──
+      // Width = max(sigW, tsPillW), always at least fits the QR on the right
+      const minW = qrCv ? Math.max(sw, tsPillW, QR_BLOCK_W + 20) : Math.max(sw, tsPillW);
+      const totalW = minW;
+
+      // Height = sig + ts + (qr gap + qr block if qr enabled)
+      let totalH = sh + tsH;
+      if(qrCv){
+        totalH += QR_GAP + QR_BLOCK_H;
+      }
+
+      const cv = document.createElement('canvas');
+      cv.width  = totalW;
+      cv.height = totalH;
+      const ctx = cv.getContext('2d');
+      ctx.clearRect(0, 0, totalW, totalH);
+
+      // ── 1. Draw main signature image (top, horizontally centered) ──
+      const sigX = Math.round((totalW - sw) / 2);
+      ctx.drawImage(img, sigX, 0, sw, sh);
+
+      // ── 2. Draw timestamp pill (below sig, centered) ──
+      if(tsText){
+        const tw = _tmpCtx.measureText(tsText).width;
+        const pW = Math.ceil(tw) + tsPadX * 2;
+        const pX = Math.round((totalW - pW) / 2);
+        const pY = sh + tsGap;
+        const pH = tsPadV * 2 + tsLineH;
+
+        // pill background
+        ctx.fillStyle = 'rgba(255,255,255,0.93)';
+        ctx.strokeStyle = 'rgba(0,0,0,0.13)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        if(ctx.roundRect) ctx.roundRect(pX, pY, pW, pH, 6);
+        else ctx.rect(pX, pY, pW, pH);
+        ctx.fill();
+        ctx.stroke();
+
+        // timestamp text
+        ctx.fillStyle = '#1e293b';
+        ctx.font = `${tsFontSize}px 'DM Mono',monospace`;
+        ctx.textBaseline = 'middle';
+        ctx.textAlign = 'center';
+        ctx.fillText(tsText, pX + pW / 2, pY + pH / 2);
+      }
+
+      // ── 3. Draw QR block — góc PHẢI phía DƯỚI ──
+      if(qrCv){
+        // QR block starts after sig + ts area, aligned to right edge
+        const qrBlockY = sh + tsH + QR_GAP;
+
+        // Right-align: leave 4px from right edge
+        const qrBgX = totalW - QR_BLOCK_W - 4;
+        const qrBgY = qrBlockY;
+        const qrBgW = QR_BLOCK_W;
+        const qrBgH = QR_SIZE + QR_PAD * 2 + QR_LBL_H;
+
+        // White rounded background for QR block
+        ctx.fillStyle = 'rgba(255,255,255,0.97)';
+        ctx.strokeStyle = 'rgba(0,0,0,0.15)';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        if(ctx.roundRect) ctx.roundRect(qrBgX, qrBgY, qrBgW, qrBgH, 6);
+        else ctx.rect(qrBgX, qrBgY, qrBgW, qrBgH);
+        ctx.fill();
+        ctx.stroke();
+
+        // Draw QR image inside the block
+        const qrImgX = qrBgX + QR_PAD;
+        const qrImgY = qrBgY + QR_PAD;
+        ctx.drawImage(qrCv, qrImgX, qrImgY, QR_SIZE, QR_SIZE);
+
+        // "QUÉT ĐỂ XÁC THỰC" label below QR
+        ctx.fillStyle = '#166534';
+        ctx.font = `bold 10px 'DM Mono',monospace`;
+        ctx.textBaseline = 'middle';
+        ctx.textAlign = 'center';
+        ctx.fillText('Scan to Verify', qrBgX + qrBgW / 2, qrBgY + QR_PAD + QR_SIZE + QR_LBL_H / 2);
+
+        // Small lock icon at top-left of QR block
+        ctx.fillStyle = '#166534';
+        ctx.font = 'bold 9px sans-serif';
+        ctx.textBaseline = 'top';
+        ctx.textAlign = 'left';
+        ctx.fillText('🔐', qrBgX + 2, qrBgY + 2);
+      }
+
+      resolve(cv.toDataURL('image/png'));
+    };
+    img.onerror = ()=>resolve(sigDataUrl);
+    img.src = sigDataUrl;
+  });
+}
+
+function initQrStatusForTab(tabId){
+  updateQrIpStatus(tabId);
+}
 
 // ═══════════════════════════════════════════════════════════════════════
 // I18N
@@ -693,7 +946,6 @@ const I18N={
     exportTitle:'📑 Xuất trang đã chọn',expSummaryFmt:(n,t)=>`Đã chọn <strong>${n}</strong> / ${t} trang để xuất`,
     previewDefault:'Tên của bạn',
     zoomFit:'Vừa trang',zoomFitOff:'Tỉ lệ tự do',
-    // Combine
     combineTitle:'🔗 Ghép nhiều PDF thành một',combineDropTitle:'Kéo thả hoặc nhấn để thêm file PDF',
     combineDropSub:'Có thể thêm nhiều file cùng lúc · Kéo để sắp xếp thứ tự',
     combineOrderHint:'↕ Kéo để sắp xếp thứ tự · Nhập dải trang (vd: 1-3,5) để chỉ lấy một số trang từ mỗi file',
@@ -820,7 +1072,6 @@ function applyLang(){
   const dn=document.getElementById('dropNote');if(dn)dn.textContent=t('dragNote');
   const cf=document.getElementById('chooseFileBtn');if(cf)cf.innerHTML=t('chooseFile');
   const zfb=document.getElementById('zoomFitBtn');if(zfb)zfb.textContent=S.zoomFit?t('zoomFit'):t('zoomFitOff');
-  // Combine modal
   const cdt=document.getElementById('combineDropTitle');if(cdt)cdt.textContent=t('combineDropTitle');
   const cds=document.getElementById('combineDropSub');if(cds)cds.textContent=t('combineDropSub');
   const coh=document.getElementById('combineOrderHint');if(coh)coh.textContent=t('combineOrderHint');
@@ -833,70 +1084,40 @@ function applyLang(){
 // ═══════════════════════════════════════════════════════════════════════
 const ZOOM_STEPS=[0.25,0.33,0.5,0.67,0.75,0.9,1.0,1.1,1.25,1.5,1.75,2.0,2.5,3.0,4.0];
 const ZOOM_MIN=0.1, ZOOM_MAX=5.0;
-
 function zoomStep(delta){
-  S.zoomFit=false;
-  const cur=S.zoom;
-  if(delta>0){
-    // Find next step up
-    const next=ZOOM_STEPS.find(z=>z>cur+0.01);
-    S.zoom=next||Math.min(ZOOM_MAX,cur+0.25);
-  }else{
-    // Find next step down
-    const prev=[...ZOOM_STEPS].reverse().find(z=>z<cur-0.01);
-    S.zoom=prev||Math.max(ZOOM_MIN,cur-0.25);
-  }
+  S.zoomFit=false;const cur=S.zoom;
+  if(delta>0){const next=ZOOM_STEPS.find(z=>z>cur+0.01);S.zoom=next||Math.min(ZOOM_MAX,cur+0.25);}
+  else{const prev=[...ZOOM_STEPS].reverse().find(z=>z<cur-0.01);S.zoom=prev||Math.max(ZOOM_MIN,cur-0.25);}
   applyZoom();
 }
-
-function zoomReset(){
-  S.zoomFit=false;S.zoom=1.0;applyZoom();
-}
-
+function zoomReset(){S.zoomFit=false;S.zoom=1.0;applyZoom();}
 function toggleZoomFit(){
   S.zoomFit=!S.zoomFit;
   const btn=document.getElementById('zoomFitBtn');
   if(btn)btn.textContent=S.zoomFit?t('zoomFit'):t('zoomFitOff');
   btn.classList.toggle('on',S.zoomFit);
-  if(S.zoomFit){renderMainZoom();}
-  else{S.zoom=1.0;applyZoom();}
+  if(S.zoomFit){renderMainZoom();}else{S.zoom=1.0;applyZoom();}
 }
-
 function applyZoom(){
   if(!S.pjsDoc)return;
-  const zv=document.getElementById('zoomVal');
-  if(zv)zv.textContent=Math.round(S.zoom*100)+'%';
-  const btn=document.getElementById('zoomFitBtn');
-  if(btn){btn.classList.toggle('on',S.zoomFit);btn.textContent=S.zoomFit?t('zoomFit'):t('zoomFitOff');}
-  const viewer=document.getElementById('viewer');
-  if(viewer){
-    viewer.classList.toggle('zoom-fit-mode',S.zoomFit);
-  }
+  const zv=document.getElementById('zoomVal');if(zv)zv.textContent=Math.round(S.zoom*100)+'%';
+  const btn=document.getElementById('zoomFitBtn');if(btn){btn.classList.toggle('on',S.zoomFit);btn.textContent=S.zoomFit?t('zoomFit'):t('zoomFitOff');}
+  const viewer=document.getElementById('viewer');if(viewer){viewer.classList.toggle('zoom-fit-mode',S.zoomFit);}
   renderMainZoom();
 }
-
-// Re-render main canvas at current zoom (no page change)
 async function renderMainZoom(){
   if(!S.pjsDoc||S.rendering)return;
-  const pageNum=S.current;
-  S.rendering=true;
+  const pageNum=S.current;S.rendering=true;
   try{
     const page=await S.pjsDoc.getPage(pageNum);
     const rot=S.rotations[pageNum]||0;
     const viewer=document.getElementById('viewer');
-    const maxW=viewer.clientWidth-56, maxH=viewer.clientHeight-56;
+    const maxW=viewer.clientWidth-56,maxH=viewer.clientHeight-56;
     const raw=page.getViewport({scale:1,rotation:rot});
-    // base scale = fit to viewport
-    S.baseScale=Math.min(maxW/raw.width, maxH/raw.height, 2.5);
+    S.baseScale=Math.min(maxW/raw.width,maxH/raw.height,2.5);
     let sc;
-    if(S.zoomFit){
-      sc=S.baseScale;
-      S.zoom=1.0;
-      const zv=document.getElementById('zoomVal');
-      if(zv)zv.textContent='100%';
-    }else{
-      sc=S.baseScale*S.zoom;
-    }
+    if(S.zoomFit){sc=S.baseScale;S.zoom=1.0;const zv=document.getElementById('zoomVal');if(zv)zv.textContent='100%';}
+    else{sc=S.baseScale*S.zoom;}
     const vp=page.getViewport({scale:sc,rotation:rot});
     const canvas=document.getElementById('mainCanvas');
     canvas.width=Math.round(vp.width);canvas.height=Math.round(vp.height);
@@ -905,64 +1126,38 @@ async function renderMainZoom(){
     const ovl=document.getElementById('sigOvl');ovl.width=canvas.width;ovl.height=canvas.height;
     const covl=document.getElementById('commentOvl');covl.width=canvas.width;covl.height=canvas.height;
     renderSigBoxes(pageNum);renderCommentLabels(pageNum);
-    const deg=rot;
-    const ab=document.getElementById('angBadge');
-    ab.textContent=deg+'°';ab.className='ang'+(deg?' on':'');
+    const ab=document.getElementById('angBadge');ab.textContent=rot+'°';ab.className='ang'+(rot?' on':'');
   }catch(e){console.error(e);}
   S.rendering=false;
 }
-
-// Pinch-to-zoom support
 let _pinchDist=0;
 document.getElementById('viewer').addEventListener('touchstart',e=>{
-  if(e.touches.length===2){
-    _pinchDist=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);
-    e.preventDefault();
-  }
+  if(e.touches.length===2){_pinchDist=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);e.preventDefault();}
 },{passive:false});
 document.getElementById('viewer').addEventListener('touchmove',e=>{
   if(e.touches.length===2&&_pinchDist>0){
     const d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);
     const ratio=d/_pinchDist;
-    if(Math.abs(ratio-1)>0.04){
-      S.zoomFit=false;
-      S.zoom=Math.max(ZOOM_MIN,Math.min(ZOOM_MAX,S.zoom*ratio));
-      _pinchDist=d;
-      const zv=document.getElementById('zoomVal');if(zv)zv.textContent=Math.round(S.zoom*100)+'%';
-      renderMainZoom();
-    }
+    if(Math.abs(ratio-1)>0.04){S.zoomFit=false;S.zoom=Math.max(ZOOM_MIN,Math.min(ZOOM_MAX,S.zoom*ratio));_pinchDist=d;const zv=document.getElementById('zoomVal');if(zv)zv.textContent=Math.round(S.zoom*100)+'%';renderMainZoom();}
     e.preventDefault();
   }
 },{passive:false});
-
-// Mouse wheel zoom (Ctrl+scroll)
 document.getElementById('viewer').addEventListener('wheel',e=>{
-  if(!e.ctrlKey&&!e.metaKey)return;
-  e.preventDefault();
-  S.zoomFit=false;
-  const delta=e.deltaY>0?-0.1:0.1;
+  if(!e.ctrlKey&&!e.metaKey)return;e.preventDefault();
+  S.zoomFit=false;const delta=e.deltaY>0?-0.1:0.1;
   S.zoom=Math.max(ZOOM_MIN,Math.min(ZOOM_MAX,S.zoom+delta));
-  const zv=document.getElementById('zoomVal');if(zv)zv.textContent=Math.round(S.zoom*100)+'%';
-  renderMainZoom();
+  const zv=document.getElementById('zoomVal');if(zv)zv.textContent=Math.round(S.zoom*100)+'%';renderMainZoom();
 },{passive:false});
-
-// Middle-click / drag to pan when zoomed in
 (()=>{
-  const viewer=document.getElementById('viewer');
-  let panning=false,px=0,py=0,sl=0,st=0;
+  const viewer=document.getElementById('viewer');let panning=false,px=0,py=0,sl=0,st=0;
   viewer.addEventListener('mousedown',e=>{
     if(e.button===1||(e.button===0&&!S.signMode&&!S.commentMode)){
       if(e.button===0&&e.target.closest('.sig-box,.cmt-label,.cmt-composer,.mode-bar'))return;
       if(e.button===0&&S.zoom<=1.05)return;
-      panning=true;px=e.clientX;py=e.clientY;sl=viewer.scrollLeft;st=viewer.scrollTop;
-      viewer.classList.add('grabbing');e.preventDefault();
+      panning=true;px=e.clientX;py=e.clientY;sl=viewer.scrollLeft;st=viewer.scrollTop;viewer.classList.add('grabbing');e.preventDefault();
     }
   });
-  document.addEventListener('mousemove',e=>{
-    if(!panning)return;
-    viewer.scrollLeft=sl-(e.clientX-px);
-    viewer.scrollTop=st-(e.clientY-py);
-  });
+  document.addEventListener('mousemove',e=>{if(!panning)return;viewer.scrollLeft=sl-(e.clientX-px);viewer.scrollTop=st-(e.clientY-py);});
   document.addEventListener('mouseup',()=>{panning=false;viewer.classList.remove('grabbing');});
 })();
 
@@ -988,46 +1183,16 @@ function setTsFmtUpload(el){TS.upload.fmt=el.dataset.fmt;document.querySelectorA
 function toggleTsFmtUpload(){TS.upload.enable=document.getElementById('tsEnableUpload').checked;const r=document.getElementById('tsFmtRowUpload');r.style.opacity=TS.upload.enable?'1':'0.4';r.style.pointerEvents=TS.upload.enable?'':'none';}
 
 // ═══════════════════════════════════════════════════════════════════════
-// COMPOSE SIG + TIMESTAMP
-// ═══════════════════════════════════════════════════════════════════════
-function composeSigWithTs(sigDataUrl,tsText){
-  return new Promise(resolve=>{
-    const img=new Image();
-    img.onload=()=>{
-      const sw=img.naturalWidth||400,sh=img.naturalHeight||120;
-      const mctx=document.createElement('canvas').getContext('2d');
-      const fontSize=22;mctx.font=`${fontSize}px 'DM Mono',monospace`;
-      const tw=mctx.measureText(tsText).width;
-      const pillPadX=16,canvasW=Math.max(sw,Math.ceil(tw)+pillPadX*2);
-      const lineH=Math.round(fontSize*1.6),gap=8,padV=6,totalH=sh+gap+lineH+padV*2;
-      const cv=document.createElement('canvas');cv.width=canvasW;cv.height=totalH;
-      const ctx=cv.getContext('2d');ctx.clearRect(0,0,canvasW,totalH);
-      ctx.drawImage(img,Math.round((canvasW-sw)/2),0,sw,sh);
-      const pillW=Math.ceil(tw)+pillPadX*2,pillX=Math.round((canvasW-pillW)/2),pillY=sh+gap,pillH=lineH+padV*2;
-      ctx.fillStyle='rgba(255,255,255,0.92)';ctx.beginPath();
-      if(ctx.roundRect)ctx.roundRect(pillX,pillY,pillW,pillH,5);else ctx.rect(pillX,pillY,pillW,pillH);
-      ctx.fill();ctx.strokeStyle='rgba(0,0,0,0.14)';ctx.lineWidth=1;ctx.stroke();
-      ctx.fillStyle='#1e293b';ctx.font=`${fontSize}px 'DM Mono',monospace`;ctx.textBaseline='middle';ctx.textAlign='center';
-      ctx.fillText(tsText,canvasW/2,pillY+pillH/2);
-      resolve(cv.toDataURL('image/png'));
-    };
-    img.onerror=()=>resolve(sigDataUrl);img.src=sigDataUrl;
-  });
-}
-
-// ═══════════════════════════════════════════════════════════════════════
 // UTILS
 // ═══════════════════════════════════════════════════════════════════════
 function toast(msg,type='info',ms=2800){
-  const el=document.createElement('div');
-  const ic={ok:'✅',err:'❌',warn:'⚠️',info:'ℹ️'};
+  const el=document.createElement('div');const ic={ok:'✅',err:'❌',warn:'⚠️',info:'ℹ️'};
   el.className='toast '+type;el.innerHTML=`<span>${ic[type]||''}</span><span>${msg}</span>`;
   document.getElementById('toasts').appendChild(el);
   setTimeout(()=>{el.style.cssText+='transition:all .22s;opacity:0;transform:translateY(6px)';setTimeout(()=>el.remove(),230);},ms);
 }
 function showLoad(txt,pct){
-  document.getElementById('loading').classList.add('on');
-  document.getElementById('loTxt').textContent=txt||'...';
+  document.getElementById('loading').classList.add('on');document.getElementById('loTxt').textContent=txt||'...';
   if(pct!=null)document.getElementById('loFill').style.width=Math.min(100,pct)+'%';
 }
 function hideLoad(){document.getElementById('loading').classList.remove('on');document.getElementById('loFill').style.width='0';}
@@ -1052,8 +1217,7 @@ async function loadPdfBytes(bytes,filename){
     document.getElementById('pgTotal').textContent=S.pageCount;
     updateHdrInfo();buildThumbList();await renderMain(1);
     setTimeout(loadThumbs,200);
-    hideLoad();toast(`${filename} (${S.pageCount} ${t('trang')})`,'ok');
-    applyLang();
+    hideLoad();toast(`${filename} (${S.pageCount} ${t('trang')})`,'ok');applyLang();
   }catch(e){hideLoad();toast(t('cantRead')+e.message,'err');console.error(e);}
 }
 
@@ -1069,8 +1233,7 @@ function buildThumbList(){
     d.innerHTML=`<div class="pg-sel-check" id="psc-${i}" onclick="toggleExportPage(event,${i})">✓</div><div class="pg-thumb"><div class="pg-thumb-ld" id="thl-${i}"><div class="spin" style="width:14px;height:14px;border:2px solid var(--border);border-top-color:var(--accent)"></div></div><canvas id="thc-${i}" style="display:none;max-width:100%;max-height:100%"></canvas></div><div class="pg-foot"><span class="pg-num">${i}</span><span class="badges"><span class="badge badge-r" id="br-${i}">${S.rotations[i]||0}°</span><span class="badge badge-s" id="bs-${i}">✍</span><span class="badge badge-c" id="bc-${i}">💬</span></span></div>`;
     d.addEventListener('click',e=>{
       if(e.target.classList.contains('pg-sel-check')||e.target.closest('.pg-sel-check'))return;
-      if(S.exportSelMode){toggleExportPage(e,i);return;}
-      selectPage(i);
+      if(S.exportSelMode){toggleExportPage(e,i);return;}selectPage(i);
     });
     list.appendChild(d);
   }
@@ -1111,19 +1274,12 @@ async function renderMain(pageNum){
     const ovl=document.getElementById('sigOvl');ovl.width=canvas.width;ovl.height=canvas.height;
     const covl=document.getElementById('commentOvl');covl.width=canvas.width;covl.height=canvas.height;
     empty.style.display='none';vi.style.display='block';
-    const viewer2=document.getElementById('viewer');
-    viewer2.classList.toggle('zoom-fit-mode',S.zoomFit);
+    const viewer2=document.getElementById('viewer');viewer2.classList.toggle('zoom-fit-mode',S.zoomFit);
     renderSigBoxes(pageNum);renderCommentLabels(pageNum);
-    const deg=rot;
-    const ab=document.getElementById('angBadge');ab.textContent=deg+'°';ab.className='ang'+(deg?' on':'');
-    const zv=document.getElementById('zoomVal');
-    if(zv)zv.textContent=S.zoomFit?'100%':Math.round(S.zoom*100)+'%';
-    const zfb=document.getElementById('zoomFitBtn');
-    if(zfb){zfb.classList.toggle('on',S.zoomFit);zfb.textContent=S.zoomFit?t('zoomFit'):t('zoomFitOff');}
-  }catch(e){
-    empty.innerHTML='<span style="font-size:36px">⚠️</span><p>Error page '+pageNum+'</p>';
-    empty.style.display='flex';console.error(e);
-  }
+    const ab=document.getElementById('angBadge');ab.textContent=rot+'°';ab.className='ang'+(rot?' on':'');
+    const zv=document.getElementById('zoomVal');if(zv)zv.textContent=S.zoomFit?'100%':Math.round(S.zoom*100)+'%';
+    const zfb=document.getElementById('zoomFitBtn');if(zfb){zfb.classList.toggle('on',S.zoomFit);zfb.textContent=S.zoomFit?t('zoomFit'):t('zoomFitOff');}
+  }catch(e){empty.innerHTML='<span style="font-size:36px">⚠️</span><p>Error page '+pageNum+'</p>';empty.style.display='flex';console.error(e);}
   S.rendering=false;
 }
 
@@ -1135,8 +1291,7 @@ async function selectPage(num){
   document.querySelectorAll('.pg-card').forEach(c=>c.classList.remove('active'));
   const card=document.getElementById('card-'+num);
   if(card){card.classList.add('active');card.scrollIntoView({block:'nearest',behavior:'smooth'});}
-  S.current=num;document.getElementById('pgCur').textContent=num;
-  await renderMain(num);
+  S.current=num;document.getElementById('pgCur').textContent=num;await renderMain(num);
 }
 const prevPage=()=>{if(S.current>1)selectPage(S.current-1);};
 const nextPage=()=>{if(S.current<S.pageCount)selectPage(S.current+1);};
@@ -1145,8 +1300,7 @@ const nextPage=()=>{if(S.current<S.pageCount)selectPage(S.current+1);};
 // ROTATION
 // ═══════════════════════════════════════════════════════════════════════
 async function rotateCurrent(delta){
-  const p=S.current,cur=S.rotations[p]||0;
-  S.rotations[p]=((cur+delta)%360+360)%360;
+  const p=S.current,cur=S.rotations[p]||0;S.rotations[p]=((cur+delta)%360+360)%360;
   updateCard(p);invalidateThumb(p);await renderMain(p);renderThumb(p);updateHdrInfo();
   toast(`${t('trang')} ${p}: ${delta>0?'+':''}${delta}° → ${S.rotations[p]}°`,'ok',1600);
 }
@@ -1154,8 +1308,7 @@ function resetRot(){const p=S.current;S.rotations[p]=0;updateCard(p);invalidateT
 async function bulkRotate(delta){
   showLoad(`${t('rotateLbl')} ${delta}°...`,10);
   for(let i=1;i<=S.pageCount;i++){S.rotations[i]=(((S.rotations[i]||0)+delta)%360+360)%360;updateCard(i);invalidateThumb(i);}
-  await renderMain(S.current);hideLoad();loadThumbs();updateHdrInfo();
-  toast(`${S.pageCount} ${t('trang')} +${delta}°`,'ok');
+  await renderMain(S.current);hideLoad();loadThumbs();updateHdrInfo();toast(`${S.pageCount} ${t('trang')} +${delta}°`,'ok');
 }
 function bulkReset(){
   if(!confirm(t('confirmBulkReset')))return;
@@ -1197,6 +1350,7 @@ function switchTab(tab){
     document.getElementById('pane-'+x).style.display=x===tab?'':'none';
   });
   if(tab==='draw')initDraw();
+  initQrStatusForTab(tab);
 }
 function initDraw(){
   if(D.inited)return;D.inited=true;
@@ -1229,8 +1383,10 @@ document.getElementById('imgInput').addEventListener('change',e=>{
   const f=e.target.files[0];if(!f)return;
   const r=new FileReader();r.onload=ev=>{const img=document.getElementById('sigPreviewImg');img.src=ev.target.result;img.style.display='block';};r.readAsDataURL(f);
 });
+
+// ── CONFIRM SIGNATURE ─────────────────────────────────────────────────
 async function confirmSig(){
-  let rawUrl=null;const tab=_tab;const tsConf=TS[tab];
+  let rawUrl=null;const tab=_tab;const tsConf=TS[tab];const qrConf=QR[tab];
   if(tab==='draw'){
     const cv=document.getElementById('drawCanvas'),ctx=cv.getContext('2d');
     const d=ctx.getImageData(0,0,cv.width,cv.height).data;
@@ -1243,12 +1399,53 @@ async function confirmSig(){
     const src=document.getElementById('sigPreviewImg').src;
     if(!src||src===location.href){toast(t('noImage'),'warn');return;}rawUrl=src;
   }
-  if(tsConf.enable){showLoad(t('processing'));try{S.sigUrl=await composeSigWithTs(rawUrl,fmtNow(tsConf.fmt));}catch(e){S.sigUrl=rawUrl;}hideLoad();}
-  else{S.sigUrl=rawUrl;}
-  const prevDiv=document.getElementById('sigCompositePreview');const prevImg=document.getElementById('sigCompositeImg');
-  if(prevDiv&&prevImg){prevImg.src=S.sigUrl;prevDiv.style.display='block';prevDiv.style.padding='10px 18px';await new Promise(r=>setTimeout(r,1400));prevDiv.style.display='none';}
-  closeSigModal();toast(t('toastReady'),'ok',4000);
+
+  showLoad(t('processing'), 30);
+
+  const tsText = tsConf.enable ? fmtNow(tsConf.fmt) : null;
+
+  // Build QR payload with timestamp + IP
+  let qrPayload = null;
+  if(qrConf.enable){
+    showLoad('Đang lấy IP & tạo QR Code...', 50);
+    const ip = await fetchClientIp();
+    const now = new Date();
+    qrPayload = {
+      app: 'PDF-Studio',
+      ver: '2.1',
+      signed_at: fmtNow('full'),          // human-readable timestamp
+      signed_iso: now.toISOString(),       // ISO 8601 for machine parsing
+      client_ip: ip,                       // client IP address
+      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+      ua_short: navigator.userAgent.slice(0,80),
+    };
+  }
+
+  showLoad(t('processing'), 70);
+
+  try{
+    // composeSigFull places QR at bottom-right of signature
+    S.sigUrl = await composeSigFull(rawUrl, tsText, qrPayload);
+  }catch(e){
+    console.error('composeSigFull error:', e);
+    S.sigUrl = rawUrl;
+  }
+
+  hideLoad();
+
+  // Brief preview
+  const prevDiv=document.getElementById('sigCompositePreview');
+  const prevImg=document.getElementById('sigCompositeImg');
+  if(prevDiv&&prevImg){
+    prevImg.src=S.sigUrl;prevDiv.style.display='block';prevDiv.style.padding='10px 18px';
+    await new Promise(r=>setTimeout(r,1800));
+    prevDiv.style.display='none';
+  }
+  closeSigModal();
+  const qrNote = qrPayload ? ' · QR bảo mật ở góc phải phía dưới 🔐' : '';
+  toast(t('toastReady')+qrNote,'ok',4500);
 }
+
 function trimDrawSig(srcCV){
   const ctx=srcCV.getContext('2d');const{data,width,height}=ctx.getImageData(0,0,srcCV.width,srcCV.height);
   let x0=width,y0=height,x1=0,y1=0;
@@ -1288,14 +1485,14 @@ document.getElementById('sigOvl').addEventListener('click',e=>{
   if(!S.signMode||!S.sigUrl)return;
   const rect=e.currentTarget.getBoundingClientRect();
   const clickX=e.clientX-rect.left,clickY=e.clientY-rect.top;
-  const nw=0.22;
+  const nw=0.30; // wider to accommodate QR at bottom-right
   const _pImg=new Image();
   _pImg.onload=()=>{
     const ar=(_pImg.naturalHeight||1)/(_pImg.naturalWidth||1);
     const nh=nw*ar*(S.cvW/S.cvH);
     placeSig(S.current,(clickX/S.cvW)-nw/2,(clickY/S.cvH)-nh/2,nw,nh,S.sigUrl);
   };
-  _pImg.onerror=()=>{placeSig(S.current,(clickX/S.cvW)-0.11,(clickY/S.cvH)-0.07,0.22,0.14,S.sigUrl);};
+  _pImg.onerror=()=>{placeSig(S.current,(clickX/S.cvW)-0.15,(clickY/S.cvH)-0.08,0.30,0.16,S.sigUrl);};
   _pImg.src=S.sigUrl;exitSignMode();toast(t('toastPlaced')+' '+S.current,'ok');
 });
 function placeSig(page,nx,ny,nw,nh,dataUrl){
@@ -1319,13 +1516,11 @@ function makeSigBox(sig,page){
   const rsz=document.createElement('div');rsz.className='sig-rsz';box.appendChild(rsz);
   let dx0,dy0,nx0,ny0;
   const dragDown=e=>{
-    if(e.target===del||e.target===rsz)return;
-    e.preventDefault();e.stopPropagation();
+    if(e.target===del||e.target===rsz)return;e.preventDefault();e.stopPropagation();
     const s=e.touches?e.touches[0]:e;dx0=s.clientX;dy0=s.clientY;nx0=sig.nx;ny0=sig.ny;
     const onMove=ev=>{const s2=ev.touches?ev.touches[0]:ev;sig.nx=nx0+(s2.clientX-dx0)/S.cvW;sig.ny=ny0+(s2.clientY-dy0)/S.cvH;const p=toPixels();box.style.left=p.left+'px';box.style.top=p.top+'px';};
     const onUp=()=>{document.removeEventListener('mousemove',onMove);document.removeEventListener('mouseup',onUp);document.removeEventListener('touchmove',onMove);document.removeEventListener('touchend',onUp);};
-    document.addEventListener('mousemove',onMove);document.addEventListener('mouseup',onUp);
-    document.addEventListener('touchmove',onMove,{passive:false});document.addEventListener('touchend',onUp);
+    document.addEventListener('mousemove',onMove);document.addEventListener('mouseup',onUp);document.addEventListener('touchmove',onMove,{passive:false});document.addEventListener('touchend',onUp);
   };
   box.addEventListener('mousedown',dragDown);box.addEventListener('touchstart',dragDown,{passive:false});
   let rx0,ry0,nw0,nh0;
@@ -1334,8 +1529,7 @@ function makeSigBox(sig,page){
     const s=e.touches?e.touches[0]:e;rx0=s.clientX;ry0=s.clientY;nw0=sig.nw;nh0=sig.nh;
     const onMove=ev=>{const s2=ev.touches?ev.touches[0]:ev;sig.nw=Math.max(40/S.cvW,nw0+(s2.clientX-rx0)/S.cvW);sig.nh=Math.max(18/S.cvH,nh0+(s2.clientY-ry0)/S.cvH);const p=toPixels();box.style.width=p.width+'px';box.style.height=p.height+'px';};
     const onUp=()=>{document.removeEventListener('mousemove',onMove);document.removeEventListener('mouseup',onUp);document.removeEventListener('touchmove',onMove);document.removeEventListener('touchend',onUp);};
-    document.addEventListener('mousemove',onMove);document.addEventListener('mouseup',onUp);
-    document.addEventListener('touchmove',onMove,{passive:false});document.addEventListener('touchend',onUp);
+    document.addEventListener('mousemove',onMove);document.addEventListener('mouseup',onUp);document.addEventListener('touchmove',onMove,{passive:false});document.addEventListener('touchend',onUp);
   };
   rsz.addEventListener('mousedown',rszDown);rsz.addEventListener('touchstart',rszDown,{passive:false});
   vi.appendChild(box);
@@ -1354,7 +1548,6 @@ const CMT_COLORS=['#7c3aed','#dc2626','#1e40af','#15803d','#b45309','#0d0f14','#
 const CMT_BG={'#7c3aed':'rgba(245,243,255,0.92)','#dc2626':'rgba(255,241,242,0.92)','#1e40af':'rgba(239,246,255,0.92)','#15803d':'rgba(240,253,244,0.92)','#b45309':'rgba(255,251,235,0.92)','#0d0f14':'rgba(30,32,40,0.92)','#fff':'rgba(255,255,255,0.96)'};
 const CMT_SIZES=[12,14,16,20];
 let _cmtDefColor='#7c3aed',_cmtDefSize=14;
-
 function toggleCommentMode(){
   if(S.signMode)exitSignMode();S.commentMode=!S.commentMode;
   document.getElementById('commentOvl').classList.toggle('commenting',S.commentMode);
@@ -1368,8 +1561,7 @@ function exitCommentMode(){
 }
 document.getElementById('commentOvl').addEventListener('click',e=>{
   if(!S.commentMode)return;e.stopPropagation();
-  const rect=e.currentTarget.getBoundingClientRect();
-  exitCommentMode();spawnComposer(e.clientX-rect.left,e.clientY-rect.top);
+  const rect=e.currentTarget.getBoundingClientRect();exitCommentMode();spawnComposer(e.clientX-rect.left,e.clientY-rect.top);
 });
 function removeComposer(){const old=document.getElementById('cmt-composer-el');if(old)old.remove();}
 function spawnComposer(px,py){
@@ -1414,7 +1606,6 @@ function commitComposer(px,py,comp,ta){
     nh:Math.max(0.04,(Math.ceil(text.split('\n').length)*_cmtDefSize*1.5+14)/S.cvH)});
   removeComposer();renderCommentLabels(page);updateCard(page);updateHdrInfo();toast(t('cmtAdded')+' '+page,'ok',2000);
 }
-function renderCommentPins(page){renderCommentLabels(page);}
 function renderCommentLabels(page){
   const vi=document.getElementById('vi');vi.querySelectorAll('.cmt-label').forEach(el=>el.remove());
   (S.comments[page]||[]).forEach(cmt=>makeCommentLabel(cmt,page));
@@ -1463,8 +1654,7 @@ function makeCommentLabel(cmt,page){
     const s=e.touches?e.touches[0]:e;dx0=s.clientX;dy0=s.clientY;nx0=cmt.nx;ny0=cmt.ny;
     const onMove=ev=>{const s2=ev.touches?ev.touches[0]:ev;cmt.nx=Math.max(0,Math.min((S.cvW-w)/S.cvW,nx0+(s2.clientX-dx0)/S.cvW));cmt.ny=Math.max(0,Math.min((S.cvH-h)/S.cvH,ny0+(s2.clientY-dy0)/S.cvH));box.style.left=cmt.nx*S.cvW+'px';box.style.top=cmt.ny*S.cvH+'px';};
     const onUp=()=>{document.removeEventListener('mousemove',onMove);document.removeEventListener('mouseup',onUp);document.removeEventListener('touchmove',onMove);document.removeEventListener('touchend',onUp);};
-    document.addEventListener('mousemove',onMove);document.addEventListener('mouseup',onUp);
-    document.addEventListener('touchmove',onMove,{passive:false});document.addEventListener('touchend',onUp);
+    document.addEventListener('mousemove',onMove);document.addEventListener('mouseup',onUp);document.addEventListener('touchmove',onMove,{passive:false});document.addEventListener('touchend',onUp);
   };
   box.addEventListener('mousedown',dragStart);box.addEventListener('touchstart',dragStart,{passive:false});
   vi.appendChild(box);
@@ -1488,8 +1678,6 @@ function syncExportPageUI(pageNum){
 }
 function updateExportModeBar(){const count=S.exportPages.size;const badge=document.getElementById('exportCountBadge');if(badge)badge.textContent=count+' '+t('trang');}
 function exitExportSelMode(){S.exportSelMode=false;document.getElementById('pageList').classList.remove('export-mode');document.getElementById('exportModeBar').classList.remove('on');document.querySelectorAll('.pg-sel-check').forEach(el=>{el.style.display='';el.style.background='';el.style.borderColor='';el.style.color='';});document.querySelectorAll('.pg-card').forEach(c=>c.classList.remove('selected-for-export'));}
-
-// PAGE EXPORT MODAL
 function openExportModal(){if(!S.pdfDoc)return;buildExportGrid();updateExportSummary();document.getElementById('expRangeInput').value='';document.getElementById('exportModal').classList.remove('hidden');}
 function closeExportModal(){document.getElementById('exportModal').classList.add('hidden');}
 function buildExportGrid(){
@@ -1535,7 +1723,26 @@ function renderCmtToCanvas(ctx,cmt,exportW,exportH){
   ctx.restore();
 }
 
-// EXECUTE EXPORT (selected pages)
+// ─── SHARED PDF RENDER HELPER ─────────────────────────────────────────
+async function renderPageToCanvas(pn, PX_PER_PT){
+  const rot=S.rotations[pn]||0,sigs=S.signatures[pn]||[],cmts=S.comments[pn]||[];
+  const hasMod=rot!==0||sigs.length>0||cmts.length>0;
+  if(!hasMod) return null;
+  const pjsPage=await S.pjsDoc.getPage(pn);
+  const exportVP=pjsPage.getViewport({scale:PX_PER_PT,rotation:rot});
+  const exportW=Math.round(exportVP.width),exportH=Math.round(exportVP.height);
+  const offscr=document.createElement('canvas');offscr.width=exportW;offscr.height=exportH;
+  const ctx=offscr.getContext('2d');await pjsPage.render({canvasContext:ctx,viewport:exportVP}).promise;
+  for(const sig of sigs){
+    await new Promise(res=>{
+      const imgEl=new Image();imgEl.onload=()=>{ctx.drawImage(imgEl,sig.nx*exportW,sig.ny*exportH,sig.nw*exportW,sig.nh*exportH);res();};
+      imgEl.onerror=()=>res();imgEl.src=sig.dataUrl;
+    });
+  }
+  for(const cmt of cmts)renderCmtToCanvas(ctx,cmt,exportW,exportH);
+  return {canvas:offscr,w:exportW,h:exportH};
+}
+
 async function executeExport(){
   if(S.exportPages.size===0){toast(t('noPageSelected'),'warn');return;}
   closeExportModal();const pages=Array.from(S.exportPages).sort((a,b)=>a-b);
@@ -1545,16 +1752,9 @@ async function executeExport(){
     for(let pi=0;pi<pages.length;pi++){
       const pn=pages[pi];showLoad(`${t('processingPage')} ${pn} (${pi+1}/${pages.length})...`,Math.round(pi/pages.length*88)+2);
       await new Promise(r=>setTimeout(r,0));
-      const rot=S.rotations[pn]||0,sigs=S.signatures[pn]||[],cmts=S.comments[pn]||[];
-      const hasMod=rot!==0||sigs.length>0||cmts.length>0;
-      if(!hasMod){const[cp]=await outDoc.copyPages(S.pdfDoc,[pn-1]);outDoc.addPage(cp);continue;}
-      const pjsPage=await S.pjsDoc.getPage(pn);
-      const exportVP=pjsPage.getViewport({scale:PX_PER_PT,rotation:rot});
-      const exportW=Math.round(exportVP.width),exportH=Math.round(exportVP.height);
-      const offscr=document.createElement('canvas');offscr.width=exportW;offscr.height=exportH;
-      const ctx=offscr.getContext('2d');await pjsPage.render({canvasContext:ctx,viewport:exportVP}).promise;
-      for(const sig of sigs){await new Promise(res=>{const imgEl=new Image();imgEl.onload=()=>{ctx.drawImage(imgEl,sig.nx*exportW,sig.ny*exportH,sig.nw*exportW,sig.nh*exportH);res();};imgEl.onerror=()=>res();imgEl.src=sig.dataUrl;});}
-      for(const cmt of cmts)renderCmtToCanvas(ctx,cmt,exportW,exportH);
+      const result=await renderPageToCanvas(pn,PX_PER_PT);
+      if(!result){const[cp]=await outDoc.copyPages(S.pdfDoc,[pn-1]);outDoc.addPage(cp);continue;}
+      const{canvas:offscr,w:exportW,h:exportH}=result;
       const pngUrl=offscr.toDataURL('image/png'),b64=pngUrl.split(',')[1];
       const bin=atob(b64);const bytes=new Uint8Array(bin.length);for(let k=0;k<bin.length;k++)bytes[k]=bin.charCodeAt(k);
       const embImg=await outDoc.embedPng(bytes);const pgW=exportW/PX_PER_PT,pgH=exportH/PX_PER_PT;
@@ -1568,23 +1768,15 @@ async function executeExport(){
   hideLoad();document.getElementById('exportExecBtn').disabled=false;
 }
 
-// SAVE FULL PDF
 async function savePdf(){
   showLoad(t('preparing'),2);document.getElementById('dlBtn').disabled=true;
   try{
     const outDoc=await PDFLib.PDFDocument.create();const PX_PER_PT=2.0;
     for(let pn=1;pn<=S.pageCount;pn++){
       showLoad(`${t('processingPage')} ${pn}/${S.pageCount}...`,Math.round((pn-1)/S.pageCount*88)+2);await new Promise(r=>setTimeout(r,0));
-      const rot=S.rotations[pn]||0,sigs=S.signatures[pn]||[],cmts=S.comments[pn]||[];
-      const hasMod=rot!==0||sigs.length>0||cmts.length>0;
-      if(!hasMod){const[cp]=await outDoc.copyPages(S.pdfDoc,[pn-1]);outDoc.addPage(cp);continue;}
-      const pjsPage=await S.pjsDoc.getPage(pn);
-      const exportVP=pjsPage.getViewport({scale:PX_PER_PT,rotation:rot});
-      const exportW=Math.round(exportVP.width),exportH=Math.round(exportVP.height);
-      const offscr=document.createElement('canvas');offscr.width=exportW;offscr.height=exportH;
-      const ctx=offscr.getContext('2d');await pjsPage.render({canvasContext:ctx,viewport:exportVP}).promise;
-      for(const sig of sigs){await new Promise(res=>{const imgEl=new Image();imgEl.onload=()=>{ctx.drawImage(imgEl,sig.nx*exportW,sig.ny*exportH,sig.nw*exportW,sig.nh*exportH);res();};imgEl.onerror=()=>res();imgEl.src=sig.dataUrl;});}
-      for(const cmt of cmts)renderCmtToCanvas(ctx,cmt,exportW,exportH);
+      const result=await renderPageToCanvas(pn,PX_PER_PT);
+      if(!result){const[cp]=await outDoc.copyPages(S.pdfDoc,[pn-1]);outDoc.addPage(cp);continue;}
+      const{canvas:offscr,w:exportW,h:exportH}=result;
       const pngUrl=offscr.toDataURL('image/png'),b64=pngUrl.split(',')[1];
       const bin=atob(b64);const bytes=new Uint8Array(bin.length);for(let k=0;k<bin.length;k++)bytes[k]=bin.charCodeAt(k);
       const embImg=await outDoc.embedPng(bytes);const pgW=exportW/PX_PER_PT,pgH=exportH/PX_PER_PT;
@@ -1601,397 +1793,130 @@ async function savePdf(){
 // ═══════════════════════════════════════════════════════════════════════
 // COMBINE PDF
 // ═══════════════════════════════════════════════════════════════════════
-// Each item: { id, file, name, size, bytes(ArrayBuffer), pageCount, rangeInput }
 let _combineFiles=[];
 let _combineDragSrc=null;
-
-function openCombineModal(){
-  document.getElementById('combineModal').classList.remove('hidden');
-  updateCombineCurrentBanner();
-  renderCombineList();
-}
+function openCombineModal(){document.getElementById('combineModal').classList.remove('hidden');updateCombineCurrentBanner();renderCombineList();}
 function closeCombineModal(){document.getElementById('combineModal').classList.add('hidden');}
-
-// Show/update the "add current file" banner at the top of modal
 function updateCombineCurrentBanner(){
-  const banner  = document.getElementById('combineCurrBanner');
-  const nameEl  = document.getElementById('combineCurrName');
-  const metaEl  = document.getElementById('combineCurrMeta');
-  const addBtn  = document.getElementById('combineCurrBtn');
-  const botBtn  = document.getElementById('combineCurrBtnBottom');
-  if(!banner) return;
-
-  if(!S.pdfDoc || !S.filename){
-    banner.classList.add('hidden');
-    if(botBtn) botBtn.style.display = 'none';
-    return;
-  }
-
-  banner.classList.remove('hidden');
-  nameEl.textContent = S.filename;
-  metaEl.textContent = S.pageCount + ' trang';
-
-  // Check if already added (match by name + pageCount as proxy)
-  const alreadyAdded = _combineFiles.some(f => f.name === S.filename && f.pageCount === S.pageCount && f._fromCurrent);
-  if(addBtn){
-    addBtn.textContent = alreadyAdded ? '✓ Đã thêm' : '＋ Thêm file này';
-    addBtn.className   = alreadyAdded ? 'ccb-btn added' : 'ccb-btn add';
-    addBtn.disabled    = alreadyAdded;
-  }
-  if(botBtn){
-    botBtn.style.display = '';
-    botBtn.textContent = alreadyAdded ? '✓ Đã thêm file đang mở' : '＋ Thêm file đang mở';
-    botBtn.disabled    = alreadyAdded;
-  }
+  const banner=document.getElementById('combineCurrBanner');const nameEl=document.getElementById('combineCurrName');const metaEl=document.getElementById('combineCurrMeta');const addBtn=document.getElementById('combineCurrBtn');const botBtn=document.getElementById('combineCurrBtnBottom');
+  if(!banner)return;
+  if(!S.pdfDoc||!S.filename){banner.classList.add('hidden');if(botBtn)botBtn.style.display='none';return;}
+  banner.classList.remove('hidden');nameEl.textContent=S.filename;metaEl.textContent=S.pageCount+' trang';
+  const alreadyAdded=_combineFiles.some(f=>f.name===S.filename&&f.pageCount===S.pageCount&&f._fromCurrent);
+  if(addBtn){addBtn.textContent=alreadyAdded?'✓ Đã thêm':'＋ Thêm file này';addBtn.className=alreadyAdded?'ccb-btn added':'ccb-btn add';addBtn.disabled=alreadyAdded;}
+  if(botBtn){botBtn.style.display='';botBtn.textContent=alreadyAdded?'✓ Đã thêm file đang mở':'＋ Thêm file đang mở';botBtn.disabled=alreadyAdded;}
 }
-
-// Add the currently open PDF bytes into combine list
 async function addCurrentFileToCombine(){
-  if(!S.pdfDoc || !S.pjsDoc){ toast('Chưa có file nào đang mở', 'warn'); return; }
-
-  // Check limit
-  const currentTotal = _combineFiles.reduce((sum, item) => {
-    const pgs = typeof item.pageCount === 'number' ? item.pageCount : 0;
-    return sum + (item.rangeInput ? countRangePages(item.rangeInput, pgs) : pgs);
-  }, 0);
-  if(_combineFiles.length > 0 && currentTotal + S.pageCount > MAX_TOTAL_PAGES){
-    toast('⚠️ Thêm file này sẽ vượt giới hạn ' + MAX_TOTAL_PAGES + ' trang', 'warn', 3500);
-    return;
-  }
-
-  showLoad('Đang đọc file...', 20);
+  if(!S.pdfDoc||!S.pjsDoc){toast('Chưa có file nào đang mở','warn');return;}
+  const currentTotal=_combineFiles.reduce((sum,item)=>{const pgs=typeof item.pageCount==='number'?item.pageCount:0;return sum+(item.rangeInput?countRangePages(item.rangeInput,pgs):pgs);},0);
+  if(_combineFiles.length>0&&currentTotal+S.pageCount>MAX_TOTAL_PAGES){toast('⚠️ Thêm file này sẽ vượt giới hạn '+MAX_TOTAL_PAGES+' trang','warn',3500);return;}
+  showLoad('Đang đọc file...',20);
   try{
-    // Re-save current doc (with any rotations already embedded) to bytes
-    const outDoc = await PDFLib.PDFDocument.create();
-    const pages  = await outDoc.copyPages(S.pdfDoc, Array.from({length: S.pageCount}, (_,i) => i));
-    pages.forEach(p => outDoc.addPage(p));
-    const bytes  = (await outDoc.save()).buffer;
-
-    _combineFiles.push({
-      id: 'cf_' + Date.now() + '_curr',
-      name: S.filename,
-      size: bytes.byteLength,
-      bytes,
-      pageCount: S.pageCount,
-      rangeInput: '',
-      _fromCurrent: true,   // flag so banner knows it was added
-    });
-    hideLoad();
-    renderCombineList();
-    updateCombineCurrentBanner();
-    toast('✅ Đã thêm file đang mở vào danh sách ghép', 'ok', 2500);
-  }catch(e){
-    hideLoad();
-    toast('Lỗi khi đọc file: ' + e.message, 'err');
-    console.error(e);
-  }
+    const outDoc=await PDFLib.PDFDocument.create();const pages=await outDoc.copyPages(S.pdfDoc,Array.from({length:S.pageCount},(_,i)=>i));pages.forEach(p=>outDoc.addPage(p));const bytes=(await outDoc.save()).buffer;
+    _combineFiles.push({id:'cf_'+Date.now()+'_curr',name:S.filename,size:bytes.byteLength,bytes,pageCount:S.pageCount,rangeInput:'',_fromCurrent:true});
+    hideLoad();renderCombineList();updateCombineCurrentBanner();toast('✅ Đã thêm file đang mở vào danh sách ghép','ok',2500);
+  }catch(e){hideLoad();toast('Lỗi khi đọc file: '+e.message,'err');console.error(e);}
 }
-
-// ── COMBINE FILE INPUT & DROP ZONE ──────────────────────────────────
-const MAX_TOTAL_PAGES = 100;
-
-// Click on drop zone → trigger file picker
-document.getElementById('combineDrop').addEventListener('click', e => {
-  document.getElementById('combineInput').click();
-});
-
-// File input change handler
-document.getElementById('combineInput').addEventListener('change', async e => {
-  const files = [...e.target.files];
-  if(files.length === 0) return;
-  showLoad(t('preparing'), 10);
-  let added = 0, skipped = 0;
+const MAX_TOTAL_PAGES=100;
+document.getElementById('combineDrop').addEventListener('click',e=>{document.getElementById('combineInput').click();});
+document.getElementById('combineInput').addEventListener('change',async e=>{
+  const files=[...e.target.files];if(files.length===0)return;
+  showLoad(t('preparing'),10);let added=0,skipped=0;
   for(const f of files){
-    if(f.type !== 'application/pdf' && !f.name.endsWith('.pdf')){
-      toast(t('notPdf'), 'warn'); skipped++; continue;
-    }
-    const result = await addCombineFile(f);
-    if(result === 'limit') { skipped++; }
-    else { added++; }
+    if(f.type!=='application/pdf'&&!f.name.endsWith('.pdf')){toast(t('notPdf'),'warn');skipped++;continue;}
+    const result=await addCombineFile(f);if(result==='limit'){skipped++;}else{added++;}
   }
-  e.target.value = '';
-  hideLoad();
-  renderCombineList();
-  if(added > 0) toast(`✅ Đã thêm ${added} file`, 'ok', 2000);
-  if(skipped > 0 && added === 0) toast(`⚠️ Vượt giới hạn 100 trang hoặc file không hợp lệ`, 'warn', 3500);
+  e.target.value='';hideLoad();renderCombineList();
+  if(added>0)toast(`✅ Đã thêm ${added} file`,'ok',2000);
+  if(skipped>0&&added===0)toast(`⚠️ Vượt giới hạn 100 trang hoặc file không hợp lệ`,'warn',3500);
 });
-
-// Drag-drop onto combine drop zone
-const _combineDrop = document.getElementById('combineDrop');
-_combineDrop.addEventListener('dragover', e => { e.preventDefault(); _combineDrop.classList.add('over'); });
-_combineDrop.addEventListener('dragleave', () => _combineDrop.classList.remove('over'));
-_combineDrop.addEventListener('drop', async e => {
-  e.preventDefault(); _combineDrop.classList.remove('over');
-  const files = [...e.dataTransfer.files];
-  showLoad(t('preparing'), 10);
-  let added = 0;
-  for(const f of files){
-    if(f.type !== 'application/pdf' && !f.name.endsWith('.pdf')){ toast(t('notPdf'), 'warn'); continue; }
-    const result = await addCombineFile(f);
-    if(result !== 'limit') added++;
-  }
-  hideLoad();
-  renderCombineList();
-  if(added > 0) toast(`✅ Đã thêm ${added} file`, 'ok', 2000);
+const _combineDrop=document.getElementById('combineDrop');
+_combineDrop.addEventListener('dragover',e=>{e.preventDefault();_combineDrop.classList.add('over');});
+_combineDrop.addEventListener('dragleave',()=>_combineDrop.classList.remove('over'));
+_combineDrop.addEventListener('drop',async e=>{
+  e.preventDefault();_combineDrop.classList.remove('over');const files=[...e.dataTransfer.files];
+  showLoad(t('preparing'),10);let added=0;
+  for(const f of files){if(f.type!=='application/pdf'&&!f.name.endsWith('.pdf')){toast(t('notPdf'),'warn');continue;}const result=await addCombineFile(f);if(result!=='limit')added++;}
+  hideLoad();renderCombineList();if(added>0)toast(`✅ Đã thêm ${added} file`,'ok',2000);
 });
-
-// Returns 'ok' or 'limit'
 async function addCombineFile(file){
-  return new Promise(resolve => {
-    const reader = new FileReader();
-    reader.onload = async ev => {
-      const bytes = ev.target.result;
-      let pageCount = 0;
-      try{
-        const doc = await PDFLib.PDFDocument.load(bytes, {ignoreEncryption:true});
-        pageCount = doc.getPageCount();
-      }catch(e){ pageCount = 1; }
-
-      // Count current total pages (respecting range inputs)
-      const currentTotal = _combineFiles.reduce((sum, item) => {
-        const pgs = typeof item.pageCount === 'number' ? item.pageCount : 0;
-        return sum + (item.rangeInput ? countRangePages(item.rangeInput, pgs) : pgs);
-      }, 0);
-
-      const addPages = typeof pageCount === 'number' ? pageCount : 1;
-
-      // Check limit: if already 0 files allow any single file < 10 pages freely,
-      // otherwise cap total at MAX_TOTAL_PAGES
-      if(_combineFiles.length > 0 && currentTotal + addPages > MAX_TOTAL_PAGES){
-        toast(`⚠️ "${file.name}" sẽ vượt giới hạn ${MAX_TOTAL_PAGES} trang (hiện: ${currentTotal}/${MAX_TOTAL_PAGES})`, 'warn', 4000);
-        resolve('limit'); return;
-      }
-
-      _combineFiles.push({
-        id: 'cf_' + Date.now() + '_' + Math.random().toString(36).slice(2,5),
-        name: file.name,
-        size: file.size,
-        bytes, pageCount,
-        rangeInput: '',
-      });
-      resolve('ok');
+  return new Promise(resolve=>{
+    const reader=new FileReader();
+    reader.onload=async ev=>{
+      const bytes=ev.target.result;let pageCount=0;
+      try{const doc=await PDFLib.PDFDocument.load(bytes,{ignoreEncryption:true});pageCount=doc.getPageCount();}catch(e){pageCount=1;}
+      const currentTotal=_combineFiles.reduce((sum,item)=>{const pgs=typeof item.pageCount==='number'?item.pageCount:0;return sum+(item.rangeInput?countRangePages(item.rangeInput,pgs):pgs);},0);
+      const addPages=typeof pageCount==='number'?pageCount:1;
+      if(_combineFiles.length>0&&currentTotal+addPages>MAX_TOTAL_PAGES){toast(`⚠️ "${file.name}" sẽ vượt giới hạn ${MAX_TOTAL_PAGES} trang (hiện: ${currentTotal}/${MAX_TOTAL_PAGES})`,'warn',4000);resolve('limit');return;}
+      _combineFiles.push({id:'cf_'+Date.now()+'_'+Math.random().toString(36).slice(2,5),name:file.name,size:file.size,bytes,pageCount,rangeInput:''});resolve('ok');
     };
-    reader.onerror = () => resolve('limit');
-    reader.readAsArrayBuffer(file);
+    reader.onerror=()=>resolve('limit');reader.readAsArrayBuffer(file);
   });
 }
-
 function renderCombineList(){
-  const list    = document.getElementById('combineFileList');
-  const empty   = document.getElementById('combineEmpty');
-  const hint    = document.getElementById('combineOrderHint');
-  const bottom  = document.getElementById('combineBottomBar');
-  const execBtn = document.getElementById('combineExecBtn');
-  const drop    = document.getElementById('combineDrop');
-  // Guard: modal not yet in DOM
+  const list=document.getElementById('combineFileList');const empty=document.getElementById('combineEmpty');const hint=document.getElementById('combineOrderHint');const bottom=document.getElementById('combineBottomBar');const execBtn=document.getElementById('combineExecBtn');const drop=document.getElementById('combineDrop');
   if(!list||!empty||!execBtn)return;
-
-  // Clear only the file rows (empty/hint/bottom are siblings, not children)
-  list.innerHTML='';
-
-  const hasFiles = _combineFiles.length > 0;
-
-  // Toggle UI sections
-  empty.style.display   = hasFiles ? 'none' : 'block';
-  if(hint)   hint.style.display   = hasFiles ? 'block' : 'none';
-  if(bottom) bottom.style.display = hasFiles ? 'flex'  : 'none';
-  execBtn.disabled = _combineFiles.length < 2;
-
-  // Shrink drop zone when files present
-  if(drop){
-    drop.style.padding = hasFiles ? '10px 14px' : '20px';
-    drop.style.marginBottom = hasFiles ? '6px' : '10px';
-    const di = drop.querySelector('.drop-icon');
-    if(di) di.style.display = hasFiles ? 'none' : '';
-  }
-
-  if(!hasFiles) return;
-
-  // Build file rows
-  _combineFiles.forEach((item, idx) => {
-    const row = document.createElement('div');
-    row.className = 'combine-file-item';
-    row.draggable = true;
-    row.dataset.id = item.id;
-
-    // Order badge
-    const ordBadge = document.createElement('div');
-    ordBadge.style.cssText = 'position:absolute;top:6px;left:28px;width:18px;height:18px;background:var(--teal);color:#fff;border-radius:50%;font-size:.62rem;font-weight:700;display:flex;align-items:center;justify-content:center;font-family:var(--mono);z-index:2';
-    ordBadge.textContent = idx + 1;
-    row.appendChild(ordBadge);
-
-    // Drag handle
-    const dh = document.createElement('span');
-    dh.className = 'cfi-drag-handle'; dh.textContent = '⋮⋮'; dh.title = 'Kéo để sắp xếp';
-    row.appendChild(dh);
-
-    // Icon
-    const icon = document.createElement('span');
-    icon.className = 'cfi-icon'; icon.textContent = item._fromCurrent ? '📂' : '📄';
-    row.appendChild(icon);
-
-    // Source badge
-    const srcBadge = document.createElement('span');
-    srcBadge.className = 'cfi-source ' + (item._fromCurrent ? 'from-current' : 'from-file');
-    srcBadge.textContent = item._fromCurrent ? '★ Đang mở' : '↑ File';
-    row.appendChild(srcBadge);
-
-    // Name + size
-    const info = document.createElement('div'); info.className = 'cfi-info';
-    const nameEl = document.createElement('div'); nameEl.className = 'cfi-name'; nameEl.textContent = item.name;
-    const metaEl = document.createElement('div'); metaEl.className = 'cfi-meta';
-    metaEl.textContent = (item.size/1024).toFixed(0) + ' KB · ' + item.pageCount + ' ' + t('combinePages');
-    info.appendChild(nameEl); info.appendChild(metaEl);
-    row.appendChild(info);
-
-    // Page range input
-    const rangeWrap = document.createElement('div');
-    rangeWrap.style.cssText = 'display:flex;flex-direction:column;align-items:flex-end;gap:2px;flex-shrink:0';
-    const rangeLbl = document.createElement('span');
-    rangeLbl.style.cssText = 'font-size:.6rem;color:var(--muted);font-family:var(--mono)';
-    rangeLbl.textContent = t('combinePageRange');
-    const rangeIn = document.createElement('input');
-    rangeIn.type = 'text'; rangeIn.className = 'cfi-range';
-    rangeIn.placeholder = '1-' + item.pageCount; rangeIn.value = item.rangeInput;
-    rangeIn.title = 'Dải trang, vd: 1-3,5 (trống = tất cả)';
-    rangeIn.oninput = () => { item.rangeInput = rangeIn.value.trim(); updateCombineSummary(); };
-    rangeIn.addEventListener('click', e => e.stopPropagation());
-    rangeIn.addEventListener('mousedown', e => e.stopPropagation());
-    rangeWrap.appendChild(rangeLbl); rangeWrap.appendChild(rangeIn);
-    row.appendChild(rangeWrap);
-
-    // Delete button
-    const delBtn = document.createElement('button');
-    delBtn.className = 'cfi-del'; delBtn.textContent = '✕'; delBtn.title = 'Xóa file này';
-    delBtn.addEventListener('click', e => { e.stopPropagation(); removeCombineFile(item.id); });
-    row.appendChild(delBtn);
-
-    // ── Drag-to-reorder ──
-    row.addEventListener('dragstart', e => {
-      _combineDragSrc = item.id; row.classList.add('dragging');
-      e.dataTransfer.effectAllowed = 'move';
-    });
-    row.addEventListener('dragend', () => {
-      row.classList.remove('dragging');
-      document.querySelectorAll('.combine-file-item').forEach(r => r.classList.remove('drag-over'));
-    });
-    row.addEventListener('dragover', e => {
-      e.preventDefault();
-      if(_combineDragSrc !== item.id) row.classList.add('drag-over');
-      e.dataTransfer.dropEffect = 'move';
-    });
-    row.addEventListener('dragleave', () => row.classList.remove('drag-over'));
-    row.addEventListener('drop', e => {
-      e.preventDefault(); row.classList.remove('drag-over');
-      if(_combineDragSrc === item.id) return;
-      const srcIdx = _combineFiles.findIndex(f => f.id === _combineDragSrc);
-      if(srcIdx < 0) return;
-      const [moved] = _combineFiles.splice(srcIdx, 1);
-      _combineFiles.splice(idx, 0, moved);
-      renderCombineList();
-    });
-
+  list.innerHTML='';const hasFiles=_combineFiles.length>0;
+  empty.style.display=hasFiles?'none':'block';if(hint)hint.style.display=hasFiles?'block':'none';if(bottom)bottom.style.display=hasFiles?'flex':'none';execBtn.disabled=_combineFiles.length<2;
+  if(drop){drop.style.padding=hasFiles?'10px 14px':'20px';drop.style.marginBottom=hasFiles?'6px':'10px';const di=drop.querySelector('.drop-icon');if(di)di.style.display=hasFiles?'none':'';}
+  if(!hasFiles)return;
+  _combineFiles.forEach((item,idx)=>{
+    const row=document.createElement('div');row.className='combine-file-item';row.draggable=true;row.dataset.id=item.id;
+    const ordBadge=document.createElement('div');ordBadge.style.cssText='position:absolute;top:6px;left:28px;width:18px;height:18px;background:var(--teal);color:#fff;border-radius:50%;font-size:.62rem;font-weight:700;display:flex;align-items:center;justify-content:center;font-family:var(--mono);z-index:2';ordBadge.textContent=idx+1;row.appendChild(ordBadge);
+    const dh=document.createElement('span');dh.className='cfi-drag-handle';dh.textContent='⋮⋮';dh.title='Kéo để sắp xếp';row.appendChild(dh);
+    const icon=document.createElement('span');icon.className='cfi-icon';icon.textContent=item._fromCurrent?'📂':'📄';row.appendChild(icon);
+    const srcBadge=document.createElement('span');srcBadge.className='cfi-source '+(item._fromCurrent?'from-current':'from-file');srcBadge.textContent=item._fromCurrent?'★ Đang mở':'↑ File';row.appendChild(srcBadge);
+    const info=document.createElement('div');info.className='cfi-info';const nameEl=document.createElement('div');nameEl.className='cfi-name';nameEl.textContent=item.name;const metaEl=document.createElement('div');metaEl.className='cfi-meta';metaEl.textContent=(item.size/1024).toFixed(0)+' KB · '+item.pageCount+' '+t('combinePages');info.appendChild(nameEl);info.appendChild(metaEl);row.appendChild(info);
+    const rangeWrap=document.createElement('div');rangeWrap.style.cssText='display:flex;flex-direction:column;align-items:flex-end;gap:2px;flex-shrink:0';const rangeLbl=document.createElement('span');rangeLbl.style.cssText='font-size:.6rem;color:var(--muted);font-family:var(--mono)';rangeLbl.textContent=t('combinePageRange');const rangeIn=document.createElement('input');rangeIn.type='text';rangeIn.className='cfi-range';rangeIn.placeholder='1-'+item.pageCount;rangeIn.value=item.rangeInput;rangeIn.title='Dải trang, vd: 1-3,5 (trống = tất cả)';rangeIn.oninput=()=>{item.rangeInput=rangeIn.value.trim();updateCombineSummary();};rangeIn.addEventListener('click',e=>e.stopPropagation());rangeIn.addEventListener('mousedown',e=>e.stopPropagation());rangeWrap.appendChild(rangeLbl);rangeWrap.appendChild(rangeIn);row.appendChild(rangeWrap);
+    const delBtn=document.createElement('button');delBtn.className='cfi-del';delBtn.textContent='✕';delBtn.title='Xóa file này';delBtn.addEventListener('click',e=>{e.stopPropagation();removeCombineFile(item.id);});row.appendChild(delBtn);
+    row.addEventListener('dragstart',e=>{_combineDragSrc=item.id;row.classList.add('dragging');e.dataTransfer.effectAllowed='move';});
+    row.addEventListener('dragend',()=>{row.classList.remove('dragging');document.querySelectorAll('.combine-file-item').forEach(r=>r.classList.remove('drag-over'));});
+    row.addEventListener('dragover',e=>{e.preventDefault();if(_combineDragSrc!==item.id)row.classList.add('drag-over');e.dataTransfer.dropEffect='move';});
+    row.addEventListener('dragleave',()=>row.classList.remove('drag-over'));
+    row.addEventListener('drop',e=>{e.preventDefault();row.classList.remove('drag-over');if(_combineDragSrc===item.id)return;const srcIdx=_combineFiles.findIndex(f=>f.id===_combineDragSrc);if(srcIdx<0)return;const[moved]=_combineFiles.splice(srcIdx,1);_combineFiles.splice(idx,0,moved);renderCombineList();});
     list.appendChild(row);
   });
-
-  updateCombineSummary();
-  // Refresh "add current file" banner state (button enabled/disabled)
-  updateCombineCurrentBanner();
+  updateCombineSummary();updateCombineCurrentBanner();
 }
-
 function countRangePages(rangeStr,maxPage){
-  if(!rangeStr.trim())return maxPage;
-  let count=0;
-  rangeStr.split(',').forEach(part=>{
-    part=part.trim();
-    if(part.includes('-')){
-      const[a,b]=part.split('-').map(Number);
-      if(!isNaN(a)&&!isNaN(b)){const lo=Math.min(a,b),hi=Math.min(Math.max(a,b),maxPage);if(lo>=1)count+=Math.max(0,hi-lo+1);}
-    }else{const n=Number(part);if(!isNaN(n)&&n>=1&&n<=maxPage)count++;}
-  });
+  if(!rangeStr.trim())return maxPage;let count=0;
+  rangeStr.split(',').forEach(part=>{part=part.trim();if(part.includes('-')){const[a,b]=part.split('-').map(Number);if(!isNaN(a)&&!isNaN(b)){const lo=Math.min(a,b),hi=Math.min(Math.max(a,b),maxPage);if(lo>=1)count+=Math.max(0,hi-lo+1);}}else{const n=Number(part);if(!isNaN(n)&&n>=1&&n<=maxPage)count++;}});
   return count;
 }
-
 function updateCombineSummary(){
-  const txt       = document.getElementById('combineSummaryText');
-  const limitInfo = document.getElementById('combineLimitInfo');
-  const limitBar  = document.getElementById('combineLimitBar');
-  const execBtn   = document.getElementById('combineExecBtn');
-  if(!txt) return;
-
-  let totalPages = 0;
-  _combineFiles.forEach(item => {
-    const pgs = typeof item.pageCount === 'number' ? item.pageCount : 0;
-    totalPages += item.rangeInput ? countRangePages(item.rangeInput, pgs) : pgs;
-  });
-
-  txt.innerHTML = '<strong>' + _combineFiles.length + '</strong> ' + t('combineFile') + ' · <strong>' + totalPages + '</strong> ' + t('combinePages');
-
-  const pct  = Math.min(100, Math.round(totalPages / MAX_TOTAL_PAGES * 100));
-  const remaining = MAX_TOTAL_PAGES - totalPages;
-  const color = totalPages >= MAX_TOTAL_PAGES ? '#dc2626'
-              : totalPages >= MAX_TOTAL_PAGES * 0.8 ? '#f59e0b'
-              : 'var(--teal)';
-
-  if(limitInfo){
-    limitInfo.innerHTML = '<span style="color:' + color + ';font-weight:600">' + totalPages + '/' + MAX_TOTAL_PAGES + ' ' + t('combinePages') + '</span>'
-      + (remaining > 0 ? ' · còn ' + remaining + ' trang' : ' · <span style="color:#dc2626">Đã đầy</span>');
-  }
-  if(limitBar){
-    limitBar.style.width = pct + '%';
-    limitBar.style.background = color;
-  }
-  if(execBtn) execBtn.disabled = _combineFiles.length < 2;
+  const txt=document.getElementById('combineSummaryText');const limitInfo=document.getElementById('combineLimitInfo');const limitBar=document.getElementById('combineLimitBar');const execBtn=document.getElementById('combineExecBtn');if(!txt)return;
+  let totalPages=0;_combineFiles.forEach(item=>{const pgs=typeof item.pageCount==='number'?item.pageCount:0;totalPages+=item.rangeInput?countRangePages(item.rangeInput,pgs):pgs;});
+  txt.innerHTML='<strong>'+_combineFiles.length+'</strong> '+t('combineFile')+' · <strong>'+totalPages+'</strong> '+t('combinePages');
+  const pct=Math.min(100,Math.round(totalPages/MAX_TOTAL_PAGES*100));const remaining=MAX_TOTAL_PAGES-totalPages;
+  const color=totalPages>=MAX_TOTAL_PAGES?'#dc2626':totalPages>=MAX_TOTAL_PAGES*0.8?'#f59e0b':'var(--teal)';
+  if(limitInfo){limitInfo.innerHTML='<span style="color:'+color+';font-weight:600">'+totalPages+'/'+MAX_TOTAL_PAGES+' '+t('combinePages')+'</span>'+(remaining>0?' · còn '+remaining+' trang':' · <span style="color:#dc2626">Đã đầy</span>');}
+  if(limitBar){limitBar.style.width=pct+'%';limitBar.style.background=color;}
+  if(execBtn)execBtn.disabled=_combineFiles.length<2;
 }
-
-function removeCombineFile(id){
-  _combineFiles=_combineFiles.filter(f=>f.id!==id);renderCombineList();
-}
-
+function removeCombineFile(id){_combineFiles=_combineFiles.filter(f=>f.id!==id);renderCombineList();}
 async function executeCombine(){
   if(_combineFiles.length<2){toast(t('combineNeedFiles'),'warn');return;}
-  showLoad(t('combineProcessing'),5);
-  document.getElementById('combineExecBtn').disabled=true;
+  showLoad(t('combineProcessing'),5);document.getElementById('combineExecBtn').disabled=true;
   try{
-    const outDoc=await PDFLib.PDFDocument.create();
-    let processed=0;
+    const outDoc=await PDFLib.PDFDocument.create();let processed=0;
     for(const item of _combineFiles){
-      showLoad(`${t('combineProcessing')} (${++processed}/${_combineFiles.length})...`,Math.round((processed-1)/_combineFiles.length*90)+5);
-      await new Promise(r=>setTimeout(r,0));
-      const srcDoc=await PDFLib.PDFDocument.load(item.bytes,{ignoreEncryption:true});
-      const totalPgs=srcDoc.getPageCount();
-      // Parse page range
+      showLoad(`${t('combineProcessing')} (${++processed}/${_combineFiles.length})...`,Math.round((processed-1)/_combineFiles.length*90)+5);await new Promise(r=>setTimeout(r,0));
+      const srcDoc=await PDFLib.PDFDocument.load(item.bytes,{ignoreEncryption:true});const totalPgs=srcDoc.getPageCount();
       let pageIdxs=[];
       if(item.rangeInput&&item.rangeInput.trim()){
         const rangeParts=item.rangeInput.split(',');
         for(const part of rangeParts){
-          const p=part.trim();
-          if(p.includes('-')){
-            const[a,b]=p.split('-').map(n=>parseInt(n,10));
-            if(isNaN(a)||isNaN(b)){toast(t('combineInvalidRange')(item.name),'warn');continue;}
-            const lo=Math.min(a,b)-1,hi=Math.min(Math.max(a,b)-1,totalPgs-1);
-            for(let i=Math.max(0,lo);i<=hi;i++)pageIdxs.push(i);
-          }else{
-            const n=parseInt(p,10);
-            if(isNaN(n)){toast(t('combineInvalidRange')(item.name),'warn');continue;}
-            const idx=n-1;if(idx>=0&&idx<totalPgs)pageIdxs.push(idx);
-          }
+          const p=part.trim();if(p.includes('-')){const[a,b]=p.split('-').map(n=>parseInt(n,10));if(isNaN(a)||isNaN(b)){toast(t('combineInvalidRange')(item.name),'warn');continue;}const lo=Math.min(a,b)-1,hi=Math.min(Math.max(a,b)-1,totalPgs-1);for(let i=Math.max(0,lo);i<=hi;i++)pageIdxs.push(i);}
+          else{const n=parseInt(p,10);if(isNaN(n)){toast(t('combineInvalidRange')(item.name),'warn');continue;}const idx=n-1;if(idx>=0&&idx<totalPgs)pageIdxs.push(idx);}
         }
-        // Deduplicate while preserving order
         pageIdxs=[...new Set(pageIdxs)];
-      }else{
-        pageIdxs=Array.from({length:totalPgs},(_,i)=>i);
-      }
+      }else{pageIdxs=Array.from({length:totalPgs},(_,i)=>i);}
       if(pageIdxs.length===0)continue;
-      const copiedPages=await outDoc.copyPages(srcDoc,pageIdxs);
-      copiedPages.forEach(p=>outDoc.addPage(p));
+      const copiedPages=await outDoc.copyPages(srcDoc,pageIdxs);copiedPages.forEach(p=>outDoc.addPage(p));
     }
-    showLoad(t('saving'),96);await new Promise(r=>setTimeout(r,0));
-    const out=await outDoc.save();showLoad(t('done'),100);await new Promise(r=>setTimeout(r,300));
-    const blob=new Blob([out],{type:'application/pdf'});const url=URL.createObjectURL(blob);const a=document.createElement('a');
-    const outName='combined_'+Date.now()+'.pdf';a.href=url;a.download=outName;a.click();URL.revokeObjectURL(url);
-    toast(t('combineDone')+outName,'ok',5000);
-    closeCombineModal();
+    showLoad(t('saving'),96);await new Promise(r=>setTimeout(r,0));const out=await outDoc.save();showLoad(t('done'),100);await new Promise(r=>setTimeout(r,300));
+    const blob=new Blob([out],{type:'application/pdf'});const url=URL.createObjectURL(blob);const a=document.createElement('a');const outName='combined_'+Date.now()+'.pdf';a.href=url;a.download=outName;a.click();URL.revokeObjectURL(url);
+    toast(t('combineDone')+outName,'ok',5000);closeCombineModal();
   }catch(e){toast(t('combineErr')+e.message,'err',7000);console.error(e);}
   hideLoad();document.getElementById('combineExecBtn').disabled=false;
 }
@@ -2009,7 +1934,6 @@ async function executeCombine(){
   document.body.addEventListener('dragover',e=>e.preventDefault());
   document.body.addEventListener('drop',e=>{
     e.preventDefault();const f=e.dataTransfer.files[0];
-    // Don't intercept drops onto combine modal
     if(e.target.closest('#combineModal'))return;
     if(f&&(f.type==='application/pdf'||f.name.endsWith('.pdf'))){if(!S.pdfDoc||confirm(t('confirmNewFile')))readPdf(f);}
   });
@@ -2021,12 +1945,7 @@ function readPdf(file){
 function openNewFile(){
   if(!S.pdfDoc||confirm(t('confirmNewFile'))){
     S.pdfDoc=null;S.pjsDoc=null;S.rotations={};S.signatures={};S.comments={};S.sigUrl=null;S.exportPages=new Set();S.zoom=1.0;S.zoomFit=true;
-    document.getElementById('uploadScreen').style.display='';
-    document.getElementById('sidebar').style.display='none';
-    document.getElementById('mainArea').style.display='none';
-    document.getElementById('hdrRight').style.display='none';
-    document.getElementById('hdrInfo').innerHTML=t('appTitle');
-    document.getElementById('pdfInput').value='';exitExportSelMode();
+    document.getElementById('uploadScreen').style.display='';document.getElementById('sidebar').style.display='none';document.getElementById('mainArea').style.display='none';document.getElementById('hdrRight').style.display='none';document.getElementById('hdrInfo').innerHTML=t('appTitle');document.getElementById('pdfInput').value='';exitExportSelMode();
   }
 }
 
@@ -2037,7 +1956,6 @@ document.addEventListener('keydown',e=>{
   if(!S.pdfDoc)return;
   if(e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA'||e.target.isContentEditable)return;
   if(e.key==='Escape'){exitSignMode();exitCommentMode();return;}
-  // Zoom shortcuts: = or + to zoom in, - to zoom out, 0 to reset
   if(e.key==='='||e.key==='+'){e.preventDefault();S.zoomFit=false;zoomStep(+0.25);return;}
   if(e.key==='-'){e.preventDefault();S.zoomFit=false;zoomStep(-0.25);return;}
   if(e.key==='0'){e.preventDefault();S.zoomFit=true;const btn=document.getElementById('zoomFitBtn');if(btn){btn.classList.add('on');btn.textContent=t('zoomFit');}renderMainZoom();return;}
@@ -2053,7 +1971,13 @@ document.addEventListener('keydown',e=>{
 // ═══════════════════════════════════════════════════════════════════════
 // INIT
 // ═══════════════════════════════════════════════════════════════════════
-document.addEventListener('DOMContentLoaded',()=>applyLang());
+document.addEventListener('DOMContentLoaded',()=>{
+  applyLang();
+  // Pre-warm IP fetch so it's ready when user opens sig modal
+  fetchClientIp().then(ip=>{
+    if(ip && ip!=='unknown') console.log('[PDF Studio] Client IP cached:', ip);
+  });
+});
 </script>
 </body>
 </html>
