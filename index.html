@@ -474,7 +474,7 @@ body{font-family:var(--sans);background:var(--paper);color:var(--ink);display:fl
       </div>
       <!-- QR BOX DRAW -->
       <div class="qr-box">
-        <div class="qr-box-title"><span class="qr-badge">🔐 BẢO MẬT</span> QR Code xác thực — Góc phải phía dưới chữ ký</div>
+        <div class="qr-box-title"><span class="qr-badge">🔐 BẢO MẬT</span> QR Code xác thực — Góc phải-dưới chữ ký</div>
         <div class="qr-toggle-row"><label><input type="checkbox" id="qrEnableDraw" checked onchange="updateQrIpStatus('draw')"> Nhúng QR Code vào chữ ký</label></div>
         <div class="qr-info" id="qrInfoDraw">
           QR Code mã hoá: <strong>Thời gian ký · IP thiết bị · Phiên bản</strong><br>
@@ -512,7 +512,7 @@ body{font-family:var(--sans);background:var(--paper);color:var(--ink);display:fl
       </div>
       <!-- QR BOX TYPE -->
       <div class="qr-box">
-        <div class="qr-box-title"><span class="qr-badge">🔐 BẢO MẬT</span> QR Code xác thực — Góc phải phía dưới chữ ký</div>
+        <div class="qr-box-title"><span class="qr-badge">🔐 BẢO MẬT</span> QR Code xác thực — Góc phải-dưới chữ ký</div>
         <div class="qr-toggle-row"><label><input type="checkbox" id="qrEnableType" checked onchange="updateQrIpStatus('type')"> Nhúng QR Code vào chữ ký</label></div>
         <div class="qr-info" id="qrInfoType">
           QR Code mã hoá: <strong>Thời gian ký · IP thiết bị · Phiên bản</strong><br>
@@ -542,7 +542,7 @@ body{font-family:var(--sans);background:var(--paper);color:var(--ink);display:fl
       </div>
       <!-- QR BOX UPLOAD -->
       <div class="qr-box">
-        <div class="qr-box-title"><span class="qr-badge">🔐 BẢO MẬT</span> QR Code xác thực — Góc phải phía dưới chữ ký</div>
+        <div class="qr-box-title"><span class="qr-badge">🔐 BẢO MẬT</span> QR Code xác thực — Góc phải-dưới chữ ký</div>
         <div class="qr-toggle-row"><label><input type="checkbox" id="qrEnableUpload" checked onchange="updateQrIpStatus('upload')"> Nhúng QR Code vào chữ ký</label></div>
         <div class="qr-info" id="qrInfoUpload">
           QR Code mã hoá: <strong>Thời gian ký · IP thiết bị · Phiên bản</strong><br>
@@ -720,189 +720,198 @@ async function updateQrIpStatus(tabId){
   }
 }
 
-// Generate QR canvas — returns Promise<HTMLCanvasElement|null>
+// Generate QR canvas — correctLevel.L (ít module nhất, module lớn nhất, scan dễ nhất)
+// payload đã tối giản nên L là lựa chọn tốt nhất về kích thước module
 async function generateQrCanvas(payload, size){
   return new Promise((resolve)=>{
     try{
+      const text = JSON.stringify(payload);
       const container = document.createElement('div');
-      container.style.cssText = 'position:fixed;top:-9999px;left:-9999px;width:'+size+'px;height:'+size+'px';
+      // visible nhưng off-screen để browser render đầy đủ
+      container.style.cssText = 'position:fixed;top:-9999px;left:-9999px;width:'+size+'px;height:'+size+'px;visibility:hidden';
       document.body.appendChild(container);
       new QRCode(container, {
-        text: JSON.stringify(payload),
+        text: text,
         width: size,
         height: size,
-        colorDark: '#0d0f14',
-        colorLight: '#ffffff',
-        correctLevel: QRCode.CorrectLevel.M,
+        colorDark: '#000000',      // pure black - tương phản tối đa
+        colorLight: '#ffffff',     // pure white
+        correctLevel: QRCode.CorrectLevel.L,  // ít module nhất -> module lớn -> scan dễ
       });
+      // Dùng 300ms để chắc chắn QRCode.js đã render xong
       setTimeout(()=>{
-        const cv = container.querySelector('canvas');
-        const img = container.querySelector('img');
-        if(cv){
-          document.body.removeChild(container);
-          resolve(cv);
-        }else if(img){
-          const c2 = document.createElement('canvas');
-          c2.width = size; c2.height = size;
-          const ctx2 = c2.getContext('2d');
-          const i2 = new Image();
-          i2.onload = ()=>{ ctx2.drawImage(i2,0,0,size,size); document.body.removeChild(container); resolve(c2); };
-          i2.onerror = ()=>{ document.body.removeChild(container); resolve(null); };
-          i2.src = img.src;
-        }else{
-          document.body.removeChild(container);
-          resolve(null);
-        }
-      }, 120);
-    }catch(e){ resolve(null); }
+        const tryResolve = ()=>{
+          const cv  = container.querySelector('canvas');
+          const img = container.querySelector('img');
+          if(cv && cv.width > 0){
+            // Tạo canvas mới sạch để tránh tainted canvas
+            const clean = document.createElement('canvas');
+            clean.width = size; clean.height = size;
+            const cx = clean.getContext('2d');
+            cx.fillStyle = '#ffffff';
+            cx.fillRect(0, 0, size, size);
+            cx.drawImage(cv, 0, 0, size, size);
+            document.body.removeChild(container);
+            resolve(clean);
+          } else if(img && img.src){
+            const clean = document.createElement('canvas');
+            clean.width = size; clean.height = size;
+            const cx = clean.getContext('2d');
+            const i2 = new Image();
+            i2.crossOrigin = 'anonymous';
+            i2.onload = ()=>{
+              cx.fillStyle = '#ffffff';
+              cx.fillRect(0, 0, size, size);
+              cx.drawImage(i2, 0, 0, size, size);
+              document.body.removeChild(container);
+              resolve(clean);
+            };
+            i2.onerror = ()=>{ document.body.removeChild(container); resolve(null); };
+            i2.src = img.src;
+          } else {
+            document.body.removeChild(container);
+            resolve(null);
+          }
+        };
+        tryResolve();
+      }, 300);
+    }catch(e){ console.error('QR gen error:', e); resolve(null); }
   });
 }
 
 // ─────────────────────────────────────────────────────────────────────
-// composeSigFull — chữ ký + timestamp dưới + QR ở GÓC PHẢI PHÍA DƯỚI
+// composeSigFull — Layout tối ưu để scan QR
 //
-// Layout (tổng canvas):
+//  ┌──────────────────────────────────────────┐
+//  │                                          │
+//  │        CHỮ KÝ CHÍNH (full width)        │
+//  │                                          │
+//  ├───────────────────────┬──────────────────┤
+//  │  [ Timestamp pill ]   │    [ QR box ]    │
+//  │  (co giãn bên trái)   │  (cố định phải) │
+//  └───────────────────────┴──────────────────┘
 //
-//   ┌──────────────────────────────────────┐
-//   │                                      │
-//   │          CHỮ KÝ CHÍNH               │
-//   │                                      │
-//   ├──────────────────────────────────────┤
-//   │  [Timestamp pill — canh giữa]        │
-//   ├──────────────────────────────────────┤
-//   │                       ┌────────────┐ │
-//   │                       │  QR CODE   │ │
-//   │                       │ (góc phải) │ │
-//   │                       └────────────┘ │
-//   │                       QUÉT XÁC THỰC │
-//   └──────────────────────────────────────┘
-//
-// Returns Promise<dataURL string>
+// Nguyên tắc tối ưu scan:
+//  • Payload tối giản → QR version thấp → module lớn → dễ scan
+//  • correctLevel.L → ít module nhất có thể
+//  • QR generate ở 250px, vẽ ở 110px (scale sắc nét, không blur)
+//  • Quiet zone 12px trắng thuần mỗi bên (chuẩn ISO: 4 module)
+//  • Nền QR box = #ffffff thuần, không transparency
+//  • QR KHÔNG đè lên chữ ký — nằm trong hàng riêng bên dưới
 // ─────────────────────────────────────────────────────────────────────
 async function composeSigFull(sigDataUrl, tsText, qrPayload){
   return new Promise(async resolve=>{
     const img = new Image();
     img.onload = async ()=>{
-      const sw = img.naturalWidth || 400;
+      const sw = img.naturalWidth  || 400;
       const sh = img.naturalHeight || 120;
 
-      // ── Timestamp metrics ──
-      const tsFontSize = 20;
-      const tsLineH = Math.round(tsFontSize * 1.6);
-      const tsPadV = 7;
-      const tsPadX = 18;
-      const tsGap = 10; // gap between sig bottom and ts pill
-      let tsH = 0, tsPillW = 0;
+      // ── QR constants ──
+      const QR_GEN   = 250;   // generate resolution — QRCode.js tự thêm quiet zone nội bộ
+      const QR_PX    = 110;   // kích thước vẽ lên canvas (px) — đủ lớn, pixel sắc nét
+      const QR_QUIET = 12;    // quiet zone bổ sung mỗi bên (px) — nền trắng thuần
+      const QR_BOX   = QR_PX + QR_QUIET * 2;   // = 134px tổng block
 
-      const _tmpCtx = document.createElement('canvas').getContext('2d');
-      _tmpCtx.font = `${tsFontSize}px 'DM Mono',monospace`;
+      // ── Timestamp constants ──
+      const tsFontPx = 20;
+      const tsPadV   = 8;
+      const tsPadH   = 14;
+      const ROW_GAP  = 8;    // gap dọc giữa sig và hàng dưới
 
-      if(tsText){
-        const tw = _tmpCtx.measureText(tsText).width;
-        tsPillW = Math.ceil(tw) + tsPadX * 2;
-        tsH = tsPadV * 2 + tsLineH + tsGap;
-      }
-
-      // ── QR metrics ──
-      const QR_SIZE   = 50;  // rendered px on output canvas
-      const QR_GEN    = 200;  // generate at higher res, then scale down
-      const QR_PAD    = 8;    // inner padding around QR
-      const QR_LBL_H  = 18;  // height for "QUÉT XÁC THỰC" label
-      const QR_BLOCK_H = QR_SIZE + QR_PAD * 2 + QR_LBL_H; // total block height
-      const QR_BLOCK_W = QR_SIZE + QR_PAD * 2;
-      const QR_GAP    = 8;   // gap between ts row and qr block
-
+      // ── Generate QR ──
       let qrCv = null;
-      if(qrPayload){
-        qrCv = await generateQrCanvas(qrPayload, QR_GEN);
+      if(qrPayload) qrCv = await generateQrCanvas(qrPayload, QR_GEN);
+
+      // ── Đo timestamp ──
+      let tsPillW = 0, tsPillH = 0;
+      if(tsText){
+        const _m = document.createElement('canvas').getContext('2d');
+        _m.font = `${tsFontPx}px 'DM Mono',monospace`;
+        tsPillW = Math.ceil(_m.measureText(tsText).width) + tsPadH * 2;
+        tsPillH = tsPadV * 2 + Math.round(tsFontPx * 1.45);
       }
 
-      // ── Canvas dimensions ──
-      // Width = max(sigW, tsPillW), always at least fits the QR on the right
-      const minW = qrCv ? Math.max(sw, tsPillW, QR_BLOCK_W + 20) : Math.max(sw, tsPillW);
-      const totalW = minW;
+      // ── Tính kích thước hàng dưới (timestamp + QR cùng hàng) ──
+      // rowH = chiều cao hàng dưới (lấy max để canh đáy)
+      const rowH = Math.max(tsPillH, qrCv ? QR_BOX : 0);
+      const hasRow = rowH > 0;
 
-      // Height = sig + ts + (qr gap + qr block if qr enabled)
-      let totalH = sh + tsH;
-      if(qrCv){
-        totalH += QR_GAP + QR_BLOCK_H;
-      }
+      // Width: chữ ký gốc, đủ chỗ cho hàng dưới
+      const minRowW = (tsText ? tsPillW + 8 : 0) + (qrCv ? QR_BOX + 8 : 0);
+      const totalW  = Math.max(sw, minRowW);
 
-      const cv = document.createElement('canvas');
+      // Height: sig + gap + hàng dưới
+      const totalH  = sh + (hasRow ? ROW_GAP + rowH : 0);
+
+      // ── Canvas ──
+      const cv  = document.createElement('canvas');
       cv.width  = totalW;
       cv.height = totalH;
       const ctx = cv.getContext('2d');
       ctx.clearRect(0, 0, totalW, totalH);
 
-      // ── 1. Draw main signature image (top, horizontally centered) ──
+      // ── 1. Chữ ký — full width, y=0 ──
       const sigX = Math.round((totalW - sw) / 2);
       ctx.drawImage(img, sigX, 0, sw, sh);
 
-      // ── 2. Draw timestamp pill (below sig, centered) ──
-      if(tsText){
-        const tw = _tmpCtx.measureText(tsText).width;
-        const pW = Math.ceil(tw) + tsPadX * 2;
-        const pX = Math.round((totalW - pW) / 2);
-        const pY = sh + tsGap;
-        const pH = tsPadV * 2 + tsLineH;
+      if(!hasRow){ resolve(cv.toDataURL('image/png')); return; }
 
-        // pill background
-        ctx.fillStyle = 'rgba(255,255,255,0.93)';
-        ctx.strokeStyle = 'rgba(0,0,0,0.13)';
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        if(ctx.roundRect) ctx.roundRect(pX, pY, pW, pH, 6);
-        else ctx.rect(pX, pY, pW, pH);
-        ctx.fill();
-        ctx.stroke();
+      const rowY = sh + ROW_GAP;
 
-        // timestamp text
-        ctx.fillStyle = '#1e293b';
-        ctx.font = `${tsFontSize}px 'DM Mono',monospace`;
-        ctx.textBaseline = 'middle';
-        ctx.textAlign = 'center';
-        ctx.fillText(tsText, pX + pW / 2, pY + pH / 2);
+      // ── 2. QR box — cố định bên PHẢI, canh đáy hàng ──
+      if(qrCv){
+        const qrBlockX = totalW - QR_BOX - 4;                    // 4px lề phải
+        const qrBlockY = rowY + Math.round((rowH - QR_BOX) / 2); // canh giữa dọc trong rowH
+
+        // Nền trắng thuần (bắt buộc để scanner đọc)
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(qrBlockX, qrBlockY, QR_BOX, QR_BOX);
+
+        // Viền mỏng phân biệt với tài liệu
+        ctx.strokeStyle = 'rgba(0,0,0,0.2)';
+        ctx.lineWidth   = 1;
+        ctx.strokeRect(qrBlockX + 0.5, qrBlockY + 0.5, QR_BOX - 1, QR_BOX - 1);
+
+        // QR image — kích thước QR_PX cố định, đặt vào phần trong quiet zone
+        ctx.drawImage(qrCv,
+          qrBlockX + QR_QUIET,
+          qrBlockY + QR_QUIET,
+          QR_PX, QR_PX
+        );
       }
 
-      // ── 3. Draw QR block — góc PHẢI phía DƯỚI ──
-      if(qrCv){
-        // QR block starts after sig + ts area, aligned to right edge
-        const qrBlockY = sh + tsH + QR_GAP;
+      // ── 3. Timestamp pill — bên trái, chiếm phần còn lại, canh đáy hàng ──
+      if(tsText){
+        // Pill width = khoảng còn lại bên trái QR (nếu có QR), hoặc full width
+        const rightEdge = qrCv ? (totalW - QR_BOX - 4 - 6) : totalW;
+        const pillMaxW  = rightEdge - 4;                          // 4px lề trái
+        const pillW     = Math.min(tsPillW, pillMaxW);
+        const pillH     = tsPillH;
+        const pillX     = 4;
+        const pillY     = rowY + Math.round((rowH - pillH) / 2); // canh giữa dọc
 
-        // Right-align: leave 4px from right edge
-        const qrBgX = totalW - QR_BLOCK_W - 4;
-        const qrBgY = qrBlockY;
-        const qrBgW = QR_BLOCK_W;
-        const qrBgH = QR_SIZE + QR_PAD * 2 + QR_LBL_H;
-
-        // White rounded background for QR block
-        ctx.fillStyle = 'rgba(255,255,255,0.97)';
-        ctx.strokeStyle = 'rgba(0,0,0,0.15)';
-        ctx.lineWidth = 1.5;
+        // Nền pill
+        ctx.fillStyle   = '#ffffff';
+        ctx.strokeStyle = 'rgba(0,0,0,0.14)';
+        ctx.lineWidth   = 1;
         ctx.beginPath();
-        if(ctx.roundRect) ctx.roundRect(qrBgX, qrBgY, qrBgW, qrBgH, 6);
-        else ctx.rect(qrBgX, qrBgY, qrBgW, qrBgH);
+        if(ctx.roundRect) ctx.roundRect(pillX, pillY, pillW, pillH, 6);
+        else ctx.rect(pillX, pillY, pillW, pillH);
         ctx.fill();
         ctx.stroke();
 
-        // Draw QR image inside the block
-        const qrImgX = qrBgX + QR_PAD;
-        const qrImgY = qrBgY + QR_PAD;
-        ctx.drawImage(qrCv, qrImgX, qrImgY, QR_SIZE, QR_SIZE);
-
-        // "QUÉT ĐỂ XÁC THỰC" label below QR
-        ctx.fillStyle = '#166534';
-        ctx.font = `bold 10px 'DM Mono',monospace`;
+        // Text
+        ctx.fillStyle    = '#0f172a';
+        ctx.font         = `${tsFontPx}px 'DM Mono',monospace`;
         ctx.textBaseline = 'middle';
-        ctx.textAlign = 'center';
-        ctx.fillText('Scan to Verify', qrBgX + qrBgW / 2, qrBgY + QR_PAD + QR_SIZE + QR_LBL_H / 2);
-
-        // Small lock icon at top-left of QR block
-        ctx.fillStyle = '#166534';
-        ctx.font = 'bold 9px sans-serif';
-        ctx.textBaseline = 'top';
-        ctx.textAlign = 'left';
-        ctx.fillText('🔐', qrBgX + 2, qrBgY + 2);
+        ctx.textAlign    = 'center';
+        // Clip để text không tràn sang QR
+        ctx.save();
+        ctx.beginPath();
+        ctx.rect(pillX, pillY, pillW, pillH);
+        ctx.clip();
+        ctx.fillText(tsText, pillX + pillW / 2, pillY + pillH / 2);
+        ctx.restore();
       }
 
       resolve(cv.toDataURL('image/png'));
@@ -1404,27 +1413,25 @@ async function confirmSig(){
 
   const tsText = tsConf.enable ? fmtNow(tsConf.fmt) : null;
 
-  // Build QR payload with timestamp + IP
   let qrPayload = null;
   if(qrConf.enable){
     showLoad('Đang lấy IP & tạo QR Code...', 50);
     const ip = await fetchClientIp();
     const now = new Date();
+    // Payload tối giản: ít ký tự -> QR ít module -> module lớn -> scan dễ
+    const _tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
     qrPayload = {
-      app: 'PDF-Studio',
-      ver: '2.1',
-      signed_at: fmtNow('full'),          // human-readable timestamp
-      signed_iso: now.toISOString(),       // ISO 8601 for machine parsing
-      client_ip: ip,                       // client IP address
-      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-      ua_short: navigator.userAgent.slice(0,80),
+      a: 'PDF-Studio',
+      t: fmtNow('full'),
+      i: now.toISOString(),
+      ip: (ip && ip !== 'unknown') ? ip : '',
+      tz: (_tz && _tz.length <= 24) ? _tz : '',
     };
   }
 
   showLoad(t('processing'), 70);
 
   try{
-    // composeSigFull places QR at bottom-right of signature
     S.sigUrl = await composeSigFull(rawUrl, tsText, qrPayload);
   }catch(e){
     console.error('composeSigFull error:', e);
@@ -1433,7 +1440,6 @@ async function confirmSig(){
 
   hideLoad();
 
-  // Brief preview
   const prevDiv=document.getElementById('sigCompositePreview');
   const prevImg=document.getElementById('sigCompositeImg');
   if(prevDiv&&prevImg){
@@ -1442,7 +1448,7 @@ async function confirmSig(){
     prevDiv.style.display='none';
   }
   closeSigModal();
-  const qrNote = qrPayload ? ' · QR bảo mật ở góc phải phía dưới 🔐' : '';
+  const qrNote = qrPayload ? ' · QR bảo mật cạnh ngày giờ 🔐' : '';
   toast(t('toastReady')+qrNote,'ok',4500);
 }
 
@@ -1485,7 +1491,7 @@ document.getElementById('sigOvl').addEventListener('click',e=>{
   if(!S.signMode||!S.sigUrl)return;
   const rect=e.currentTarget.getBoundingClientRect();
   const clickX=e.clientX-rect.left,clickY=e.clientY-rect.top;
-  const nw=0.30; // wider to accommodate QR at bottom-right
+  const nw=0.30;
   const _pImg=new Image();
   _pImg.onload=()=>{
     const ar=(_pImg.naturalHeight||1)/(_pImg.naturalWidth||1);
@@ -1973,7 +1979,6 @@ document.addEventListener('keydown',e=>{
 // ═══════════════════════════════════════════════════════════════════════
 document.addEventListener('DOMContentLoaded',()=>{
   applyLang();
-  // Pre-warm IP fetch so it's ready when user opens sig modal
   fetchClientIp().then(ip=>{
     if(ip && ip!=='unknown') console.log('[PDF Studio] Client IP cached:', ip);
   });
